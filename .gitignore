@@ -1,0 +1,30 @@
+# Home Assistant core files
+.homeassistant/.storage/
+homeassistant/.storage/
+homeassistant/home-assistant_v2.db*
+homeassistant/home-assistant.log*
+homeassistant/home-assistant.log.1
+homeassistant/home-assistant.log.fault
+homeassistant/home-assistant.log.fault.*
+homeassistant/home-assistant_v2.db-shm
+homeassistant/home-assistant_v2.db-wal
+
+# Secrets
+homeassistant/secrets.yaml
+
+# Backups
+homeassistant/backups/
+homeassistant/.cloud/
+
+# OS junk
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Python / virtual env (if ever used)
+__pycache__/
+*.pyc
+.venv/
+
+# VS Code
+.vscode/
