@@ -10,9 +10,16 @@ cards:
     style: |
       ha-card {
         background: var(--header-background);
+        backdrop-filter: blur(var(--header-blur-amount));
+        box-shadow: 0 0 var(--header-glow-strength) var(--header-glow-color);
         box-shadow: none;
         padding: 0;
         margin: 0;
+        animation: headerGlowPulse 6s ease-in-out infinite;
+        backdrop-filter: blur(var(--header-blur-amount));
+        -webkit-backdrop-filter: blur(var(--header-blur-amount));
+        animation: headerGlowPulse 6s ease-in-out infinite, headerBlurFade 1.4s ease-out forwards;
+
       }
     card:
       type: horizontal-stack

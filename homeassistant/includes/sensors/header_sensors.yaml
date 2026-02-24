@@ -1,0 +1,35 @@
+sensor:
+
+  # Cinematic Header — Time
+  - name: header_time
+    unique_id: header_time
+    state: >
+      {{ now().strftime('%H:%M') }}
+    icon: mdi:clock-outline
+
+  # Cinematic Header — Weather Summary
+  - name: header_weather_summary
+    unique_id: header_weather_summary
+    state: >
+      {% set cond = states('weather.pirateweather') %}
+      {% set temp = state_attr('weather.pirateweather', 'temperature') %}
+      {% if cond != 'unknown' and temp != 'unknown' %}
+        {{ cond | capitalize }} • {{ temp }}°C
+      {% else %}
+        Updating…
+      {% endif %}
+    icon: mdi:weather-partly-cloudy
+
+  # Cinematic Header — Presence Summary
+  - name: header_presence_summary
+    unique_id: header_presence_summary
+    state: >
+      {% set home = [
+        states('person.jon'),
+        states('person.natalie'),
+        states('person.jacob'),
+        states('person.joseph')
+      ] | select('equalto', 'home') | list | count %}
+      {% set away = 4 - home %}
+      {{ home }} home • {{ away }} away
+    icon: mdi:account-group

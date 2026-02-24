@@ -1,19 +1,17 @@
 # Cinematic Header - Atmospheric Effects Layer
-# This file defines the gradient, glow, and ambient styling behind the header.
+# Provides optional animations and CSS variables for the header.
 
-type: custom:mod-card
-style: |
-  ha-card {
-    background: linear-gradient(
-      to bottom,
-      var(--header-gradient-top),
-      var(--header-gradient-bottom)
-    );
-    box-shadow: 0 0 40px var(--header-glow-color);
-    border-radius: 0;
-    padding: 0;
-    margin: 0;
+# Glow Pulse Animation (subtle)
+header_glow_pulse: |
+  @keyframes headerGlowPulse {
+    0%   { box-shadow: 0 0 var(--header-glow-strength) var(--header-glow-color); }
+    50%  { box-shadow: 0 0 calc(var(--header-glow-strength) * 1.4) var(--header-glow-color); }
+    100% { box-shadow: 0 0 var(--header-glow-strength) var(--header-glow-color); }
   }
-card:
-  type: custom:button-card
-  template: header_effects_background
+
+# Blur Fade Animation (optional)
+header_blur_fade: |
+  @keyframes headerBlurFade {
+    0%   { backdrop-filter: blur(calc(var(--header-blur-amount) * 0.6)); }
+    100% { backdrop-filter: blur(var(--header-blur-amount)); }
+  }

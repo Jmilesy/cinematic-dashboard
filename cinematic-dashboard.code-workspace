@@ -1,0 +1,16 @@
+{
+  "folders": [
+    {
+      "name": "Dashboard Config",
+      "path": "."
+    }
+  ],
+  "extensions": {
+    "recommendations": [
+      "redhat.vscode-yaml",
+      "keesschollaart.vscode-home-assistant",
+      "eamodio.gitlens",
+      "esbenp.prettier-vscode"
+    ]
+  }
+}

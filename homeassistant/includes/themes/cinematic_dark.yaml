@@ -45,3 +45,17 @@ cinematic_dark:
 
   # Shadows
   block-shadow: "0 4px 12px rgba(0,0,0,0.4)"
+
+  # Cinematic Header Background
+  --header-background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.65) 0%,
+    rgba(0, 0, 0, 0.35) 40%,
+    rgba(0, 0, 0, 0.15) 100%
+    );
+
+  
+  # Header Effects
+  --header-glow-strength: 18px;
+  --header-blur-amount: 12px;
+

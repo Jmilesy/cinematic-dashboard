@@ -8,15 +8,21 @@ button_card_templates:
     template: base_block
     show_name: true
     name: "[[[ return states['sensor.header_time'].state ]]]"
-    styles:
-      card:
-        - background: transparent
-        - box-shadow: none
-        - padding: 0
-      name:
-        - font-size: 2rem
-        - font-weight: 600
-        - color: var(--header-time-color)
+  styles:
+    card:
+      - background: transparent
+      - box-shadow: none
+      - padding: 0
+      - margin: 0
+    name:
+      - font-size: 2rem
+      - font-weight: 600
+      - color: var(--header-time-color)
+      - text-shadow: 0 0 6px var(--header-glow-color)
+      - align-self: center
+      - justify-self: center
+      - line-height: 1.1
+
 
   # Weather Block
   header_weather_block:
@@ -30,10 +36,17 @@ button_card_templates:
         - background: transparent
         - box-shadow: none
         - padding: 0
+        - margin: 0
       name:
-        - font-size: 1.1rem
+        - font-size: 1.15rem
         - font-weight: 500
         - color: var(--header-weather-color)
+        - text-shadow: 0 0 5px var(--header-glow-color)
+        - align-self: center
+        - justify-self: center
+        - line-height: 1.2
+        - white-space: nowrap
+
 
   # Presence Block
   header_presence_block:
@@ -46,7 +59,14 @@ button_card_templates:
         - background: transparent
         - box-shadow: none
         - padding: 0
+        - margin: 0
       name:
-        - font-size: 1.1rem
+        - font-size: 1.05rem
         - font-weight: 500
         - color: var(--header-presence-color)
+        - text-shadow: 0 0 5px var(--header-glow-color)
+        - align-self: center
+        - justify-self: center
+        - line-height: 1.2
+        - white-space: nowrap
+
