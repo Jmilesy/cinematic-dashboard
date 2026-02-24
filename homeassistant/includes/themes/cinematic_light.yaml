@@ -1,0 +1,47 @@
+# Cinematic Light Theme
+# Bright surfaces, soft shadows, subtle colour accents.
+
+cinematic_light:
+
+  # Core Backgrounds
+  background-color: "#f5f7fa"
+  card-background-color: "#ffffff"
+  block-bg: "#ffffff"
+  section-header-bg: "#f0f2f5"
+
+  # Text
+  primary-text-color: "#1a1c1f"
+  secondary-text-color: "#4a4d52"
+  block-text: "#1a1c1f"
+  section-header-text: "#1a1c1f"
+
+  # Header
+  header-time-color: "#1a1c1f"
+  header-weather-color: "#4a4d52"
+  header-presence-color: "#4a4d52"
+
+  # Gradients
+  header-gradient-top: "rgba(255,255,255,0.8)"
+  header-gradient-bottom: "rgba(255,255,255,0)"
+
+  gradient-top: "rgba(0,0,0,0.04)"
+  gradient-bottom: "rgba(0,0,0,0)"
+
+  # Glows
+  header-glow-color: "rgba(0, 120, 255, 0.25)"
+  soft-glow-color: "rgba(0, 120, 255, 0.15)"
+  icon-glow-color: "rgba(0, 120, 255, 0.4)"
+
+  # Icons
+  weather-icon-color: "#007aff"
+  climate-icon-color: "#ff8c00"
+  humidity-icon-color: "#007aff"
+  lighting-icon-color: "#ffb300"
+  scene-icon-color: "#9c27b0"
+  media-icon-color: "#007aff"
+  media-device-icon-color: "#007aff"
+  system-icon-color: "#005bbb"
+  network-icon-color: "#005bbb"
+
+  # Shadows
+  block-shadow: "0 4px 12px rgba(0,0,0,0.08)"

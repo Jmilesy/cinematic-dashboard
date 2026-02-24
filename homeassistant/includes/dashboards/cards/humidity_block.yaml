@@ -1,0 +1,5 @@
+# Humidity Block - Stub
+# Displays humidity levels and related environmental info.
+
+type: custom:button-card
+template: humidity_block

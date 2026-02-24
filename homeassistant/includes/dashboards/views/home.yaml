@@ -1,0 +1,23 @@
+# Home View - Cinematic Dashboard
+# This is the main landing view for your dashboard.
+
+title: Home
+path: home
+icon: mdi:home
+
+cards:
+  - type: custom:vertical-stack-in-card
+    cards:
+      - type: custom:button-card
+        template: section_header
+        name: Overview
+
+      # Example card include (replace later)
+      - !include ../cards/presence_summary.yaml
+
+      - type: custom:button-card
+        template: section_header
+        name: Weather
+
+      # Example card include (replace later)
+      - !include ../cards/weather_block.yaml

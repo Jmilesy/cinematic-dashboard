@@ -1,0 +1,45 @@
+# Main Home Assistant Configuration
+# Cinematic Dashboard Architecture (Modular Includes)
+
+homeassistant:
+  name: Home
+  latitude: !secret home_latitude
+  longitude: !secret home_longitude
+  elevation: 0
+  unit_system: metric
+  time_zone: Europe/London
+
+# Load all sensors
+template: !include_dir_merge_named includes/templates/
+sensor: !include_dir_merge_named includes/sensors/
+
+lovelace:
+  mode: yaml
+  resources: !include includes/resources/resources.yaml
+  dashboards:
+    cinematic-dashboard:
+      mode: yaml
+      filename: includes/dashboards/ui-lovelace.yaml
+      title: Cinematic Dashboard
+      icon: mdi:filmstrip
+      show_in_sidebar: true
+
+
+# Dashboards
+lovelace:
+  mode: yaml
+  resources: !include resources/resources.yaml
+  dashboards:
+    cinematic-dashboard:
+      mode: yaml
+      title: Cinematic
+      icon: mdi:movie-open
+      show_in_sidebar: true
+      filename: includes/dashboards/ui-lovelace.yaml
+
+# Themes
+frontend:
+  themes: !include_dir_merge_named includes/themes/
+
+# Custom Cards / JS / CSS
+# (Loaded via resources.yaml)

@@ -1,0 +1,23 @@
+# Media View - Cinematic Dashboard
+# Controls for media players, speakers, TVs, and streaming devices.
+
+title: Media
+path: media
+icon: mdi:play-circle
+
+cards:
+  - type: custom:vertical-stack-in-card
+    cards:
+      - type: custom:button-card
+        template: section_header
+        name: Now Playing
+
+      # Example media overview card include (replace later)
+      - !include ../cards/media_now_playing.yaml
+
+      - type: custom:button-card
+        template: section_header
+        name: Devices
+
+      # Example media devices card include (replace later)
+      - !include ../cards/media_devices.yaml

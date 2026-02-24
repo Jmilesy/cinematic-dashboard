@@ -1,0 +1,57 @@
+# Utility Templates - Cinematic Dashboard
+# Reusable helpers, animations, gradients, and style fragments.
+
+button_card_templates:
+
+  # Fade-in Animation
+  fade_in:
+    styles:
+      card:
+        - animation: fadeIn 0.6s ease-out
+    extra_styles: |
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(6px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+  # Soft Glow
+  soft_glow:
+    styles:
+      card:
+        - box-shadow: 0 0 20px var(--soft-glow-color)
+
+  # Gradient Overlay
+  gradient_overlay:
+    styles:
+      card:
+        - background: linear-gradient(
+            to bottom,
+            var(--gradient-top),
+            var(--gradient-bottom)
+          )
+
+  # Responsive Padding
+  responsive_padding:
+    styles:
+      card:
+        - padding: 16px
+    extra_styles: |
+      @media (max-width: 600px) {
+        ha-card {
+          padding: 12px !important;
+        }
+      }
+
+  # Icon Tint Helper
+  icon_tint:
+    styles:
+      icon:
+        - filter: drop-shadow(0 0 4px var(--icon-glow-color))
+
+  # Text Subtle Helper
+  subtle_text:
+    styles:
+      name:
+        - opacity: 0.85
+      state:
+        - opacity: 0.7

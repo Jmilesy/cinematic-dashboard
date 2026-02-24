@@ -1,0 +1,3 @@
+# Scene Selector Card - Stub
+type: custom:button-card
+template: scene_selector_block

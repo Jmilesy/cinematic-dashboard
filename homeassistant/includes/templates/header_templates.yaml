@@ -1,0 +1,52 @@
+# Header Templates - Cinematic Dashboard
+# UI templates for time, weather, and presence blocks in the header.
+
+button_card_templates:
+
+  # Time Block
+  header_time_block:
+    template: base_block
+    show_name: true
+    name: "[[[ return states['sensor.header_time'].state ]]]"
+    styles:
+      card:
+        - background: transparent
+        - box-shadow: none
+        - padding: 0
+      name:
+        - font-size: 2rem
+        - font-weight: 600
+        - color: var(--header-time-color)
+
+  # Weather Block
+  header_weather_block:
+    template: base_block
+    show_icon: false
+    show_name: true
+    name: >
+      [[[ return states['sensor.header_weather_summary'].state ]]]
+    styles:
+      card:
+        - background: transparent
+        - box-shadow: none
+        - padding: 0
+      name:
+        - font-size: 1.1rem
+        - font-weight: 500
+        - color: var(--header-weather-color)
+
+  # Presence Block
+  header_presence_block:
+    template: base_block
+    show_name: true
+    name: >
+      [[[ return states['sensor.header_presence_summary'].state ]]]
+    styles:
+      card:
+        - background: transparent
+        - box-shadow: none
+        - padding: 0
+      name:
+        - font-size: 1.1rem
+        - font-weight: 500
+        - color: var(--header-presence-color)

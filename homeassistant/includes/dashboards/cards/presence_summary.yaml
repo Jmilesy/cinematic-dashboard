@@ -1,0 +1,5 @@
+# Presence Summary Card - Stub
+# Displays who is home, away, or recently arrived/left.
+
+type: custom:button-card
+template: presence_summary_block

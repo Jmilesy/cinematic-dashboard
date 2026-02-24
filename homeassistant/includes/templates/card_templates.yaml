@@ -1,0 +1,172 @@
+# Card Templates - Cinematic Dashboard
+# UI templates for all dashboard block cards.
+
+button_card_templates:
+
+  # Weather Block
+  weather_block:
+    template: base_block
+    show_icon: true
+    show_name: true
+    show_state: true
+    styles:
+      card:
+        - padding: 20px
+      icon:
+        - width: 48px
+        - height: 48px
+        - color: var(--weather-icon-color)
+      name:
+        - font-size: 1.2rem
+        - font-weight: 600
+      state:
+        - font-size: 1rem
+        - opacity: 0.8
+
+  # Climate Overview Block
+  climate_overview_block:
+    template: base_block
+    show_icon: true
+    show_name: true
+    show_state: true
+    styles:
+      card:
+        - padding: 20px
+      icon:
+        - width: 48px
+        - height: 48px
+        - color: var(--climate-icon-color)
+      name:
+        - font-size: 1.2rem
+        - font-weight: 600
+      state:
+        - font-size: 1rem
+        - opacity: 0.8
+
+  # Humidity Block
+  humidity_block:
+    template: base_block
+    show_icon: true
+    show_name: true
+    show_state: true
+    styles:
+      card:
+        - padding: 20px
+      icon:
+        - width: 48px
+        - height: 48px
+        - color: var(--humidity-icon-color)
+      name:
+        - font-size: 1.2rem
+        - font-weight: 600
+      state:
+        - font-size: 1rem
+        - opacity: 0.8
+
+  # Lighting Overview Block
+  lighting_overview_block:
+    template: base_block
+    show_icon: true
+    show_name: true
+    styles:
+      card:
+        - padding: 20px
+      icon:
+        - width: 40px
+        - height: 40px
+        - color: var(--lighting-icon-color)
+      name:
+        - font-size: 1.2rem
+        - font-weight: 600
+
+  # Scene Selector Block
+  scene_selector_block:
+    template: base_block
+    show_icon: true
+    show_name: true
+    styles:
+      card:
+        - padding: 20px
+      icon:
+        - width: 36px
+        - height: 36px
+        - color: var(--scene-icon-color)
+      name:
+        - font-size: 1.1rem
+        - font-weight: 600
+
+  # Media Now Playing Block
+  media_now_playing_block:
+    template: base_block
+    show_icon: true
+    show_name: true
+    show_state: true
+    styles:
+      card:
+        - padding: 20px
+      icon:
+        - width: 48px
+        - height: 48px
+        - color: var(--media-icon-color)
+      name:
+        - font-size: 1.2rem
+        - font-weight: 600
+      state:
+        - font-size: 1rem
+        - opacity: 0.8
+
+  # Media Devices Block
+  media_devices_block:
+    template: base_block
+    show_icon: true
+    show_name: true
+    styles:
+      card:
+        - padding: 20px
+      icon:
+        - width: 40px
+        - height: 40px
+        - color: var(--media-device-icon-color)
+      name:
+        - font-size: 1.1rem
+        - font-weight: 600
+
+  # System Overview Block
+  system_overview_block:
+    template: base_block
+    show_icon: true
+    show_name: true
+    show_state: true
+    styles:
+      card:
+        - padding: 20px
+      icon:
+        - width: 40px
+        - height: 40px
+        - color: var(--system-icon-color)
+      name:
+        - font-size: 1.2rem
+        - font-weight: 600
+      state:
+        - font-size: 1rem
+        - opacity: 0.8
+
+  # Network Status Block
+  network_status_block:
+    template: base_block
+    show_icon: true
+    show_name: true
+    show_state: true
+    styles:
+      card:
+        - padding: 20px
+      icon:
+        - width: 40px
+        - height: 40px
+        - color: var(--network-icon-color)
+      name:
+        - font-size: 1.2rem
+        - font-weight: 600
+      state:
+        - font-size: 1rem
+        - opacity: 0.8

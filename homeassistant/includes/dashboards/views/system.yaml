@@ -1,0 +1,23 @@
+# System View - Cinematic Dashboard
+# System health, diagnostics, uptime, and internal monitoring.
+
+title: System
+path: system
+icon: mdi:server
+
+cards:
+  - type: custom:vertical-stack-in-card
+    cards:
+      - type: custom:button-card
+        template: section_header
+        name: System Status
+
+      # Example system overview card include (replace later)
+      - !include ../cards/system_overview.yaml
+
+      - type: custom:button-card
+        template: section_header
+        name: Network
+
+      # Example network card include (replace later)
+      - !include ../cards/network_status.yaml

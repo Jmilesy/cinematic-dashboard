@@ -1,0 +1,23 @@
+# Lighting View - Cinematic Dashboard
+# Controls for lights, groups, scenes, and ambience.
+
+title: Lighting
+path: lighting
+icon: mdi:lightbulb-group
+
+cards:
+  - type: custom:vertical-stack-in-card
+    cards:
+      - type: custom:button-card
+        template: section_header
+        name: Rooms
+
+      # Example lighting overview card include (replace later)
+      - !include ../cards/lighting_overview.yaml
+
+      - type: custom:button-card
+        template: section_header
+        name: Scenes
+
+      # Example scenes card include (replace later)
+      - !include ../cards/scene_selector.yaml

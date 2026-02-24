@@ -1,0 +1,5 @@
+# Weather Block - Stub
+# Displays current conditions, temperature, and short summary.
+
+type: custom:button-card
+template: weather_block

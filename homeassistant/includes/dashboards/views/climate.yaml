@@ -1,0 +1,23 @@
+# Climate View - Cinematic Dashboard
+# Displays heating, cooling, temperature, and environmental controls.
+
+title: Climate
+path: climate
+icon: mdi:thermometer
+
+cards:
+  - type: custom:vertical-stack-in-card
+    cards:
+      - type: custom:button-card
+        template: section_header
+        name: Temperature
+
+      # Example climate card include (replace later)
+      - !include ../cards/climate_overview.yaml
+
+      - type: custom:button-card
+        template: section_header
+        name: Humidity
+
+      # Example humidity card include (replace later)
+      - !include ../cards/humidity_block.yaml

@@ -1,0 +1,20 @@
+# Cinematic Dashboard - Main Lovelace Entry Point
+# This file defines the dashboard structure and loads all views + header.
+
+title: Cinematic Dashboard
+theme: cinematic_dark
+background: var(--background-image)
+
+# Include header effects
+!include header_effects.yaml
+
+views:
+  # Cinematic Header (global)
+  - !include header/cinematic_header.yaml
+
+  # Main Views
+  - !include views/home.yaml
+  - !include views/climate.yaml
+  - !include views/lighting.yaml
+  - !include views/media.yaml
+  - !include views/system.yaml

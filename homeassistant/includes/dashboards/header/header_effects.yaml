@@ -1,0 +1,19 @@
+# Cinematic Header - Atmospheric Effects Layer
+# This file defines the gradient, glow, and ambient styling behind the header.
+
+type: custom:mod-card
+style: |
+  ha-card {
+    background: linear-gradient(
+      to bottom,
+      var(--header-gradient-top),
+      var(--header-gradient-bottom)
+    );
+    box-shadow: 0 0 40px var(--header-glow-color);
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+  }
+card:
+  type: custom:button-card
+  template: header_effects_background

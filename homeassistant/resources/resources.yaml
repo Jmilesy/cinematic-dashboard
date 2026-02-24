@@ -1,0 +1,22 @@
+# Resource Loader for Cinematic Dashboard
+# All custom cards, JS, and CSS files are declared here.
+
+# Example custom card includes (add/remove as needed)
+# - url: /local/custom_cards/button-card.js
+#   type: module
+# - url: /local/custom_cards/apexcharts-card.js
+#   type: module
+
+# JS Resources
+# - url: /local/js/custom-helpers.js
+#   type: module
+
+# CSS Resources
+# - url: /local/css/cinematic.css
+#   type: css
+
+- url: /hacsfiles/button-card/button-card.js
+  type: module
+
+- url: /hacsfiles/vertical-stack-in-card/vertical-stack-in-card.js
+  type: module

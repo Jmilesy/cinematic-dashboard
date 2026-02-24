@@ -1,0 +1,3 @@
+# Media Now Playing Card - Stub
+type: custom:button-card
+template: media_now_playing_block

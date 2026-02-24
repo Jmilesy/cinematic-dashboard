@@ -1,0 +1,31 @@
+# Global Templates - Cinematic Dashboard
+# Shared button-card templates, styles, and reusable UI elements.
+
+button_card_templates:
+
+  # Section Header Template
+  section_header:
+    styles:
+      card:
+        - background: var(--section-header-bg)
+        - padding: 12px 16px
+        - border-radius: 12px
+        - font-size: 1.2rem
+        - font-weight: 600
+        - color: var(--section-header-text)
+        - box-shadow: none
+    tap_action:
+      action: none
+
+  # Base Block Template (all blocks inherit from this)
+  base_block:
+    show_icon: false
+    show_name: false
+    show_state: false
+    styles:
+      card:
+        - background: var(--block-bg)
+        - border-radius: 16px
+        - padding: 16px
+        - box-shadow: var(--block-shadow)
+        - color: var(--block-text)
