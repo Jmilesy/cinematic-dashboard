@@ -1,0 +1,19 @@
+###############################################################
+# CINEMATIC V2 DASHBOARD - ENTRY POINT
+# Location: config/lovelace/cinematic-v2.yaml
+#
+# Second dashboard for testing the new cinematic design.
+# Source of truth: experiments/claude/lovelace/cinematic-v2.yaml
+###############################################################
+
+title: Cinematic V2
+theme: cinematic_dark
+
+button_card_templates: !include templates/cinematic_v2_templates.yaml
+
+views:
+  - !include dashboards/views/cinematic_home.yaml
+  - !include dashboards/views/cinematic_climate.yaml
+  - !include dashboards/views/cinematic_lighting.yaml
+  - !include dashboards/views/cinematic_media.yaml
+  - !include dashboards/views/cinematic_system.yaml

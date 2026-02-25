@@ -1,0 +1,21 @@
+###############################################################
+# CINEMATIC HEADER CARD
+# Location: config/lovelace/dashboards/cards/cinematic_header_card.yaml
+#
+# 3-column header: Time | Weather | Presence
+# Included in: cinematic_home.yaml (home view only — first pass)
+#
+# Sensors used (all exist on live HA):
+#   sensor.header_current_time
+#   sensor.header_weather_summary
+#   sensor.family_presence_summary
+###############################################################
+
+type: horizontal-stack
+cards:
+  - type: custom:button-card
+    template: header_time_block
+  - type: custom:button-card
+    template: header_weather_block
+  - type: custom:button-card
+    template: header_presence_block

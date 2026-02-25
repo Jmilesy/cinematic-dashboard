@@ -2,15 +2,36 @@
   "folders": [
     {
       "name": "Dashboard Config",
-      "path": "."
-    }
+      "path": ".",
+    },
+    {
+      "name": "HA Live Config",
+      "path": "\\\\192.168.1.104\\config",
+    },
   ],
+  "settings": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "files.associations": {
+      "*.yaml": "home-assistant",
+      "compose.yml": "yaml",
+      "compose.yaml": "yaml",
+      "compose.*.yml": "yaml",
+      "compose.*.yaml": "yaml",
+      "docker-compose.yml": "yaml",
+      "docker-compose.yaml": "yaml",
+      "docker-compose.*.yml": "yaml",
+      "docker-compose.*.yaml": "yaml",
+      "esphome/**/*.yml": "esphome",
+      "esphome/**/*.yaml": "esphome",
+    },
+  },
   "extensions": {
     "recommendations": [
       "redhat.vscode-yaml",
       "keesschollaart.vscode-home-assistant",
       "eamodio.gitlens",
-      "esbenp.prettier-vscode"
-    ]
-  }
+      "esbenp.prettier-vscode",
+    ],
+  },
 }

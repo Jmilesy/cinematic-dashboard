@@ -1,0 +1,23 @@
+###############################################################
+# SYSTEM VIEW - CINEMATIC V2
+# Location: config/lovelace/dashboards/views/cinematic_system.yaml
+###############################################################
+
+title: System
+path: cinematic-system
+icon: mdi:server
+
+cards:
+  - type: custom:button-card
+    template: section_header
+    name: System Status
+
+  - type: custom:button-card
+    template: system_overview_block
+
+  - type: custom:button-card
+    template: section_header
+    name: Network
+
+  - type: custom:button-card
+    template: network_status_block

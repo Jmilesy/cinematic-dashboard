@@ -1,0 +1,23 @@
+###############################################################
+# MANUAL DEPLOY - configuration.yaml snippet
+#
+# Add this block under the existing lovelace.dashboards section.
+#
+# Find this in /config/configuration.yaml:
+#
+#   lovelace:
+#     dashboards:
+#       cinematic-dashboard:
+#         mode: yaml
+#         title: Cinematic
+#         ...
+#
+# Add directly below the cinematic-dashboard block:
+###############################################################
+
+    cinematic-v2:
+      mode: yaml
+      title: Cinematic V2
+      icon: mdi:filmstrip
+      show_in_sidebar: true
+      filename: lovelace/cinematic-v2.yaml

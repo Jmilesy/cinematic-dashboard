@@ -1,0 +1,28 @@
+###############################################################
+# HOME VIEW - CINEMATIC V2
+# Location: config/lovelace/dashboards/views/cinematic_home.yaml
+#
+# The only view with the cinematic header card (first pass).
+# Other views will receive it in a later iteration.
+###############################################################
+
+title: Home
+path: cinematic-home
+icon: mdi:home
+
+cards:
+  - !include ../cards/cinematic_header_card.yaml
+
+  - type: custom:button-card
+    template: section_header
+    name: Overview
+
+  - type: custom:button-card
+    template: presence_summary_block
+
+  - type: custom:button-card
+    template: section_header
+    name: Weather
+
+  - type: custom:button-card
+    template: weather_block

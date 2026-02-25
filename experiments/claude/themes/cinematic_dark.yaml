@@ -1,0 +1,61 @@
+# Cinematic Dark Theme
+# Deep blacks, soft glows, neon accents.
+# Source: experiments/claude/themes/cinematic_dark.yaml
+# Deploy to: config/themes/cinematic_dark.yaml
+
+cinematic_dark:
+
+  # Core Backgrounds
+  background-color: "#0d0f12"
+  card-background-color: "#16181d"
+  block-bg: "#1c1f24"
+  section-header-bg: "#1a1d22"
+
+  # Text
+  primary-text-color: "#ffffff"
+  secondary-text-color: "#b6b9c0"
+  block-text: "#e5e7eb"
+  section-header-text: "#e5e7eb"
+
+  # Header
+  header-time-color: "#ffffff"
+  header-weather-color: "#cfd2d9"
+  header-presence-color: "#cfd2d9"
+
+  # Gradients
+  header-gradient-top: "rgba(0,0,0,0.6)"
+  header-gradient-bottom: "rgba(0,0,0,0)"
+  gradient-top: "rgba(255,255,255,0.04)"
+  gradient-bottom: "rgba(255,255,255,0)"
+
+  # Glows
+  header-glow-color: "rgba(0, 150, 255, 0.25)"
+  soft-glow-color: "rgba(0, 150, 255, 0.15)"
+  icon-glow-color: "rgba(0, 150, 255, 0.4)"
+
+  # Icon colours
+  weather-icon-color: "#7dc8ff"
+  climate-icon-color: "#ffb86c"
+  humidity-icon-color: "#7dc8ff"
+  lighting-icon-color: "#ffd479"
+  scene-icon-color: "#c792ea"
+  media-icon-color: "#7dc8ff"
+  media-device-icon-color: "#7dc8ff"
+  system-icon-color: "#9cdcfe"
+  network-icon-color: "#9cdcfe"
+
+  # Shadows
+  block-shadow: "0 4px 12px rgba(0,0,0,0.4)"
+
+  # Header background
+  header-background: >-
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.65) 0%,
+      rgba(0, 0, 0, 0.35) 40%,
+      rgba(0, 0, 0, 0.15) 100%
+    )
+
+  # Header effect variables
+  header-glow-strength: "18px"
+  header-blur-amount: "12px"
