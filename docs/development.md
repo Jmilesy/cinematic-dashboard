@@ -1,121 +1,245 @@
-# Theming Architecture
+# Development Workflow & Collaboration Rules
 
-This document explains how themes are structured, named, and used within the Cinematic Dashboard.  
-Themes control the visual identity of the UI — colours, typography, shadows, transitions, and atmospheric effects.
+This document defines how development is carried out in this repository.  
+It applies to Jon and all AI collaborators (Copilot, ChatGPT, Claude, Gemini,
+Grok).
 
-The goal is to maintain a clean, modular, AI‑friendly theming system that supports both light and dark modes.
+This repo is a **documentation hub**, a **reference architecture**, and a
+**development space** for the cinematic dashboard.  
+It is **not** Jon’s live Home Assistant configuration.
 
----
+All YAML in this repo is **example‑only** and lives in:
 
-## 🎨 Purpose of Themes
+- `/config-examples`
+- `/experiments`
 
-Themes exist to:
-- define the colour palette  
-- control typography  
-- set shadows and elevations  
-- define card backgrounds  
-- manage transitions and animations  
-- unify the visual identity across all views  
-
-Themes **never** contain:
-- sensors  
-- templates  
-- card layout  
-- view logic  
-
-Those belong elsewhere.
+Jon manually copies improvements into his real HA when ready.
 
 ---
 
-## 📁 Theme Folder Structure
+## 🎯 Purpose of This Document
 
-Themes live in:
+- Define how changes are made
+- Prevent drift or destructive edits
+- Ensure all AIs follow the same rules
+- Document decisions and architecture evolution
+- Maintain a clean, future‑proof structure
+- Support safe experimentation
 
-homeassistant/includes/themes/
-
-Files:
-- cinematic_dark.yaml  
-- cinematic_light.yaml  
-
-Each file contains only theme definitions.
-
----
-
-## 🌗 Theme Types
-
-### 1. Cinematic Dark
-A deep, atmospheric theme designed for:
-- evening use  
-- OLED displays  
-- cinematic header effects  
-- high‑contrast UI elements  
-
-Dark mode uses:
-- rich blacks  
-- deep greys  
-- neon accents  
-- soft glows  
-- subtle gradients  
+This is part of the **Home Assistant Bible**.
 
 ---
 
-### 2. Cinematic Light
-A bright, clean theme designed for:
-- daytime use  
-- tablets and mobile  
-- high‑visibility UI elements  
+# 🧠 Core Development Principles
 
-Light mode uses:
-- soft whites  
-- muted greys  
-- pastel accents  
-- gentle shadows  
-- minimal gradients  
+### **1. Documentation First**
 
----
+All architectural decisions must be documented in `/docs` before or alongside
+implementation.
 
-## 🧠 Naming Conventions
+### **2. No Direct Production Changes**
 
-Themes follow this pattern:
+Jon’s real Home Assistant is **not** linked to GitHub.  
+Nothing in this repo is deployed automatically.
 
-- lowercase  
-- underscores  
-- descriptive names  
+### **3. Reference-Only YAML**
+
+All YAML in this repo is:
+
+- safe
+- illustrative
+- modular
+- non-destructive
+
+### **4. Experiments Are Isolated**
+
+All prototypes live in `/experiments`, especially:
+
+- cinematic header
+- prototype dashboards
+- prototype cards
+- prototype themes
+
+### **5. Modularity Above All**
+
+Every logical component lives in its own file:
+
+- sensors
+- templates
+- dashboards
+- themes
+- resources
+
+### **6. Predictable Naming**
+
+All filenames use:
+
+- lowercase
+- underscores
+- descriptive names
 
 Examples:
-- cinematic_dark  
-- cinematic_light  
+
+- `header_sensors.yaml`
+- `presence_summary.yaml`
+- `cinematic_header.yaml`
+
+### **7. Zero Duplication**
+
+If logic exists in:
+
+- sensors → do not duplicate in templates
+- templates → do not duplicate in dashboards
+- dashboards → do not duplicate across views
 
 ---
 
-## 🛑 Rules for Theme Editing
+# 📁 Development Areas
 
-1. Never embed sensors or templates in themes.  
-2. Never duplicate colour definitions — use variables.  
-3. Never mix dark and light logic in the same file.  
-4. Never modify multiple theme files at once.  
-5. Always maintain consistent naming across both themes.  
+### **1. Documentation Layer (`/docs`)**
+
+The HA Bible.  
+Defines:
+
+- architecture
+- naming conventions
+- sensors
+- templates
+- dashboards
+- theming
+- development rules
+
+### **2. Reference Config Layer (`/config-examples`)**
+
+Contains:
+
+- example sensors
+- example templates
+- example dashboards
+- example themes
+- example resources
+
+These are **not** Jon’s real HA files.
+
+### **3. Experimental Layer (`/experiments`)**
+
+Contains:
+
+- cinematic header
+- prototype dashboards
+- prototype cards
+- prototype themes
+- prototype resources
+
+This is the **active development space**.
+
+### **4. Assets Layer (`/assets`)**
+
+Contains:
+
+- icons
+- backgrounds
+- header images
+- mockups
+
+Used for UI development and documentation.
 
 ---
 
-## 🧠 AI Collaboration Notes
+# 🧩 AI Collaboration Rules
 
-When editing themes:
-- Always specify which theme file you are modifying  
-- Never create new themes without confirming naming  
-- Never remove variables unless confirmed  
-- Keep colour variables readable and consistent  
-- Maintain strict separation of concerns  
+These rules ensure safe, predictable, high‑quality collaboration.
+
+### **1. Never modify multiple conceptual areas in one change**
+
+Example:
+
+- editing sensors + dashboards in the same change = ❌
+- editing only sensors = ✔
+
+### **2. Always state which file you are editing**
+
+Example:
+
+> “Updating: config-examples/homeassistant/includes/sensors/header_sensors.yaml”
+
+### **3. Never remove entities or files unless Jon confirms**
+
+Deletions require explicit approval.
+
+### **4. Never add inline templates to dashboards**
+
+Logic belongs in:
+
+- sensors
+- templates
+
+Not in dashboards.
+
+### **5. Always follow naming conventions**
+
+Lowercase, underscores, descriptive.
+
+### **6. Treat `/config-examples` as reference-only**
+
+Never assume these files exist in Jon’s real HA.
+
+### **7. Treat `/experiments` as sandbox-only**
+
+Safe for:
+
+- prototypes
+- drafts
+- new ideas
+
+### **8. Document decisions in this file**
+
+Any architectural or structural decision must be logged here.
 
 ---
 
-## 🚀 Long‑Term Vision
+# 📝 Decision Logging Format
 
-Themes will evolve to support:
-- dynamic colour shifts  
-- animated header gradients  
-- seasonal palettes  
-- adaptive brightness  
-- richer atmospheric effects  
+Every decision should be logged like this:
 
-This document ensures all future theme logic remains consistent, modular, and maintainable.
+## Decision: [Short Title]
+
+**Date:** YYYY-MM-DD  
+**Summary:**  
+A short description of the change or rule.  
+**Reasoning:**  
+Why the decision was made.  
+**Impact:**  
+What it affects.  
+**Files Updated:**  
+List of files.
+
+Example:
+
+## Decision: Adopt Cinematic Header Architecture
+
+**Date:** 2026-02-24  
+**Summary:**  
+The cinematic header becomes the foundation for the unified dashboard UI.  
+**Reasoning:**  
+Provides a consistent, atmospheric UI anchor.  
+**Impact:**  
+Dashboards, themes, sensors, templates.  
+**Files Updated:**
+
+- experiments/cinematic-header/...
+
+---
+
+# 🚀 Long-Term Development Vision
+
+- A fully documented, future-proof HA architecture
+- A unified cinematic dashboard experience
+- A clean, modular sensor and template system
+- A reusable header module
+- A repo that all AIs can safely extend
+- Zero drift
+- Zero duplication
+- Zero dead entities
+
+This document defines how the system evolves safely over time.

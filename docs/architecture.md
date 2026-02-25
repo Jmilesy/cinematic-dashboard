@@ -1,122 +1,200 @@
 # Home Assistant Architecture Overview
 
-This document explains the structure, philosophy, and long‑term design goals of the Cinematic Dashboard architecture.  
-It is written to be AI‑friendly, modular, and safe for multi‑model collaboration.
+This document defines the architecture, structure, and long‑term design
+philosophy of Jon’s Home Assistant system as represented in this repository.
+
+It describes the **reference architecture**, not Jon’s live Home Assistant
+configuration.  
+All YAML in this repo is **example‑only** and lives in `/config-examples` or
+`/experiments`.
+
+Jon’s real Home Assistant remains **local**, **private**, and **not linked to
+GitHub**.
 
 ---
 
-## 🎯 Core Principles
+## 🎯 Purpose of This Document
 
-### 1. Modularity
+- Provide a clear, authoritative description of the Home Assistant architecture
+- Define naming conventions and folder structure
+- Explain how sensors, templates, dashboards, and themes are organised
+- Document the cinematic dashboard development model
+- Ensure all AIs follow the same rules and structure
+- Prevent drift, duplication, or destructive changes
+
+This is part of the **Home Assistant Bible**.
+
+---
+
+## 🧱 High-Level Architecture
+
+The architecture is built around four core layers:
+
+### 1. **Documentation Layer** (`/docs`)
+
+The HA Bible:
+
+- architecture
+- naming conventions
+- sensors
+- templates
+- dashboards
+- theming
+- development workflow
+
+This is the **source of truth** for all AIs.
+
+### 2. **Reference Configuration Layer** (`/config-examples`)
+
+Contains:
+
+- example sensors
+- example templates
+- example dashboards
+- example themes
+- example resources
+
+These are **illustrative only**.  
+Jon manually copies improvements into his real HA when ready.
+
+### 3. **Experimental Layer** (`/experiments`)
+
+Contains:
+
+- cinematic header module
+- prototype dashboards
+- prototype cards
+- prototype themes
+- UI experiments
+
+This is the **sandbox** for new ideas.
+
+### 4. **Assets Layer** (`/assets`)
+
+Contains:
+
+- icons
+- backgrounds
+- header images
+- mockups
+
+Used for documentation and UI development.
+
+---
+
+## 📁 Repository Structure (Explained)
+
+### `/docs`
+
+The HA Bible.  
+Defines the architecture and rules.
+
+### `/config-examples`
+
+Reference-only Home Assistant YAML.  
+Not Jon’s live config.
+
+### `/experiments`
+
+Cinematic dashboard development space.  
+Contains:
+
+- header components
+- dashboard prototypes
+- card prototypes
+- view layouts
+- themes
+- resources
+
+### `/assets`
+
+Images and visual resources.
+
+### `README.md`
+
+Explains the dual purpose of the repo:
+
+- HA Bible
+- Cinematic Dashboard Development Hub
+
+---
+
+## 🧩 Architectural Principles
+
+### **1. Modularity**
+
 Every logical component lives in its own file:
-- Sensors  
-- Templates  
-- Dashboards  
-- Themes  
-- Resources  
 
-This prevents merge conflicts and makes AI‑assisted editing safe.
+- sensors
+- templates
+- dashboards
+- themes
+- resources
 
-### 2. Predictable Structure
+This prevents merge conflicts and makes AI-assisted editing safe.
+
+### **2. Predictable Structure**
+
 All includes follow the same pattern:
 
-homeassistant/includes/sensors  
-homeassistant/includes/templates  
-homeassistant/includes/dashboards  
-homeassistant/includes/themes  
+config-examples/ homeassistant/ includes/ sensors/ templates/ dashboards/
+themes/ resources/
 
-This ensures any AI can locate the correct file instantly.
+### **3. Clean Separation of Concerns**
 
-### 3. Clean Separation of Concerns
-- Sensors = data  
-- Templates = formatting logic  
-- Dashboards = UI  
-- Themes = styling  
-- Resources = JS/CSS/custom cards  
+- Sensors = data
+- Templates = logic
+- Dashboards = UI
+- Themes = styling
+- Resources = JS/CSS/custom cards
 
-No file mixes responsibilities.
+### **4. AI-Friendly Naming**
 
-### 4. AI‑Friendly Naming
 All files use:
-- lowercase  
-- underscores  
-- descriptive names  
 
-Example: header_sensors.yaml, presence_summary.yaml
+- lowercase
+- underscores
+- descriptive names
 
-### 5. Future‑Proofing
-The architecture avoids:
-- deprecated integrations  
-- dead entities  
-- inline YAML duplication  
-- monolithic dashboards  
+Examples:
 
-Everything is built for long‑term maintainability.
+- `header_sensors.yaml`
+- `presence_summary.yaml`
+- `cinematic_header.yaml`
 
----
+### **5. Future-Proofing**
 
-## 📁 Folder Breakdown
+Avoid:
 
-### sensors/
-Contains all sensor definitions:
-- header sensors  
-- presence sensors  
-- system sensors  
-- weather sensors  
+- deprecated integrations
+- dead entities
+- inline YAML duplication
+- monolithic dashboards
 
-Each file contains only sensor: blocks.
-
-### templates/
-Contains all Jinja templates:
-- header templates  
-- card templates  
-- utility templates  
-
-Each file contains only template: blocks.
-
-### dashboards/
-Contains the entire Lovelace UI:
-- ui-lovelace.yaml (entry point)
-- header components  
-- views  
-- cards  
-
-Each card/view/header is isolated for clarity.
-
-### themes/
-Contains theme definitions:
-- cinematic_dark  
-- cinematic_light  
-
-Themes are modular and override‑friendly.
-
-### resources/
-Contains:
-- custom cards  
-- JS  
-- CSS  
-
-This keeps all external resources organised.
+Everything is built for long-term maintainability.
 
 ---
 
-## 🧠 AI Collaboration Rules
+## 🧠 AI Collaboration Rules (Architecture-Level)
 
-1. Never modify multiple files at once.  
-2. Always state which file you are editing.  
-3. Never create new sensors/templates without confirming naming.  
-4. Never remove entities unless confirmed.  
-5. Always maintain modularity.
+1. Never modify multiple conceptual areas in one change.
+2. Always state which file you are editing.
+3. Never remove entities unless confirmed.
+4. Always follow naming conventions.
+5. Treat `/config-examples` as reference-only.
+6. Treat `/experiments` as sandbox-only.
+7. Document architectural decisions in `development.md`.
 
 ---
 
-## 🏗 Long‑Term Vision
+## 🏗 Long-Term Vision
 
-- A cinematic, atmospheric dashboard  
-- A clean, unified sensor architecture  
-- A fully documented, AI‑extendable system  
-- Zero duplication  
-- Zero dead entities  
-- Zero deprecated integrations  
+- A fully documented, future-proof HA architecture
+- A unified cinematic dashboard experience
+- A clean, modular sensor and template system
+- A repo that all AIs can safely collaborate on
+- Zero drift
+- Zero duplication
+- Zero dead entities
 
-This repo is the foundation for that system.
+This document defines the foundation for that system.

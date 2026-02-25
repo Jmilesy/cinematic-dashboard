@@ -1,130 +1,173 @@
-# Template Architecture
+# Template Architecture & Logic Conventions
 
-This document explains how Jinja templates are structured, named, and used within the Cinematic Dashboard.  
-Templates are responsible for formatting, transforming, and presenting data — never for storing or generating it.
+This document defines how templates are structured, named, and used within this
+repository. It describes the reference template architecture, not Jon’s live
+Home Assistant configuration.
 
-The goal is to maintain a clean, modular, AI‑friendly system where all logic is centralised and reusable.
+All template YAML in this repo is example‑only and lives in:
 
----
+- config-examples/homeassistant/includes/templates/
+- experiments/cinematic-header/homeassistant/includes/templates/
 
-## 🎯 Purpose of Templates
-
-Templates exist to:
-- format sensor values  
-- compute derived values  
-- generate UI‑ready strings  
-- unify repeated logic across cards  
-- keep dashboards clean and declarative  
-
-Templates **never** contain:
-- entity IDs  
-- raw sensor definitions  
-- card layout  
-- view logic  
-
-Those belong elsewhere.
+Jon’s real templates remain local, private, and not linked to GitHub.
 
 ---
 
-## 📁 Template Folder Structure
+## Purpose
 
-Templates live in:
-
-homeassistant/includes/templates/
-
-Files:
-- header_templates.yaml  
-- card_templates.yaml  
-- utility_templates.yaml  
-
-Each file contains only template: blocks.
+- Define how templates are organised
+- Establish naming conventions
+- Explain the relationship between templates, sensors, and dashboards
+- Document the cinematic header template model
+- Provide a safe reference for all AIs
+- Prevent drift or destructive changes
 
 ---
 
-## 🧩 Template Types
+# Template Categories
 
-### 1. Header Templates
+## 1. Header Templates
+
 Used by the cinematic header for:
-- time formatting  
-- date formatting  
-- weather summaries  
-- presence summaries  
-- dynamic colour shifts  
-- atmospheric effects  
 
-These templates keep the header YAML clean and readable.
+- greetings
+- weather icons
+- time formatting
+- presence summaries
+- ambient effects
 
----
+Location:
+experiments/cinematic-header/homeassistant/includes/templates/header_templates.yaml
 
-### 2. Card Templates
-Reusable formatting for cards:
-- waste collection labels  
-- presence badges  
-- weather icons  
-- temperature formatting  
-- battery formatting  
+## 2. Global Templates
 
-If two cards need the same formatting, it becomes a template.
+Reusable logic shared across dashboards, cards, and sensors.
 
----
+Location: config-examples/homeassistant/includes/templates/global_templates.yaml
 
-### 3. Utility Templates
-General‑purpose helpers:
-- string manipulation  
-- number formatting  
-- conditional logic  
-- icon selection  
-- colour selection  
+## 3. Card Templates
 
-These are used across multiple views and cards.
+Reusable UI logic for blocks, summaries, indicators, and status components.
+
+Location: config-examples/homeassistant/includes/templates/card_templates.yaml
+
+## 4. Utility Templates
+
+Small helper functions for formatting, icons, and conditional logic.
+
+Location:
+config-examples/homeassistant/includes/templates/utility_templates.yaml
 
 ---
 
-## 🧠 Naming Conventions
+# Template Philosophy
 
-Templates follow this pattern:
+## Templates = Logic Layer
 
-- lowercase  
-- underscores  
-- descriptive names  
-- no abbreviations unless universally understood  
+Templates contain:
+
+- formatting
+- computed values
+- conditional logic
+- string manipulation
+- icon selection
+
+Templates do NOT contain:
+
+- raw sensor data
+- UI layout
+- styling
+- dashboard-specific behaviour
+
+## Sensors = Data Layer
+
+Raw values belong in sensors, not templates.
+
+## Dashboards = Presentation Layer
+
+Dashboards read template outputs and never compute logic.
+
+## Zero Duplication
+
+If logic exists in templates, do not duplicate it in dashboards or sensors.
+
+---
+
+# Folder Structure
+
+config-examples/ homeassistant/ includes/ templates/ card_templates.yaml
+global_templates.yaml header_templates.yaml utility_templates.yaml
+
+experiments/ cinematic-header/ homeassistant/ includes/ templates/
+header_templates.yaml
+
+---
+
+# Naming Conventions
+
+General rules:
+
+- lowercase
+- underscores
+- descriptive names
+- no spaces
+- no hyphens
 
 Examples:
-- header_time  
-- header_weather_summary  
-- card_battery_status  
-- util_round_temperature  
+
+- template.header_greeting
+- template.weather_icon
+- template.format_temperature
+- template.presence_summary
+
+Header templates must begin with: header\_
+
+Examples:
+
+- template.header_greeting
+- template.header_weather_icon
+- template.header_time_string
 
 ---
 
-## 🛑 Rules for Template Editing
+# Template File Structure
 
-1. Never embed entity IDs in templates.  
-2. Never duplicate logic — reuse or extend existing templates.  
-3. Never mix template types (header logic stays in header_templates).  
-4. Never modify multiple template files at once.  
-5. Always check for existing helpers before creating new ones.  
+template:
 
----
+- name: "Descriptive Name" unique_id: something_unique state: > {{ ... }}
 
-## 🧠 AI Collaboration Notes
+Rules:
 
-When editing templates:
-- Always specify which file you are modifying  
-- Never create new templates without confirming naming  
-- Never remove templates unless confirmed  
-- Keep logic readable and well‑commented  
-- Maintain strict separation of concerns  
+- Always include unique_id
+- Keep logic readable
+- Use Jinja only for computation
+- Offload raw values to sensors
+- Offload UI to dashboards
 
 ---
 
-## 🚀 Long‑Term Vision
+# AI Collaboration Rules (Template-Level)
 
-Templates will evolve to support:
-- dynamic colour themes  
-- animated header effects  
-- richer presence summaries  
-- advanced weather formatting  
-- reusable card components  
+1. Never modify multiple template files in one change.
+2. Always state which file you are editing.
+3. Never remove templates unless Jon confirms.
+4. Never duplicate logic across templates.
+5. Never add UI logic to templates.
+6. Always follow naming conventions.
+7. Treat experiments/ as sandbox-only.
+8. Document decisions in development.md.
 
-This document ensures all future template logic remains consistent, modular, and maintainable.
+---
+
+# Long-Term Vision
+
+- Clean, modular template architecture
+- Unified header template model
+- Zero duplication
+- Zero dead logic
+- Safe AI collaboration
+- Future-proof foundation for the cinematic dashboard
+
+This document defines the foundation for the template layer.
+
+---

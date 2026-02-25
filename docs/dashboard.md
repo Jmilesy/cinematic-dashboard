@@ -1,122 +1,225 @@
-# Home Assistant Architecture Overview
+# Dashboard Architecture & Cinematic UI Design
 
-This document explains the structure, philosophy, and long‑term design goals of the Cinematic Dashboard architecture.  
-It is written to be AI‑friendly, modular, and safe for multi‑model collaboration.
+This document defines the dashboard philosophy, structure, and development
+workflow used in this repository.  
+It describes the **reference dashboard architecture**, not Jon’s live Home
+Assistant configuration.
 
----
+All dashboard YAML in this repo is **example‑only** and lives in:
 
-## 🎯 Core Principles
+- `/config-examples/homeassistant/includes/dashboards/`
+- `/experiments/cinematic-header/homeassistant/includes/dashboards/`
 
-### 1. Modularity
-Every logical component lives in its own file:
-- Sensors  
-- Templates  
-- Dashboards  
-- Themes  
-- Resources  
-
-This prevents merge conflicts and makes AI‑assisted editing safe.
-
-### 2. Predictable Structure
-All includes follow the same pattern:
-
-homeassistant/includes/sensors  
-homeassistant/includes/templates  
-homeassistant/includes/dashboards  
-homeassistant/includes/themes  
-
-This ensures any AI can locate the correct file instantly.
-
-### 3. Clean Separation of Concerns
-- Sensors = data  
-- Templates = formatting logic  
-- Dashboards = UI  
-- Themes = styling  
-- Resources = JS/CSS/custom cards  
-
-No file mixes responsibilities.
-
-### 4. AI‑Friendly Naming
-All files use:
-- lowercase  
-- underscores  
-- descriptive names  
-
-Example: header_sensors.yaml, presence_summary.yaml
-
-### 5. Future‑Proofing
-The architecture avoids:
-- deprecated integrations  
-- dead entities  
-- inline YAML duplication  
-- monolithic dashboards  
-
-Everything is built for long‑term maintainability.
+Jon’s real dashboards remain **local**, **private**, and **not linked to
+GitHub**.
 
 ---
 
-## 📁 Folder Breakdown
+## 🎬 Purpose of This Document
 
-### sensors/
-Contains all sensor definitions:
-- header sensors  
-- presence sensors  
-- system sensors  
-- weather sensors  
+- Define the structure of dashboards in this repo
+- Document the cinematic dashboard design philosophy
+- Explain how views, cards, and headers are organised
+- Provide a safe reference for all AIs
+- Prevent drift, duplication, or destructive changes
+- Support ongoing development of the cinematic header
 
-Each file contains only sensor: blocks.
+This is part of the **Home Assistant Bible**.
 
-### templates/
-Contains all Jinja templates:
-- header templates  
-- card templates  
-- utility templates  
+---
 
-Each file contains only template: blocks.
+## 🧱 Dashboard Layers
 
-### dashboards/
-Contains the entire Lovelace UI:
-- ui-lovelace.yaml (entry point)
-- header components  
-- views  
-- cards  
+The dashboard system in this repo is built around three layers:
 
-Each card/view/header is isolated for clarity.
+### 1. **Reference Dashboards** (`/config-examples`)
 
-### themes/
-Contains theme definitions:
-- cinematic_dark  
-- cinematic_light  
+Contains simple, clean example dashboards showing:
 
-Themes are modular and override‑friendly.
+- layout structure
+- card organisation
+- view separation
+- naming conventions
 
-### resources/
+These are **illustrative only**.
+
+### 2. **Cinematic Dashboard Experiments** (`/experiments/cinematic-header`)
+
 Contains:
-- custom cards  
-- JS  
-- CSS  
 
-This keeps all external resources organised.
+- the cinematic header
+- atmospheric effects
+- prototype cards
+- prototype views
+- prototype themes
+
+This is the **active development space** for the cinematic UI.
+
+### 3. **Documentation Layer** (`/docs`)
+
+Defines:
+
+- dashboard rules
+- naming conventions
+- layout philosophy
+- AI collaboration rules
+
+This is the **source of truth** for all AIs.
 
 ---
 
-## 🧠 AI Collaboration Rules
+## 📁 Dashboard Folder Structure
 
-1. Never modify multiple files at once.  
-2. Always state which file you are editing.  
-3. Never create new sensors/templates without confirming naming.  
-4. Never remove entities unless confirmed.  
-5. Always maintain modularity.
+Dashboards in this repo follow a predictable structure:
+
+config-examples/ homeassistant/ includes/ dashboards/ ui-lovelace.yaml views/
+cards/ header/
+
+experiments/ cinematic-header/ homeassistant/ includes/ dashboards/
+ui-lovelace.yaml views/ cards/ header/
 
 ---
 
-## 🏗 Long‑Term Vision
+## 🧩 Dashboard Components
 
-- A cinematic, atmospheric dashboard  
-- A clean, unified sensor architecture  
-- A fully documented, AI‑extendable system  
-- Zero duplication  
-- Zero dead entities  
-- Zero deprecated integrations  
+### **1. ui-lovelace.yaml**
 
-This repo is the foundation for that system.
+The entry point for the dashboard.
+
+Defines:
+
+- theme
+- header
+- navigation
+- view includes
+
+### **2. Views**
+
+Each view lives in its own file.
+
+Examples:
+
+- `home.yaml`
+- `climate.yaml`
+- `lighting.yaml`
+- `media.yaml`
+- `system.yaml`
+
+Views must:
+
+- be modular
+- contain no inline templates
+- reference cards via includes
+
+### **3. Cards**
+
+Each card lives in its own file.
+
+Examples:
+
+- `presence_summary.yaml`
+- `weather_block.yaml`
+- `system_overview.yaml`
+- `media_now_playing.yaml`
+- `waste_collection.yaml`
+
+Cards must:
+
+- be self‑contained
+- use templates where possible
+- avoid inline logic
+
+### **4. Header**
+
+The cinematic header lives in:
+
+`/experiments/cinematic-header/homeassistant/includes/dashboards/header/`
+
+It contains:
+
+- `cinematic_header.yaml`
+- `header_effects.yaml`
+
+This is the **prototype** for the future unified header.
+
+---
+
+## 🎨 Cinematic Dashboard Philosophy
+
+The cinematic dashboard aims to be:
+
+- atmospheric
+- immersive
+- clean
+- modular
+- responsive
+- theme‑driven
+- animation‑aware
+
+Key principles:
+
+### **1. Minimal inline YAML**
+
+Logic belongs in:
+
+- sensors
+- templates
+- themes
+
+Not in dashboards.
+
+### **2. Modular views**
+
+Each view focuses on a single domain:
+
+- climate
+- lighting
+- media
+- system
+- home
+
+### **3. Reusable cards**
+
+Cards should be:
+
+- portable
+- template‑driven
+- visually consistent
+
+### **4. Header as a UI anchor**
+
+The cinematic header provides:
+
+- weather
+- time
+- presence
+- system state
+- ambient effects
+
+It is the “cinematic identity” of the dashboard.
+
+---
+
+## 🧠 AI Collaboration Rules (Dashboard-Level)
+
+1. Never modify multiple views or cards in one change.
+2. Always state which file you are editing.
+3. Never add inline templates to dashboards.
+4. Always use templates from `/config-examples` or `/experiments`.
+5. Never remove cards or views unless confirmed.
+6. Treat `/experiments` as the active development space.
+7. Document UI decisions in `development.md`.
+
+---
+
+## 🚀 Long-Term Vision
+
+- A unified cinematic dashboard
+- A reusable header module
+- A clean, modular card library
+- A fully documented UI architecture
+- A repo that all AIs can safely extend
+- Zero drift
+- Zero duplication
+
+This document defines the foundation for the dashboard layer.

@@ -1,143 +1,179 @@
-# Sensor Architecture
+# Sensor Architecture & Naming Conventions
 
-This document explains how sensors are structured, named, and organised within the Cinematic Dashboard.  
-Sensors provide the raw data that powers the entire UI — presence, weather, system status, header logic, and more.
+This document defines how sensors are structured, named, and used within this
+repository.  
+It describes the **reference sensor architecture**, not Jon’s live Home
+Assistant configuration.
 
-All sensors are defined in modular include files to keep the configuration clean, maintainable, and AI‑friendly.
+All sensor YAML in this repo is **example‑only** and lives in:
 
----
+- `/config-examples/homeassistant/includes/sensors/`
+- `/experiments/cinematic-header/homeassistant/includes/sensors/`
 
-## 🎯 Purpose of Sensors
-
-Sensors exist to:
-- gather raw data from integrations  
-- normalise entity values  
-- compute derived values for templates  
-- provide clean, predictable inputs for dashboards  
-- separate data from presentation logic  
-
-Sensors **never** contain:
-- formatting  
-- UI logic  
-- card layout  
-- Jinja templates  
-
-Those belong in templates or dashboards.
+Jon’s real sensors remain **local**, **private**, and **not linked to GitHub**.
 
 ---
 
-## 📁 Sensor Folder Structure
+## 🎯 Purpose of This Document
 
-Sensors live in:
+- Define how sensors are organised in this repo
+- Establish naming conventions
+- Explain the relationship between sensors, templates, and dashboards
+- Document the cinematic header sensor model
+- Provide a safe reference for all AIs
+- Prevent drift, duplication, or destructive changes
 
-homeassistant/includes/sensors/
-
-Files:
-- header_sensors.yaml  
-- presence_sensors.yaml  
-- system_sensors.yaml  
-- weather_sensors.yaml  
-
-Each file contains only sensor: blocks.
+This is part of the **Home Assistant Bible**.
 
 ---
 
-## 🧩 Sensor Types
+# 🧱 Sensor Categories
 
-### 1. Header Sensors
-Used by the cinematic header for:
-- time and date  
-- weather summary  
-- presence summary  
-- dynamic colour shifts  
-- atmospheric effects  
+Sensors in this repo fall into four main categories:
 
-These sensors feed directly into header templates.
+### **1. Header Sensors**
+
+Used by the cinematic header to display:
+
+- weather
+- time
+- date
+- presence
+- system state
+- ambient effects
+
+Located in:
+`/experiments/cinematic-header/homeassistant/includes/sensors/header_sensors.yaml`
+
+### **2. Presence Sensors**
+
+Used to track:
+
+- Jon
+- Natalie
+- Jacob
+- Joseph
+
+Located in:
+`/config-examples/homeassistant/includes/sensors/presence_sensors.yaml`
+
+### **3. System Sensors**
+
+Used for:
+
+- uptime
+- CPU
+- memory
+- network
+- HA status
+
+Located in:
+`/config-examples/homeassistant/includes/sensors/system_sensors.yaml`
+
+### **4. Weather Sensors**
+
+Used for:
+
+- temperature
+- humidity
+- conditions
+- forecast
+- alerts
+
+Located in:
+`/config-examples/homeassistant/includes/sensors/weather_sensors.yaml`
 
 ---
 
-### 2. Presence Sensors
-Tracks:
-- who is home  
-- who is away  
-- last seen times  
-- device trackers  
-- occupancy summaries  
+# 🧩 Sensor Philosophy
 
-Presence sensors are unified into a single, clean structure.
+### **1. Sensors = Data Layer**
+
+Sensors should contain:
+
+- raw values
+- processed values
+- state transformations
+
+They should **not** contain:
+
+- UI logic
+- formatting
+- styling
+- card-specific behaviour
+
+### **2. Templates = Logic Layer**
+
+If a sensor requires:
+
+- formatting
+- conditional logic
+- string manipulation
+- computed states
+
+…it belongs in a **template**, not a sensor.
+
+### **3. Dashboards = Presentation Layer**
+
+Dashboards should:
+
+- read sensor values
+- never compute logic
+- never duplicate sensor behaviour
+
+### **4. Zero Duplication**
+
+If a value exists in:
+
+- sensors → do not duplicate in templates
+- templates → do not duplicate in dashboards
 
 ---
 
-### 3. System Sensors
-Monitors:
-- Home Assistant health  
-- uptime  
-- CPU load  
-- memory usage  
-- storage  
-- network status  
+# 🧱 Folder Structure
 
-These sensors power the system view and diagnostics.
+Sensors follow a predictable structure:
 
----
+config-examples/ homeassistant/ includes/ sensors/ header_sensors.yaml
+presence_sensors.yaml system_sensors.yaml weather_sensors.yaml
 
-### 4. Weather Sensors
-Provides:
-- temperature  
-- humidity  
-- wind  
-- conditions  
-- forecasts  
-
-These sensors feed the weather block and header.
+experiments/ cinematic-header/ homeassistant/ includes/ sensors/
+header_sensors.yaml
 
 ---
 
-## 🧠 Naming Conventions
+# 🧠 Naming Conventions
 
-Sensors follow this pattern:
+### **General Rules**
 
-- lowercase  
-- underscores  
-- descriptive names  
-- no abbreviations unless universally understood  
+- lowercase
+- underscores
+- descriptive names
+- no spaces
+- no hyphens
+
+### **Examples**
+
+- `sensor.jon_home`
+- `sensor.family_home_count`
+- `sensor.header_weather_icon`
+- `sensor.system_uptime`
+- `sensor.weather_feels_like`
+
+### **Header Sensor Naming**
+
+Header sensors must begin with:
+
+`header_`
 
 Examples:
-- header_time  
-- presence_anyone_home  
-- system_cpu_load  
-- weather_temperature  
+
+- `sensor.header_temperature`
+- `sensor.header_condition`
+- `sensor.header_greeting`
 
 ---
 
-## 🛑 Rules for Sensor Editing
+# 🧩 Sensor File Structure
 
-1. Never embed formatting in sensors.  
-2. Never duplicate logic — use templates for formatting.  
-3. Never mix sensor types (weather logic stays in weather_sensors).  
-4. Never modify multiple sensor files at once.  
-5. Always check for existing sensors before creating new ones.  
-
----
-
-## 🧠 AI Collaboration Notes
-
-When editing sensors:
-- Always specify which file you are modifying  
-- Never create new sensors without confirming naming  
-- Never remove sensors unless confirmed  
-- Keep logic readable and well‑commented  
-- Maintain strict separation of concerns  
-
----
-
-## 🚀 Long‑Term Vision
-
-Sensors will evolve to support:
-- richer presence detection  
-- advanced weather summaries  
-- system health scoring  
-- dynamic header effects  
-- unified data pipelines  
-
-This document ensures all future sensor logic remains consistent, modular, and maintainable.
+Each sensor file should follow this pattern:

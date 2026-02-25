@@ -1,0 +1,29 @@
+{
+  "project_name": "Home Assistant Bible & Cinematic Dashboard",
+  "description": "A documentation-first, AI-collaborative reference architecture for Home Assistant, including a cinematic dashboard development environment.",
+  "rules": {
+    "never_edit_multiple_conceptual_areas": true,
+    "state_which_file_is_being_edited": true,
+    "no_inline_templates_in_dashboards": true,
+    "no_deleting_entities_without_confirmation": true,
+    "follow_naming_conventions": true,
+    "treat_config_examples_as_reference_only": true,
+    "treat_experiments_as_sandbox_only": true,
+    "document_decisions_in_development_md": true
+  },
+  "folders": {
+    "docs": "Authoritative documentation (HA Bible)",
+    "config-examples": "Reference-only Home Assistant YAML",
+    "experiments": "Cinematic dashboard development space",
+    "assets": "Images and UI resources"
+  },
+  "ai_guidance": {
+    "purpose": "Ensure Aider follows the same architectural and collaboration rules as all other AIs.",
+    "notes": [
+      "Do not assume this repo is Jon’s live Home Assistant.",
+      "All YAML is example-only unless explicitly stated.",
+      "Use modular, domain-based file structure.",
+      "Never introduce duplication across sensors, templates, or dashboards."
+    ]
+  }
+}
