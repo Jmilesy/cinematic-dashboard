@@ -758,7 +758,7 @@
         type: announce
         volume: 0.5
         method: all
-  - action: notify.mobile_app_sm_s931b
+  - action: notify.mobile_app_sm_g991b
     data:
       title: School Prep
       message: '{{ agent_response.response.speech.plain.speech }}'
