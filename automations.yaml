@@ -691,3 +691,232 @@
     data:
       message: '{{ agent.response.speech.plain.speech }}'
   mode: single
+- id: jacob_school_evening_prep
+  alias: Jacob school evening prep
+  description: Evening school prep with AI announcement, PE detection, and actionable
+    notifications
+  mode: single
+  triggers:
+  - trigger: time
+    at: '19:00:00'
+  conditions:
+  - condition: time
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+  - condition: state
+    entity_id: input_boolean.school_day
+    state: 'on'
+  actions:
+  - action: input_boolean.turn_off
+    target:
+      entity_id:
+      - input_boolean.jacob_drink_confirmed
+      - input_boolean.jacob_pe_kit_confirmed
+      - input_boolean.jacob_pe_tomorrow
+  - action: calendar.get_events
+    target:
+      entity_id: calendar.boys_school
+    data:
+      start_date_time: "{{ (now().date() + timedelta(days=1)).strftime('%Y-%m-%d')\
+        \ }} 00:00:00"
+      end_date_time: "{{ (now().date() + timedelta(days=1)).strftime('%Y-%m-%d') }}\
+        \ 23:59:59"
+    response_variable: school_events
+  - if:
+    - condition: template
+      value_template: "{{ school_events['calendar.boys_school']['events'] |\n   selectattr('summary',\
+        \ 'search', 'PE', ignorecase=True) |\n   list | count > 0 }}\n"
+    then:
+    - action: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.jacob_pe_tomorrow
+  - action: conversation.process
+    data:
+      agent_id: conversation.evening_prep
+      text: "Write a short evening school prep announcement for both boys.\nSchool\
+        \ is tomorrow. They need bags packed, homework done.\nJacob needs a drink\
+        \ bottle in the fridge.\n{% if is_state('input_boolean.jacob_pe_tomorrow',\
+        \ 'on') %}\nJacob also has PE tomorrow and needs his PE kit ready.\n{% endif\
+        \ %}\n{% if states('sensor.school_event_tomorrow') not in ['unknown', 'unavailable',\
+        \ ''] %}\nThere is a school event tomorrow: {{ states('sensor.school_event_tomorrow')\
+        \ }}.\n{% endif %}\nStyle: chaotic dad humour, dry sarcasm, short punchy sentences.\n\
+        No emojis. No baby talk. Address both boys directly.\n"
+    response_variable: agent_response
+  - action: notify.alexa_media
+    data:
+      message: '{{ agent_response.response.speech.plain.speech }}'
+      target:
+      - media_player.lounge_plus
+      - media_player.boy_s_new_dot
+      - media_player.bedroom_dot
+      - media_player.kitchen_dot
+      data:
+        type: announce
+        volume: 0.5
+        method: all
+  - action: notify.mobile_app_sm_s931b
+    data:
+      title: School Prep
+      message: '{{ agent_response.response.speech.plain.speech }}'
+  - action: notify.mobile_app_sm_g990b2
+    data:
+      title: School Prep
+      message: '{{ agent_response.response.speech.plain.speech }}'
+  - action: notify.mobile_app_sm_g990b2
+    data:
+      title: Drink bottles
+      message: Jacob. How many drink bottles have you got in the fridge for tomorrow?
+      data:
+        actions:
+        - action: JACOB_DRINK_ONE
+          title: 1 bottle
+        - action: JACOB_DRINK_TWO
+          title: 2 bottles
+        - action: JACOB_DRINK_NONE
+          title: None yet
+  - if:
+    - condition: state
+      entity_id: input_boolean.jacob_pe_tomorrow
+      state: 'on'
+    then:
+    - action: notify.mobile_app_sm_g990b2
+      data:
+        title: PE kit
+        message: Jacob. PE tomorrow. Is your kit sorted and ready to go?
+        data:
+          actions:
+          - action: JACOB_PE_DONE
+            title: Yes sorted
+          - action: JACOB_PE_NOT_YET
+            title: Not yet
+- id: jacob_task_nagger
+  alias: Jacob task nagger
+  description: Reminds Jacob every 30 mins if tasks are still unconfirmed
+  mode: single
+  triggers:
+  - trigger: time
+    at:
+    - '19:30:00'
+    - '20:00:00'
+    - '20:30:00'
+    - '21:00:00'
+  conditions:
+  - condition: time
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+  - condition: state
+    entity_id: input_boolean.school_day
+    state: 'on'
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: input_boolean.jacob_drink_confirmed
+      state: 'off'
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: input_boolean.jacob_pe_tomorrow
+        state: 'on'
+      - condition: state
+        entity_id: input_boolean.jacob_pe_kit_confirmed
+        state: 'off'
+  actions:
+  - if:
+    - condition: state
+      entity_id: input_boolean.jacob_drink_confirmed
+      state: 'off'
+    then:
+    - action: notify.mobile_app_sm_g990b2
+      data:
+        title: Still waiting...
+        message: "Jacob. The drink bottle. Still no answer.\nFridge. Bottle. How many.\
+          \ Simple question.\n"
+        data:
+          actions:
+          - action: JACOB_DRINK_ONE
+            title: 1 bottle
+          - action: JACOB_DRINK_TWO
+            title: 2 bottles
+          - action: JACOB_DRINK_NONE
+            title: None yet
+  - if:
+    - condition: and
+      conditions:
+      - condition: state
+        entity_id: input_boolean.jacob_pe_tomorrow
+        state: 'on'
+      - condition: state
+        entity_id: input_boolean.jacob_pe_kit_confirmed
+        state: 'off'
+    then:
+    - action: notify.mobile_app_sm_g990b2
+      data:
+        title: PE kit. Again.
+        message: "Jacob. PE tomorrow. Your kit. Still no confirmation.\nIs it ready\
+          \ or not. Yes or no. That's it.\n"
+        data:
+          actions:
+          - action: JACOB_PE_DONE
+            title: Yes sorted
+          - action: JACOB_PE_NOT_YET
+            title: Not yet
+- id: jacob_drink_bottle_confirmed
+  alias: Jacob drink bottle confirmed
+  description: Marks drink bottle as confirmed when Jacob responds
+  mode: single
+  triggers:
+  - trigger: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: JACOB_DRINK_ONE
+  - trigger: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: JACOB_DRINK_TWO
+  actions:
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.jacob_drink_confirmed
+  - action: notify.mobile_app_sm_g990b2
+    data:
+      title: Logged
+      message: Drink bottle confirmed. Only took you a few reminders. Well done.
+- id: jacob_pe_kit_confirmed
+  alias: Jacob PE kit confirmed
+  description: Marks PE kit as confirmed when Jacob responds
+  mode: single
+  triggers:
+  - trigger: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: JACOB_PE_DONE
+  actions:
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.jacob_pe_kit_confirmed
+  - action: notify.mobile_app_sm_g990b2
+    data:
+      title: PE kit logged
+      message: PE kit confirmed. You're almost organised. Almost.
+- id: jacob_task_reset
+  alias: Jacob task reset
+  description: Resets all Jacob task booleans at midnight
+  mode: single
+  triggers:
+  - trigger: time
+    at: '00:01:00'
+  actions:
+  - action: input_boolean.turn_off
+    target:
+      entity_id:
+      - input_boolean.jacob_drink_confirmed
+      - input_boolean.jacob_pe_kit_confirmed
+      - input_boolean.jacob_pe_tomorrow
