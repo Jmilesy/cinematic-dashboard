@@ -1,0 +1,54 @@
+# ═══════════════════════════════════════════════════════════════
+# 📅 ACTIVITY REMINDER (30 Minutes Before)
+# ═══════════════════════════════════════════════════════════════
+#
+# Reminds boys 30 minutes before calendar events
+# Based on Google Calendar events for Joseph/Jacob
+#
+# Device: Boy's New Dot
+# Trigger: 30 minutes before event start
+# Days: When events exist
+#
+# Note: This uses input_text.boys_school which is updated by Node-RED
+#       from Google Calendar
+#
+# ═══════════════════════════════════════════════════════════════
+
+alias: "Activity Reminder - 30 Minutes Before"
+description: "Remind boys of upcoming activities from calendar"
+mode: queued
+max: 5
+
+triggers:
+  # Trigger when boys_school text changes (Node-RED updates this from calendar)
+  - trigger: state
+    entity_id: input_text.boys_school
+
+conditions:
+  # Only if the text contains an activity (not "Enjoy your day off")
+  - condition: template
+    value_template: >
+      {{ 'Enjoy your day off' not in states('input_text.boys_school') }}
+  
+  # Only during reasonable hours
+  - condition: time
+    after: "07:00:00"
+    before: "20:00:00"
+
+actions:
+  # Wait 30 minutes before the event (adjust as needed)
+  - delay:
+      minutes: 30
+
+  - action: notify.alexa_media_boy_s_new_dot
+    data:
+      message: >
+        Boys! Reminder: 
+        {{ states('input_text.boys_school') }}
+        is in 30 minutes. Get ready!
+      data:
+        type: announce
+
+# Alternative version that works with actual calendar events:
+# You would need to set up Google Calendar integration in HA first
+# Then replace this with calendar triggers

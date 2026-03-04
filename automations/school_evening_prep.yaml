@@ -1,0 +1,49 @@
+# ═══════════════════════════════════════════════════════════════
+# 🎒 SCHOOL EVENING PREP REMINDER (8:00 PM)
+# ═══════════════════════════════════════════════════════════════
+#
+# Reminds boys to prepare for school the night before
+# Get bags ready, clothes out, etc.
+#
+# Device: Boy's New Dot (their room)
+# Time: 8:00 PM
+# Days: Sunday-Thursday (night before school)
+#
+# ═══════════════════════════════════════════════════════════════
+
+alias: "School Evening Prep Reminder"
+description: "Remind boys to prepare for school tomorrow"
+mode: single
+
+triggers:
+  - at: "19:00:00"
+    trigger: time
+
+conditions:
+  - condition: time
+    weekday:
+      - sun  # Night before Monday
+      - mon  # Night before Tuesday
+      - tue  # Night before Wednesday
+      - wed  # Night before Thursday
+      - thu  # Night before Friday
+  
+  # Check if tomorrow is a school day
+  # Note: This checks current school_day state as proxy
+  # Ideally you'd check tomorrow's calendar, but this works for most cases
+  - condition: state
+    entity_id: input_boolean.school_day
+    state: "on"
+
+actions:
+  - action: notify.alexa_media_everywhere
+    data:
+      message: >
+        Boys, school tomorrow. Make sure you have:
+        Your bags packed, 
+        Your PE kit ready, if you need it,
+        Drink in the fridge Jacob
+        And your homework done.
+      data:
+        type: announce
+        volume_level: 0.5

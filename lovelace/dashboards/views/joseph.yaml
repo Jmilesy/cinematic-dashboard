@@ -1,0 +1,300 @@
+title: Joseph's Room
+path: joseph
+type: sidebar
+theme: Google Dark Theme
+cards:
+  # Back Button
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: back
+    alignment: center
+    card_mod:
+      style: |
+        ha-card {
+          background: linear-gradient(135deg, rgba(122,38,58,0.3), rgba(27,177,231,0.2)), 
+                      linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)) !important;
+          border-radius: 20px;
+          border: 2px solid rgba(122,38,58,0.5);
+          box-shadow: 0 0 30px rgba(122,38,58,0.4), 0 8px 32px rgba(0,0,0,0.4);
+          backdrop-filter: blur(10px);
+          margin-bottom: 8px;
+        }
+
+  # West Ham Header Banner
+  - type: custom:button-card
+    name: "⚒️ JOSEPH'S WEST HAM ZONE ⚒️"
+    show_icon: false
+    styles:
+      card:
+        - background: linear-gradient(135deg, #7A263A 0%, #1BB1E7 100%)
+        - border-radius: 20px
+        - padding: 20px
+        - border: 2px solid rgba(122,38,58,0.8)
+        - box-shadow: 0 0 40px rgba(122,38,58,0.6), 0 8px 32px rgba(0,0,0,0.5)
+        - margin-bottom: 12px
+      name:
+        - font-size: 1.8rem
+        - font-weight: 900
+        - color: white
+        - text-shadow: 0 0 20px rgba(0,0,0,0.8), 0 4px 8px rgba(0,0,0,0.5)
+        - letter-spacing: 2px
+        - text-transform: uppercase
+
+  # Climate Stats
+  - type: horizontal-stack
+    cards:
+      - type: sensor
+        entity: sensor.boysroom_temperature
+        graph: line
+        hours_to_show: 24
+        detail: 1
+        name: Temperature
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(122,38,58,0.25), rgba(27,177,231,0.15)),
+                          linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)) !important;
+              border-radius: 20px;
+              border: 1px solid rgba(122,38,58,0.4);
+              box-shadow: 0 0 20px rgba(122,38,58,0.3), 0 8px 32px rgba(0,0,0,0.4);
+              backdrop-filter: blur(10px);
+            }
+      
+      - type: sensor
+        entity: sensor.boys_room_humidity
+        graph: line
+        hours_to_show: 24
+        detail: 1
+        name: Humidity
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(27,177,231,0.25), rgba(122,38,58,0.15)),
+                          linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)) !important;
+              border-radius: 20px;
+              border: 1px solid rgba(27,177,231,0.4);
+              box-shadow: 0 0 20px rgba(27,177,231,0.3), 0 8px 32px rgba(0,0,0,0.4);
+              backdrop-filter: blur(10px);
+            }
+
+  # Spacer
+  - type: custom:button-card
+    color_type: blank-card
+    styles:
+      card:
+        - height: 8px
+        - background: transparent
+
+  # Controls Section
+  - type: custom:mushroom-title-card
+    subtitle: "⚒️ ROOM CONTROLS"
+    card_mod:
+      style: |
+        ha-card {
+          background: linear-gradient(135deg, rgba(122,38,58,0.3), rgba(27,177,231,0.2)) !important;
+          border-radius: 20px;
+          border: 2px solid rgba(122,38,58,0.5);
+          box-shadow: 0 0 25px rgba(122,38,58,0.4);
+          backdrop-filter: blur(10px);
+        }
+        .header {
+          color: #1BB1E7 !important;
+          font-weight: 800 !important;
+          text-shadow: 0 0 10px rgba(122,38,58,0.8);
+        }
+
+  # Joseph's Light Control
+  - type: custom:mushroom-light-card
+    entity: light.joseph
+    use_light_color: true
+    show_brightness_control: true
+    show_color_control: true
+    show_color_temp_control: true
+    name: Joseph's Light
+    icon: mdi:ceiling-light
+    tap_action:
+      action: toggle
+    card_mod:
+      style: |
+        ha-card {
+          background: linear-gradient(135deg, rgba(122,38,58,0.3), rgba(27,177,231,0.2)) !important;
+          border-radius: 20px;
+          border: 2px solid #7A263A;
+          box-shadow: 0 0 30px rgba(122,38,58,0.5), 0 8px 32px rgba(0,0,0,0.4);
+          backdrop-filter: blur(10px);
+        }
+
+  # Media & Entertainment
+  - type: custom:mushroom-media-player-card
+    entity: media_player.boy_s_new_dot
+    volume_controls:
+      - volume_mute
+      - volume_set
+    use_media_info: true
+    show_volume_level: true
+    media_controls:
+      - on_off
+      - previous
+      - play_pause_stop
+      - next
+    name: "🎵 Alexa"
+    card_mod:
+      style: |
+        ha-card {
+          background: linear-gradient(135deg, rgba(27,177,231,0.3), rgba(122,38,58,0.2)) !important;
+          border-radius: 20px;
+          border: 2px solid rgba(27,177,231,0.4);
+          box-shadow: 0 0 25px rgba(27,177,231,0.4), 0 8px 32px rgba(0,0,0,0.4);
+          backdrop-filter: blur(10px);
+        }
+
+  # Spacer
+  - type: custom:button-card
+    color_type: blank-card
+    styles:
+      card:
+        - height: 8px
+        - background: transparent
+
+  # Joseph's Stats Section
+  - type: custom:mushroom-title-card
+    subtitle: "📊 JOSEPH'S STATS"
+    card_mod:
+      style: |
+        ha-card {
+          background: linear-gradient(135deg, rgba(27,177,231,0.3), rgba(122,38,58,0.2)) !important;
+          border-radius: 20px;
+          border: 2px solid rgba(27,177,231,0.5);
+          box-shadow: 0 0 25px rgba(27,177,231,0.4);
+          backdrop-filter: blur(10px);
+        }
+        .header {
+          color: #7A263A !important;
+          font-weight: 800 !important;
+        }
+  # Personal Stats REMOVED - sensor.joseph_used_screen_time and sensor.joseph_available_balance unavailable
+  # - type: horizontal-stack
+  #   cards:
+  #     - type: sensor
+  #       entity: sensor.joseph_used_screen_time
+  #       name: Screen Time
+  #       icon: mdi:cellphone-clock
+  #     card_mod:
+  #       style: |
+  #         ha-card {
+  #           background: linear-gradient(135deg, rgba(122,38,58,0.25), rgba(0,0,0,0.3)) !important;
+  #           border-radius: 20px;
+  #           border: 1px solid rgba(122,38,58,0.4);
+  #           box-shadow: 0 0 20px rgba(122,38,58,0.3), 0 8px 32px rgba(0,0,0,0.4);
+  #           backdrop-filter: blur(10px);
+  #         }
+  #   
+  #   # Balance card REMOVED - sensor.joseph_available_balance unavailable
+  #           border: 1px solid rgba(27,177,231,0.4);
+  #           box-shadow: 0 0 20px rgba(27,177,231,0.3), 0 8px 32px rgba(0,0,0,0.4);
+  #           backdrop-filter: blur(10px);
+  #         }
+
+  # Phone Stats
+  - type: horizontal-stack
+    cards:
+      - type: sensor
+        entity: sensor.joseph_battery_level
+        name: Phone Battery
+        icon: mdi:battery
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(122,38,58,0.25), rgba(0,0,0,0.3)) !important;
+              border-radius: 20px;
+              border: 1px solid rgba(122,38,58,0.4);
+              box-shadow: 0 0 20px rgba(122,38,58,0.3), 0 8px 32px rgba(0,0,0,0.4);
+              backdrop-filter: blur(10px);
+            }
+      
+      - type: sensor
+        entity: sensor.joseph_wi_fi_connection
+        name: WiFi
+        icon: mdi:wifi
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(27,177,231,0.25), rgba(0,0,0,0.3)) !important;
+              border-radius: 20px;
+              border: 1px solid rgba(27,177,231,0.4);
+              box-shadow: 0 0 20px rgba(27,177,231,0.3), 0 8px 32px rgba(0,0,0,0.4);
+              backdrop-filter: blur(10px);
+            }
+
+  # Spacer
+  - type: custom:button-card
+    color_type: blank-card
+    styles:
+      card:
+        - height: 8px
+        - background: transparent
+
+  # Power Monitoring
+  - type: custom:mushroom-title-card
+    subtitle: "⚡ POWER & CLIMATE"
+    card_mod:
+      style: |
+        ha-card {
+          background: linear-gradient(135deg, rgba(122,38,58,0.3), rgba(27,177,231,0.2)) !important;
+          border-radius: 20px;
+          border: 2px solid rgba(122,38,58,0.5);
+          box-shadow: 0 0 25px rgba(122,38,58,0.4);
+          backdrop-filter: blur(10px);
+        }
+
+  - type: horizontal-stack
+    cards:
+      - type: sensor
+        entity: sensor.boys_aircon_energy_power
+        graph: line
+        hours_to_show: 24
+        detail: 1
+        name: Aircon Power
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(122,38,58,0.25), rgba(0,0,0,0.3)) !important;
+              border-radius: 20px;
+              border: 1px solid rgba(122,38,58,0.4);
+              box-shadow: 0 0 20px rgba(122,38,58,0.3), 0 8px 32px rgba(0,0,0,0.4);
+              backdrop-filter: blur(10px);
+            }
+      
+      - type: sensor
+        entity: sensor.boys_aircon_energy_today
+        graph: none
+        detail: 2
+        name: Energy Today
+        card_mod:
+          style: |
+            ha-card {
+              background: linear-gradient(135deg, rgba(27,177,231,0.25), rgba(0,0,0,0.3)) !important;
+              border-radius: 20px;
+              border: 1px solid rgba(27,177,231,0.4);
+              box-shadow: 0 0 20px rgba(27,177,231,0.3), 0 8px 32px rgba(0,0,0,0.4);
+              backdrop-filter: blur(10px);
+            }
+
+  # Footer - Come On You Irons
+  - type: custom:button-card
+    name: "⚒️ COME ON YOU IRONS ⚒️"
+    show_icon: false
+    styles:
+      card:
+        - background: linear-gradient(135deg, #7A263A 0%, #1BB1E7 100%)
+        - border-radius: 20px
+        - padding: 15px
+        - border: 2px solid rgba(122,38,58,0.8)
+        - box-shadow: 0 0 30px rgba(122,38,58,0.5)
+        - margin-top: 12px
+      name:
+        - font-size: 1.2rem
+        - font-weight: 800
+        - color: white
+        - text-shadow: 0 0 15px rgba(0,0,0,0.8)
+        - letter-spacing: 3px

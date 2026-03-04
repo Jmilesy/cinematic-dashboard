@@ -1,0 +1,35 @@
+title: Network
+path: network
+type: sidebar
+theme: Google Dark Theme
+cards:
+  # Back Button
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: back
+    alignment: center
+    card_mod:
+      style: |
+        ha-card {
+          background: {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+          border-radius: 20px;
+          border: 1px solid rgba(255,255,255,0.15);
+          box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+          backdrop-filter: blur(10px);
+          margin-bottom: 8px;
+        }
+
+  - type: custom:mushroom-title-card
+    subtitle: Connectivity
+
+  - type: entities
+    entities:
+      - entity: binary_sensor.ugw3_wan_status
+      # Removed: sensor.tautulli_lan_bandwidth (disabled), sensor.nzbget_uptime (missing)
+
+  - type: custom:mushroom-title-card
+    subtitle: Services
+
+  - type: entities
+    entities:
+      # Removed: sensor.tautulli_direct_plays (disabled), sensor.nzbget_queue_size (missing), sensor.jellyfin_active_streams (missing)

@@ -1,0 +1,23 @@
+###############################################################
+# MEDIA VIEW - CINEMATIC V2
+# Location: config/lovelace/dashboards/views/cinematic_media.yaml
+###############################################################
+
+title: Media
+path: cinematic-media
+icon: mdi:play-circle
+
+cards:
+  - type: custom:button-card
+    template: section_header
+    name: Now Playing
+
+  - type: custom:button-card
+    template: media_now_playing_block
+
+  - type: custom:button-card
+    template: section_header
+    name: Devices
+
+  - type: custom:button-card
+    template: media_devices_block

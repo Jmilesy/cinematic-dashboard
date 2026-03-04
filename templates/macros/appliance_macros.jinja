@@ -1,0 +1,144 @@
+{# ============================================
+   APPLIANCE MACRO ENGINE
+   Purpose: Unified state and attribute handling for Home Assistant devices
+   ============================================ #}
+
+{# MACRO: normalise(entity_id)
+   Purpose: Convert unavailable/unknown states into "standby"
+   Input: entity_id (string)
+   Output: String - "standby" or actual state
+#}
+{% macro normalise(entity_id) -%}
+  {%- if states(entity_id) in ['unavailable', 'unknown', 'none'] -%}
+    standby
+  {%- else -%}
+    {{ states(entity_id) | lower }}
+  {%- endif -%}
+{%- endmacro %}
+
+
+{# MACRO: typed_state(entity_id, device_type)
+   Purpose: Return human-friendly state based on device type
+   Input: entity_id (string), device_type (string)
+   Output: String - processed state
+   Device types: appliance, timer, media, vacuum, generic
+#}
+{% macro typed_state(entity_id, device_type) -%}
+  {%- set state = normalise(entity_id) -%}
+  
+  {%- if device_type == 'appliance' -%}
+    {%- if state == 'standby' -%}idle
+    {%- elif state in ['running', 'on', 'drying', 'heating'] -%}running
+    {%- elif state in ['paused', 'off', 'stopped'] -%}off
+    {%- elif state in ['error', 'fault'] -%}error
+    {%- else -%}{{ state }}
+    {%- endif -%}
+  
+  {%- elif device_type == 'timer' -%}
+    {%- if state == 'standby' -%}standby
+    {%- elif state == 'on' -%}running
+    {%- elif state == 'off' -%}stopped
+    {%- elif state in ['idle', 'paused'] -%}paused
+    {%- else -%}{{ state }}
+    {%- endif -%}
+  
+  {%- elif device_type == 'media' -%}
+    {%- if state == 'standby' -%}standby
+    {%- elif state == 'playing' -%}playing
+    {%- elif state == 'paused' -%}paused
+    {%- elif state in ['off', 'stopped'] -%}off
+    {%- elif state == 'on' -%}on
+    {%- else -%}{{ state }}
+    {%- endif -%}
+  
+  {%- elif device_type == 'vacuum' -%}
+    {%- if state == 'standby' -%}docked
+    {%- elif state in ['cleaning', 'running'] -%}cleaning
+    {%- elif state in ['returning', 'docking'] -%}returning
+    {%- elif state in ['idle', 'off'] -%}idle
+    {%- elif state in ['error', 'fault'] -%}error
+    {%- else -%}{{ state }}
+    {%- endif -%}
+  
+  {%- else -%}
+    {# generic device type #}
+    {{ state }}
+  {%- endif -%}
+{%- endmacro %}
+
+
+{# MACRO: attributes(entity_id, device_type)
+   Purpose: Return JSON object with dashboard-friendly attributes
+   Input: entity_id (string), device_type (string)
+   Output: JSON string with keys: raw, state, icon, colour
+#}
+{% macro attributes(entity_id, device_type) -%}
+  {%- set raw_state = states(entity_id) -%}
+  {%- set typed = typed_state(entity_id, device_type) -%}
+  {%- set icon = get_icon(entity_id, device_type, typed) -%}
+  {%- set colour = get_colour(entity_id, device_type, typed) -%}
+  
+{
+  "raw": "{{ raw_state }}",
+  "state": "{{ typed }}",
+  "icon": "{{ icon }}",
+  "colour": "{{ colour }}"
+}
+{%- endmacro %}
+
+
+{# HELPER MACRO: get_icon(entity_id, device_type, state)
+   Purpose: Return appropriate MDI icon based on device type and state
+   Input: entity_id, device_type, state
+   Output: MDI icon string
+#}
+{% macro get_icon(entity_id, device_type, state) -%}
+  {%- if device_type == 'appliance' -%}
+    {%- if 'washing' in entity_id | lower -%}mdi:washing-machine
+    {%- elif 'dishwasher' in entity_id | lower -%}mdi:dishwasher
+    {%- elif 'dryer' in entity_id | lower -%}mdi:tumble-dryer
+    {%- elif 'oven' in entity_id | lower -%}mdi:oven
+    {%- elif 'kettle' in entity_id | lower -%}mdi:kettle
+    {%- else -%}mdi:power-plug
+    {%- endif -%}
+  
+  {%- elif device_type == 'timer' -%}
+    {%- if state == 'running' -%}mdi:timer
+    {%- elif state == 'paused' -%}mdi:timer-pause
+    {%- else -%}mdi:timer-stop
+    {%- endif -%}
+  
+  {%- elif device_type == 'media' -%}
+    {%- if 'tv' in entity_id | lower -%}mdi:television
+    {%- elif 'speaker' in entity_id | lower -%}mdi:speaker
+    {%- elif state == 'playing' -%}mdi:play
+    {%- elif state == 'paused' -%}mdi:pause
+    {%- else -%}mdi:multimedia
+    {%- endif -%}
+  
+  {%- elif device_type == 'vacuum' -%}
+    {%- if state == 'docked' -%}mdi:robot-vacuum-box
+    {%- elif state == 'cleaning' -%}mdi:robot-vacuum
+    {%- elif state == 'returning' -%}mdi:robot-vacuum
+    {%- else -%}mdi:robot-vacuum
+    {%- endif -%}
+  
+  {%- else -%}mdi:information
+  {%- endif -%}
+{%- endmacro %}
+
+
+{# HELPER MACRO: get_colour(entity_id, device_type, state)
+   Purpose: Return colour name based on device type and state
+   Input: entity_id, device_type, state
+   Output: Colour name string
+#}
+{% macro get_colour(entity_id, device_type, state) -%}
+  {%- if state == 'error' or state == 'fault' -%}red
+  {%- elif state == 'running' or state == 'cleaning' or state == 'playing' -%}green
+  {%- elif state == 'paused' -%}orange
+  {%- elif state in ['idle', 'off', 'docked', 'standby'] -%}blue
+  {%- elif state == 'returning' -%}yellow
+  {%- else -%}gray
+  {%- endif -%}
+{%- endmacro %}

@@ -1,0 +1,35 @@
+###############################################################
+# CINEMATIC DASHBOARD - MAIN FILE
+# Location: config/lovelace/cinematic-dashboard.yaml
+#
+# This is the main dashboard file that includes all views
+# Each view is in a separate file for easy maintenance
+###############################################################
+
+# Button Card Templates - Load templates from separate file
+button_card_templates: !include ./templates/button_card_templates.yaml
+
+title: Cinematic Home
+theme: Google Dark Theme
+
+views:
+  # Main Home View
+  - !include ./dashboards/views/home.yaml
+  
+  # Room Views
+  - !include ./dashboards/views/boys_room.yaml
+  - !include ./dashboards/views/kitchen.yaml
+  - !include ./dashboards/views/jacob.yaml
+  - !include ./dashboards/views/joseph.yaml
+  - !include ./dashboards/views/living_room.yaml
+  - !include ./dashboards/views/bedroom.yaml
+  - !include ./dashboards/views/landing.yaml
+  
+  # Functional Views
+  - !include ./dashboards/views/network.yaml
+  - !include ./dashboards/views/security.yaml
+  - !include ./dashboards/views/lights.yaml
+  - !include ./dashboards/views/christmas.yaml
+  - !include ./dashboards/views/weather.yaml
+  - !include ./dashboards/views/f1.yaml
+  - !include ./dashboards/views/media.yaml

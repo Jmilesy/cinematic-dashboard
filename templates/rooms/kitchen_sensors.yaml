@@ -1,0 +1,163 @@
+- sensor:
+
+    # ------------------------------------------------------------
+    # Raw state from provider
+    # ------------------------------------------------------------
+    - name: waste_raw
+      unique_id: waste_raw
+      state: "{{ states('sensor.next_waste_collection') }}"
+
+    # ------------------------------------------------------------
+    # Days until next collection
+    # ------------------------------------------------------------
+    - name: waste_days_to
+      unique_id: waste_days_to
+      state: "{{ state_attr('sensor.next_waste_collection', 'daysTo') }}"
+
+    # ------------------------------------------------------------
+    # First collection date (ISO)
+    # ------------------------------------------------------------
+    - name: waste_next_date
+      unique_id: waste_next_date
+      device_class: date
+      state: >
+        {% set days = state_attr('sensor.next_waste_collection', 'daysTo') | int(0) %}
+        {{ (now().date() + timedelta(days=days)) }}
+
+    # ------------------------------------------------------------
+    # First collection friendly date
+    # ------------------------------------------------------------
+    - name: waste_next_friendly_date
+      unique_id: waste_next_friendly_date
+      state: >
+        {% set days = state_attr('sensor.next_waste_collection', 'daysTo') | int(0) %}
+        {% set d = now() + timedelta(days=days) %}
+        {{ d.strftime('%A %-d %B %Y') }}
+
+    # ------------------------------------------------------------
+    # First collection relative text
+    # ------------------------------------------------------------
+    - name: waste_next_relative
+      unique_id: waste_next_relative
+      state: >
+        {% set days = state_attr('sensor.next_waste_collection', 'daysTo') | int(0) %}
+        {% if days == 0 %}
+          today
+        {% elif days == 1 %}
+          tomorrow
+        {% else %}
+          in {{ days }} days
+        {% endif %}
+
+    # ------------------------------------------------------------
+    # Second collection date (ISO)
+    # ------------------------------------------------------------
+    - name: waste_second_date
+      unique_id: waste_second_date
+      device_class: date
+      state: >
+        {% set first = state_attr('sensor.next_waste_collection', 'daysTo') | int(0) %}
+        {{ (now().date() + timedelta(days=first + 7)) }}
+
+    # ------------------------------------------------------------
+    # Second collection friendly date
+    # ------------------------------------------------------------
+    - name: waste_second_friendly_date
+      unique_id: waste_second_friendly_date
+      state: >
+        {% set first = state_attr('sensor.next_waste_collection', 'daysTo') | int(0) %}
+        {% set d = now() + timedelta(days=first + 7) %}
+        {{ d.strftime('%A %-d %B %Y') }}
+
+    # ------------------------------------------------------------
+    # Second collection relative text
+    # ------------------------------------------------------------
+    - name: waste_second_relative
+      unique_id: waste_second_relative
+      state: >
+        {% set days = (state_attr('sensor.next_waste_collection', 'daysTo') | int(0)) + 7 %}
+        {% if days == 0 %}
+          today
+        {% elif days == 1 %}
+          tomorrow
+        {% else %}
+          in {{ days }} days
+        {% endif %}
+
+    # ------------------------------------------------------------
+    # Extract waste types from first line
+    # ------------------------------------------------------------
+    - name: waste_types
+      unique_id: waste_types
+      state: >
+        {% set raw = states('sensor.next_waste_collection').split(' in ')[0] %}
+        {{ raw }}
+
+    # ------------------------------------------------------------
+    # Boolean flags per type
+    # ------------------------------------------------------------
+    - name: waste_has_refuse
+      unique_id: waste_has_refuse
+      state: "{{ 'Refuse' in states('sensor.waste_types') }}"
+
+    - name: waste_has_food
+      unique_id: waste_has_food
+      state: "{{ 'Food' in states('sensor.waste_types') }}"
+
+    - name: waste_has_recycling
+      unique_id: waste_has_recycling
+      state: "{{ 'Recycling' in states('sensor.waste_types') }}"
+
+    - name: waste_has_papercard
+      unique_id: waste_has_papercard
+      state: "{{ 'Paper' in states('sensor.waste_types') }}"
+
+    # ------------------------------------------------------------
+    # Per-type sensors (first or second date depending on cycle)
+    # ------------------------------------------------------------
+    - name: waste_next_refuse
+      unique_id: waste_next_refuse
+      state: >
+        {% if is_state('sensor.waste_has_refuse', 'True') %}
+          {{ states('sensor.waste_next_relative') }} ({{ states('sensor.waste_next_friendly_date') }})
+        {% else %}
+          {{ states('sensor.waste_second_relative') }} ({{ states('sensor.waste_second_friendly_date') }})
+        {% endif %}
+
+    - name: waste_next_food
+      unique_id: waste_next_food
+      state: >
+        {% if is_state('sensor.waste_has_food', 'True') %}
+          {{ states('sensor.waste_next_relative') }} ({{ states('sensor.waste_next_friendly_date') }})
+        {% else %}
+          {{ states('sensor.waste_second_relative') }} ({{ states('sensor.waste_second_friendly_date') }})
+        {% endif %}
+
+    - name: waste_next_recycling
+      unique_id: waste_next_recycling
+      state: >
+        {% if is_state('sensor.waste_has_recycling', 'True') %}
+          {{ states('sensor.waste_next_relative') }} ({{ states('sensor.waste_next_friendly_date') }})
+        {% else %}
+          {{ states('sensor.waste_second_relative') }} ({{ states('sensor.waste_second_friendly_date') }})
+        {% endif %}
+
+    - name: waste_next_papercard
+      unique_id: waste_next_papercard
+      state: >
+        {% if is_state('sensor.waste_has_papercard', 'True') %}
+          {{ states('sensor.waste_next_relative') }} ({{ states('sensor.waste_next_friendly_date') }})
+        {% else %}
+          {{ states('sensor.waste_second_relative') }} ({{ states('sensor.waste_second_friendly_date') }})
+        {% endif %}
+
+    # ------------------------------------------------------------
+    # Combined one-line cinematic sensor
+    # ------------------------------------------------------------
+    - name: waste_next_combined
+      unique_id: waste_next_combined
+      state: >
+        {% set types = states('sensor.waste_types') %}
+        {% set rel = states('sensor.waste_next_relative') %}
+        {% set date = states('sensor.waste_next_friendly_date') %}
+        {{ types }} — {{ rel }} ({{ date }})

@@ -1,0 +1,693 @@
+- id: '1754917915935'
+  alias: Watchman
+  description: ''
+  triggers:
+  - trigger: time
+    at: 01:00:00
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
+  conditions: []
+  actions:
+  - action: watchman.report
+    metadata: {}
+    data:
+      parse_config: false
+      action: persistent_notification.create
+      chunk_size: 3500
+      create_file: true
+  mode: single
+- id: school_morning_announcement
+  alias: School Morning Announcement
+  description: Announce to the boys at 7:45 AM on school days via Lounge Plus
+  triggers:
+  - at: 07:45:00
+    trigger: time
+  conditions:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  - condition: state
+    entity_id: input_boolean.school_day
+    state: 'on'
+  actions:
+  - data:
+      data:
+        type: announce
+        method: speak
+      message: Oi boys! Ablutions!
+    action: notify.alexa_media_lounge_plus
+  - data:
+      message: Ablutions!!!
+      title: School Reminder
+    action: notify.mobile_app_sm_g990b2
+  - action: notify.mobile_app_joseph
+    data:
+      message: Ablutions!!!
+      title: School Reminder
+- id: school_morning_announcement
+  alias: School Morning Announcement
+  description: Announce to the boys at 7:45 AM on school days via Lounge Plus
+  mode: single
+  triggers:
+  - at: 07:45:00
+    trigger: time
+  conditions:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  - condition: state
+    entity_id: input_boolean.school_day
+    state: 'on'
+  actions:
+  - data:
+      data:
+        type: announce
+        method: speak
+      message: Oi boys! Ablutions!
+    action: notify.alexa_media_lounge_plus
+  - data:
+      message: Ablutions!!!
+      title: School Reminder
+    action: notify.mobile_app_sm_g990b2
+  - action: notify.mobile_app_joseph
+    data:
+      message: Ablutions!!!
+      title: School Reminder
+- id: school_day_reminder_5min
+  alias: School Day - 5 Minute Warning
+  description: Gentle reminder 5 minutes before school announcement
+  mode: single
+  triggers:
+  - at: 07:05:00
+    trigger: time
+  conditions:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  - condition: state
+    entity_id: input_boolean.school_day
+    state: 'on'
+  actions:
+  - data:
+      data:
+        type: tts
+        volume_level: 0.8
+      message: Boys, time to get up please.
+    action: notify.alexa_media_boy_s_new_dot
+- id: 847ee1a2bb244002a91bb6ef5583fb2f
+  alias: School Evening Prep Reminder
+  description: Remind boys to prepare for school tomorrow
+  triggers:
+  - at: '19:00:00'
+    trigger: time
+  conditions:
+  - condition: time
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+  - condition: state
+    entity_id: input_boolean.school_day
+    state: 'on'
+  actions:
+  - action: notify.alexa_media
+    data:
+      message: 'Boys, school tomorrow. Make sure you have: your bags packed, your
+        PE kit ready if you need it, drink in the fridge Jacob, and your homework
+        done.
+
+        {% if states(''sensor.school_event_tomorrow'') %} School Update for Tomorrow:
+        {{ states(''sensor.school_event_tomorrow'') }} {% endif %}
+
+        '
+      data:
+        type: announce
+        method: all
+        volume_level: 0.5
+      target:
+      - media_player.lounge_plus
+      - media_player.boy_s_new_dot
+      - media_player.bedroom_dot
+      - media_player.kitchen_dot
+  mode: single
+- id: bedtime_reminder
+  alias: Bedtime Reminder - School Nights
+  description: Remind boys to go to bed on school nights
+  triggers:
+  - at: '20:00:00'
+    trigger: time
+  conditions:
+  - condition: time
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+  actions:
+  - action: notify.alexa_media_boy_s_new_dot
+    data:
+      message: Boys, it's bedtime. Please head to your room and get ready for bed.
+      data:
+        type: announce
+        volume_level: 0.4
+  mode: single
+- id: morning_greeting
+  alias: Morning Greeting
+  description: Good morning announcement with weather
+  mode: single
+  triggers:
+  - at: 07:00:00
+    trigger: time
+  actions:
+  - action: notify.alexa_media_lounge_plus
+    data:
+      message: 'Good morning everyone!  The time is {{ now().strftime(''%I:%M %p'')
+        }}. It''s {{ states(''sensor.bedroom_temperature'') | round(0) }} degrees
+        inside. Have a great day!
+
+        '
+      data:
+        type: announce
+- alias: Dinner Time Announcement
+  description: Call everyone for dinner
+  mode: single
+  triggers:
+  - at: '18:00:00'
+    trigger: time
+  conditions:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: person.jon
+      state: home
+    - condition: state
+      entity_id: person.natalie
+      state: home
+  actions:
+  - action: notify.alexa_media
+    data:
+      message: Dinner is ready! Everyone to the dining room please.
+      data:
+        type: announce
+        method: all
+      target:
+      - media_player.lounge_plus
+      - media_player.boy_s_new_dot
+      - media_player.bedroom_dot
+  id: 97eef7b2e96541639e79d5240ee29d86
+- alias: Alarm Triggered Announcement
+  description: Alert everyone when alarm is triggered
+  mode: single
+  triggers:
+  - trigger: state
+    entity_id: alarm_control_panel.alarmo
+    to: triggered
+  actions:
+  - action: notify.alexa_media
+    data:
+      message: "<speak>\n  <emphasis level=\"strong\">Attention! The home alarm has
+        been triggered!</emphasis>\n  <break time=\"500ms\"/>\n  Check all doors and
+        windows immediately!\n</speak>\n"
+      data:
+        type: announce
+        method: all
+        volume_level: 0.8
+      target:
+      - media_player.lounge_plus
+      - media_player.boy_s_new_dot
+      - media_player.bedroom_dot
+      - media_player.diningroom_dot
+  - action: notify.mobile_app_jon_phone
+    data:
+      title: "\U0001F6A8 Alarm Triggered!"
+      message: Home alarm has been triggered at {{ now().strftime('%I:%M %p') }}
+      data:
+        priority: high
+        ttl: 0
+  id: 68ea469f6c0d4cdbac23234989da8fac
+- alias: Door Left Open Reminder
+  description: Alert if door left open too long
+  mode: restart
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.front_door
+    to: 'on'
+    for:
+      minutes: 10
+  conditions: []
+  actions:
+  - action: notify.alexa_media_lounge_plus
+    data:
+      message: 'Reminder: The {{ trigger.to_state.attributes.friendly_name }}  has
+        been open for 10 minutes.  Please close it to save energy.
+
+        '
+      data:
+        type: announce
+  id: 3cac9d3385dd49cc90319bbb4d47ef76
+- id: bin_day_reminder
+  alias: Bin Day Reminder
+  description: Remind to put bins out for collection
+  triggers:
+  - at: '20:00:00'
+    trigger: time
+  conditions:
+  - condition: time
+    weekday:
+    - thu
+  actions:
+  - action: notify.alexa_media_lounge_plus
+    data:
+      message: 'Reminder: Tomorrow is bin day.  Please put the bins out for collection.
+
+        '
+      data:
+        type: announce
+  - action: notify.mobile_app_jon_phone
+    data:
+      title: "\U0001F5D1️ Bin Day Tomorrow"
+      message: Don't forget to put the bins out!
+  mode: single
+- id: aad83719661b40969efbb9725fd1be4a
+  alias: Welcome Home Greeting
+  description: Greet family members when they arrive home
+  triggers:
+  - trigger: state
+    entity_id:
+    - person.jon
+    - person.natalie
+    - person.jacob
+    - person.joseph
+    to: home
+    from: not_home
+  conditions:
+  - condition: time
+    after: 07:00:00
+    before: '22:00:00'
+  actions:
+  - action: notify.alexa_media_bedroom_dot
+    data:
+      message: "Welcome home {{ trigger.to_state.attributes.friendly_name }}! {% if
+        now().hour < 12 %}\n  Good morning.\n{% elif now().hour < 18 %}\n  Good afternoon.\n{%
+        else %}\n  Good evening.\n{% endif %}\n"
+  - action: light.turn_on
+    target:
+      entity_id: light.hall_light
+    data:
+      brightness: 255
+      transition: 2
+    enabled: false
+  mode: queued
+  max: 5
+- alias: Football Practice Reminder
+  description: Remind boys about football practice
+  mode: single
+  triggers:
+  - at: '16:00:00'
+    trigger: time
+  conditions:
+  - condition: time
+    weekday:
+    - tue
+    - thu
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: person.jacob
+      state: home
+    - condition: state
+      entity_id: person.joseph
+      state: home
+  actions:
+  - action: notify.alexa_media_everywhere
+    data:
+      message: 'Boys! Football practice reminder. Make sure you have your: Kit, Boots,
+        Water bottle, And shin pads ready!
+
+        '
+      data:
+        type: announce
+  - action: switch.turn_on
+    target:
+      entity_id:
+      - switch.jacob_club
+      - switch.joseph_club
+  id: e25dfb70adfe42f98cb1d7ec7fb7ff8d
+- id: '1769605667434'
+  alias: Jacob Bags
+  description: Announce to Jacob at 8:00 AM on school days via Lounge Plus
+  triggers:
+  - at: 08:00:00
+    trigger: time
+  conditions:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  - condition: state
+    entity_id: input_boolean.school_day
+    state: 'on'
+  actions:
+  - data:
+      data:
+        type: announce
+        method: speak
+      message: Jacob, Bags ready
+    action: notify.alexa_media_lounge_plus
+  - data:
+      message: Bags
+      title: School Reminder
+    action: notify.mobile_app_sm_g990b2
+  mode: single
+- id: '1769605762600'
+  alias: Joseph Bags
+  description: Announce to Joseph at 8:05 AM on school days via Lounge Plus
+  triggers:
+  - at: 08:05:00
+    trigger: time
+  conditions:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  - condition: state
+    entity_id: input_boolean.school_day
+    state: 'on'
+  actions:
+  - action: conversation.process
+    metadata: {}
+    data:
+      text: make this more fun for an 11 year old "joseph get  your school bag ready!"
+      agent_id: conversation.bags
+    response_variable: agent
+  - action: notify.alexa_media_lounge_plus
+    data:
+      message: '{{agent.response.speech.plain.speech}}'
+  - action: notify.mobile_app_joseph
+    data:
+      message: '{{agent.response.speech.plain.speech}}'
+      title: School Reminder
+    enabled: true
+  mode: single
+- id: '1769617267764'
+  alias: weather
+  description: Weather announcement with UK backup services
+  triggers:
+  - trigger: time
+    at: 07:20:00
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  conditions: []
+  actions:
+  - action: weather.get_forecasts
+    metadata: {}
+    target:
+      entity_id: "{% if has_value('weather.met_office_deal') %}\n  weather.met_office_deal\n{%
+        elif has_value('weather.openmeteo') %}\n  weather.openmeteo\n{% else %}\n
+        \ weather.met_no\n{% endif %}\n"
+    data:
+      type: daily
+    response_variable: daily_forecast
+  - action: conversation.process
+    metadata: {}
+    data:
+      text: "You are an advanced smart home with a built in personal weather station.
+        Weather updates will be spoken out loud and should be funny and creative because
+        two children 11 years old and 14 years old will be listening. Please use whole
+        numbers and try to make it educational! This should be less than 30 seconds
+        in length. it is important that the school update comes first\n{% if states('sensor.school_event_today')
+        %} School Update: {{ states('sensor.school_event_today') }} {% endif %}\nCurrent
+        Conditions: Current time is {{ now().strftime('%I:%M %p') }}.\nTemperature
+        is {% if has_value('sensor.met_office_deal_temperature') %}\n  {{ states('sensor.met_office_deal_temperature')
+        | round(0) }}°C\n{% elif has_value('sensor.openmeteo_temperature') %}\n  {{
+        states('sensor.openmeteo_temperature') | round(0) }}°C\n{% elif has_value('sensor.met_no_temperature')
+        %}\n  {{ states('sensor.met_no_temperature') | round(0) }}°C\n{% else %}\n
+        \ {{ states('sensor.pirateweather_temperature') | round(0) }}°C\n{% endif
+        %}.\nFeels like {% if has_value('sensor.pirateweather_apparent_temperature')
+        %}\n  {{ states('sensor.pirateweather_apparent_temperature') | round(0) }}°C\n{%
+        elif has_value('sensor.openmeteo_apparent_temperature') %}\n  {{ states('sensor.openmeteo_apparent_temperature')
+        | round(0) }}°C\n{% elif has_value('sensor.met_office_deal_feels_like_temperature')
+        %}\n  {{ states('sensor.met_office_deal_feels_like_temperature') | round(0)
+        }}°C\n{% else %}\n  the same\n{% endif %}.\nHumidity is {% if has_value('weather.pirateweather')
+        %}\n  {{ state_attr('weather.pirateweather', 'humidity') | round(0) }}%\n{%
+        elif has_value('weather.met_office_deal') %}\n  {{ state_attr('weather.met_office_deal',
+        'humidity') | round(0) }}%\n{% elif has_value('sensor.openmeteo_relative_humidity')
+        %}\n  {{ states('sensor.openmeteo_relative_humidity') | round(0) }}%\n{% endif
+        %}.\n{% if has_value('sensor.pirateweather_uv_index') %} UV Index is {{ states('sensor.pirateweather_uv_index')
+        | round(0) }}. {% elif has_value('sensor.openmeteo_uv_index') %} UV Index
+        is {{ states('sensor.openmeteo_uv_index') | round(0) }}. {% endif %}\nCurrent
+        conditions: {% if has_value('weather.met_office_deal') %}\n  {{ states('weather.met_office_deal')
+        }}\n{% elif has_value('weather.openmeteo') %}\n  {{ states('weather.openmeteo')
+        }}\n{% elif has_value('weather.met_no') %}\n  {{ states('weather.met_no')
+        }}\n{% else %}\n  {{ states('weather.pirateweather') }}\n{% endif %}.\nToday's
+        Forecast: {% if has_value('sensor.pirateweather_hourly_summary') %} Forecasted
+        Conditions for Today {{ states('sensor.pirateweather_hourly_summary') }} {%
+        elif has_value('sensor.openmeteo_weather_code') %} Forecasted Conditions for
+        Today {{ states('sensor.openmeteo_weather_code') }} {% endif %}\n{% set forecast_entity
+        = 'weather.met_office_deal' if has_value('weather.met_office_deal') \n                         else
+        'weather.openmeteo' if has_value('weather.openmeteo')\n                         else
+        'weather.met_no' %}\n\nTemperature for Today {{ daily_forecast[forecast_entity].forecast[0].temperature
+        }}\nForecasted Low Temperature for Today {{ daily_forecast[forecast_entity].forecast[0].templow
+        }}\nForecasted Precipitation Probability {{ daily_forecast[forecast_entity].forecast[0].precipitation_probability
+        }}"
+      agent_id: conversation.kids_weather
+    response_variable: agent
+  - action: notify.alexa_media
+    data:
+      message: '{{ agent.response.speech.plain.speech }}'
+      data:
+        type: announce
+        method: all
+        volume_level: 0.5
+      target:
+      - media_player.lounge_plus
+      - media_player.boy_s_new_dot
+      - media_player.bedroom_dot
+      - media_player.kitchen_dot
+  - action: notify.mobile_app_jon_phone
+    metadata: {}
+    data:
+      message: '{{ agent.response.speech.plain.speech }}'
+  mode: single
+- id: '1770390775158'
+  alias: New school evening
+  description: Remind boys to prepare for school tomorrow
+  triggers:
+  - at: '19:00:00'
+    trigger: time
+  conditions:
+  - condition: time
+    weekday:
+    - sun
+    - mon
+    - tue
+    - wed
+    - thu
+  - condition: state
+    entity_id: input_boolean.school_day
+    state: 'on'
+  actions:
+  - action: conversation.process
+    metadata: {}
+    data:
+      text: "You are announcing a school event to two kids aged 11 and 14. Use chaotic
+        dad humour, dry sarcasm, and short sentences. No emojis. No baby talk. No
+        long explanations.    \n\ninclude this:\n\"Boys, school tomorrow. Make sure
+        you have: your bags packed, your PE kit ready if you need it, drink in the
+        fridge Jacob, and your homework done. {% if states('sensor.school_event_tomorrow')
+        %} School Update for Tomorrow: {{ states('sensor.school_event_tomorrow') }}
+        {% endif %}\""
+      agent_id: conversation.evening_prep
+    response_variable: agent
+  - action: notify.alexa_media
+    data:
+      message: '{{ agent.response.speech.plain.speech }}
+
+        '
+      data:
+        type: announce
+        method: all
+        volume_level: 0.5
+      target:
+      - media_player.lounge_plus
+      - media_player.boy_s_new_dot
+      - media_player.bedroom_dot
+      - media_player.kitchen_dot
+  - action: notify.mobile_app_sm_g990b2
+    metadata: {}
+    data:
+      message: '{{ agent.response.speech.plain.speech }}'
+  - action: notify.mobile_app_jon_phone
+    metadata: {}
+    data:
+      message: '{{ agent.response.speech.plain.speech }}'
+  mode: single
+- id: '1770795001627'
+  alias: Check if Google Mini was used tonight
+  description: ''
+  triggers:
+  - at: '22:45:00'
+    trigger: time
+  conditions:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  - condition: template
+    value_template: '{{ states.media_player.bedroom_speaker_2.last_changed < today_at("10:00")
+      }}
+
+      '
+  actions:
+  - action: media_player.volume_set
+    metadata: {}
+    target:
+      entity_id: media_player.bedroom_dot
+    data:
+      volume_level: 0.61
+  - action: notify.alexa_media_bedroom_dot
+    metadata: {}
+    data:
+      message: Should you have set an alarm?
+  mode: single
+- id: '1771001543004'
+  alias: weather with 4-tier UK backup services
+  description: Weather announcement with 4-tier UK backup services
+  triggers:
+  - trigger: time
+    at: 07:20:00
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  conditions: []
+  actions:
+  - action: weather.get_forecasts
+    metadata: {}
+    target:
+      entity_id: "{% if has_value('weather.met_office_deal') %}\n  weather.met_office_deal\n{%
+        elif has_value('weather.home_weather') %}\n  weather.home_weather\n{% elif
+        has_value('weather.forecast_home') %}\n  weather.forecast_home\n{% else %}\n
+        \ weather.pirateweather\n{% endif %}\n"
+    data:
+      type: daily
+    response_variable: daily_forecast
+  - action: conversation.process
+    metadata: {}
+    data:
+      text: 'You are an advanced smart home with a built in personal weather station.
+        Weather updates will be spoken out loud and should be funny and creative because
+        two children 11 years old and 14 years old will be listening. Please use whole
+        numbers and try to make it educational! This should be less than 30 seconds
+        in length. it is important that the school update comes first
+
+        {% if states(''sensor.school_event_today'') %} School Update: {{ states(''sensor.school_event_today'')
+        }} {% endif %}
+
+        Current Conditions: Current time is {{ now().strftime(''%I:%M %p'') }}.
+
+        Temperature is {% if has_value(''sensor.met_office_deal_temperature'') %}{{
+        states(''sensor.met_office_deal_temperature'') | round(0) }}°C{% elif has_value(''weather.home_weather'')
+        %}{{ state_attr(''weather.home_weather'', ''temperature'') | round(0) }}°C{%
+        elif has_value(''weather.forecast_home'') %}{{ state_attr(''weather.forecast_home'',
+        ''temperature'') | round(0) }}°C{% else %}{{ states(''sensor.pirateweather_temperature'')
+        | round(0) }}°C{% endif %}.
+
+        Feels like {% if has_value(''sensor.pirateweather_apparent_temperature'')
+        %}{{ states(''sensor.pirateweather_apparent_temperature'') | round(0) }}°C{%
+        elif has_value(''sensor.met_office_deal_feels_like_temperature'') %}{{ states(''sensor.met_office_deal_feels_like_temperature'')
+        | round(0) }}°C{% elif has_value(''weather.forecast_home'') %}{{ state_attr(''weather.forecast_home'',
+        ''dew_point'') | round(0) }}°C{% else %}the same{% endif %}.
+
+        Humidity is {% if has_value(''weather.pirateweather'') %}{{ state_attr(''weather.pirateweather'',
+        ''humidity'') | round(0) }}%{% elif has_value(''weather.met_office_deal'')
+        %}{{ state_attr(''weather.met_office_deal'', ''humidity'') | round(0) }}%{%
+        elif has_value(''weather.home_weather'') %}{{ state_attr(''weather.home_weather'',
+        ''humidity'') | round(0) }}%{% elif has_value(''weather.forecast_home'') %}{{
+        state_attr(''weather.forecast_home'', ''humidity'') | round(0) }}%{% endif
+        %}.
+
+        {% if has_value(''sensor.pirateweather_uv_index'') %}UV Index is {{ states(''sensor.pirateweather_uv_index'')
+        | round(0) }}.{% elif has_value(''weather.forecast_home'') %}UV Index is {{
+        state_attr(''weather.forecast_home'', ''uv_index'') | round(1) }}.{% endif
+        %}
+
+        Current conditions: {% if has_value(''weather.met_office_deal'') %}{{ states(''weather.met_office_deal'')
+        }}{% elif has_value(''weather.home_weather'') %}{{ states(''weather.home_weather'')
+        }}{% elif has_value(''weather.forecast_home'') %}{{ states(''weather.forecast_home'')
+        }}{% else %}{{ states(''weather.pirateweather'') }}{% endif %}.
+
+        Today''s Forecast: {% if has_value(''sensor.pirateweather_hourly_summary'')
+        %}Forecasted Conditions for Today {{ states(''sensor.pirateweather_hourly_summary'')
+        }}{% endif %}
+
+        {% set forecast_entity = ''weather.met_office_deal'' if has_value(''weather.met_office_deal'')
+        else ''weather.home_weather'' if has_value(''weather.home_weather'') else
+        ''weather.forecast_home'' if has_value(''weather.forecast_home'') else ''weather.pirateweather''
+        %}
+
+        Temperature for Today {{ daily_forecast[forecast_entity].forecast[0].temperature
+        }}
+
+        Forecasted Low Temperature for Today {{ daily_forecast[forecast_entity].forecast[0].templow
+        }}
+
+        Forecasted Precipitation Probability {{ daily_forecast[forecast_entity].forecast[0].precipitation_probability
+        }}
+
+        '
+      agent_id: conversation.kids_weather
+    response_variable: agent
+  - action: notify.alexa_media
+    data:
+      message: '{{ agent.response.speech.plain.speech }}'
+      data:
+        type: announce
+        method: all
+        volume_level: 0.5
+      target:
+      - media_player.lounge_plus
+      - media_player.boy_s_new_dot
+      - media_player.bedroom_dot
+      - media_player.kitchen_dot
+  - action: notify.mobile_app_jon_phone
+    metadata: {}
+    data:
+      message: '{{ agent.response.speech.plain.speech }}'
+  mode: single

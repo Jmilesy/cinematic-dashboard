@@ -1,0 +1,45 @@
+sensor:
+  - name: "Washing Machine Status"
+    unique_id: washing_machine_status
+    state: >
+      {% from 'macros/appliance_macros.jinja' import typed_state %}
+      {{ typed_state('switch.washing_machine', 'appliance') }}
+    attributes: >
+      {% from 'macros/appliance_macros.jinja' import attributes %}
+      {{ attributes('switch.washing_machine', 'appliance') | from_json }}
+
+  - name: "Kitchen Timer Status"
+    unique_id: kitchen_timer_status
+    state: >
+      {% from 'macros/appliance_macros.jinja' import typed_state %}
+      {{ typed_state('timer.kitchen', 'timer') }}
+    attributes: >
+      {% from 'macros/appliance_macros.jinja' import attributes %}
+      {{ attributes('timer.kitchen', 'timer') | from_json }}
+
+  - name: "Living Room TV Status"
+    unique_id: living_room_tv_status
+    state: >
+      {% from 'macros/appliance_macros.jinja' import typed_state %}
+      {{ typed_state('media_player.living_room_tv', 'media') }}
+    attributes: >
+      {% from 'macros/appliance_macros.jinja' import attributes %}
+      {{ attributes('media_player.living_room_tv', 'media') | from_json }}
+
+  - name: "Robot Vacuum Status"
+    unique_id: robot_vacuum_status
+    state: >
+      {% from 'macros/appliance_macros.jinja' import typed_state %}
+      {{ typed_state('vacuum.living_room', 'vacuum') }}
+    attributes: >
+      {% from 'macros/appliance_macros.jinja' import attributes %}
+      {{ attributes('vacuum.living_room', 'vacuum') | from_json }}
+
+  - name: "Generic Device Status"
+    unique_id: generic_device_status
+    state: >
+      {% from 'macros/appliance_macros.jinja' import typed_state %}
+      {{ typed_state('light.bedroom', 'generic') }}
+    attributes: >
+      {% from 'macros/appliance_macros.jinja' import attributes %}
+      {{ attributes('light.bedroom', 'generic') | from_json }}

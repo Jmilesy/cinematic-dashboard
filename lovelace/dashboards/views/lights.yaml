@@ -1,0 +1,57 @@
+title: Lights
+path: lights
+type: sidebar
+theme: Google Dark Theme
+cards:
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: back
+    alignment: center
+
+  - type: custom:mushroom-title-card
+    title: Lights On
+
+  - type: custom:auto-entities
+    card:
+      type: grid
+      columns: 3
+      square: false
+      title: Lights On
+    card_param: cards
+    filter:
+      include:
+        - entity_id: light.*
+          not:
+            state: unavailable
+          options:
+            type: custom:mushroom-update-card
+            entities:
+              - this.entity_id
+            tap_action:
+              action: call-service
+              service: homeassistant.toggle
+              service_data:
+                entity_id: this.entity_id
+    sort:
+      method: friendly_name
+
+  - type: custom:mushroom-title-card
+    subtitle: Quick Scenes
+
+  - type: horizontal-stack
+    cards:
+      - type: button
+        name: All Off
+        tap_action:
+          action: call-service
+          service: light.turn_off
+          service_data:
+            entity_id: group.all_lights
+      # Evening scene button REMOVED - scene.evening missing
+      # - type: button
+      #   name: Evening
+      #   tap_action:
+      #     action: call-service
+      #     service: scene.turn_on
+      #     service_data:
+      #       entity_id: scene.evening

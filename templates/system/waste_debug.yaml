@@ -1,0 +1,4 @@
+- sensor:
+    - name: waste_debug
+      unique_id: waste_debug
+      state: "{{ state_attr('sensor.next_waste_collection', None) }}"

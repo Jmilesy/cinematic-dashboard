@@ -1,0 +1,87 @@
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+lovelace:
+  # resources: !include lovelace/resources/resources.yaml
+  dashboards:
+    cinematic-dashboard:
+      mode: yaml
+      title: Cinematic
+      icon: mdi:movie-open
+      show_in_sidebar: true
+      filename: lovelace/cinematic-dashboard.yaml
+
+    cinematic-v2:
+      mode: yaml
+      title: Cinematic V2
+      icon: mdi:filmstrip
+      show_in_sidebar: true
+      filename: lovelace/cinematic-v2.yaml
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+# Template sensors (loads all YAML files in templates/ folder)
+template: !include_dir_merge_list templates/
+
+homeassistant:
+  allowlist_external_dirs:
+    - "/media"
+  auth_providers:
+    - type: homeassistant
+    - type: trusted_networks
+      trusted_networks:
+        - 10.0.0.0/24
+      trusted_users:
+        192.168.1.43: a663b3fdb7874445be8a4dfefaee08d9
+
+# ============================================================
+# Waste Collection Schedule – Source Configuration
+# ============================================================
+waste_collection_schedule:
+  sources:
+    - name: dover_gov_uk
+      args:
+        uprn: "10034882837"
+      customize:
+        - type: REFUSE
+          alias: "Refuse Collection"
+          icon: mdi:trash-can-outline
+        - type: FOOD
+          alias: "Food Collection"
+          icon: mdi:food
+        - type: RECYCLING
+          alias: "Recycling Collection"
+          icon: mdi:recycle
+        - type: PAPERCARD
+          alias: "Paper/Card Collection"
+          icon: mdi:package-variant
+
+# ============================================================
+# Waste Collection Schedule – Platform Sensor
+# ============================================================
+sensor:
+  - platform: waste_collection_schedule
+    name: "Next Waste Collection"
+    source_index: 0
+    count: 3
+    leadtime: 60
+    add_days_to: true
+
+
+
+
+#python_script:
+
+#media_player:
+#  - platform: falcon_pi_player
+#    name: FPP
+#    host: 192.168.1.46
+#    #port: PORT #optional
+#    username: !secret admin
+#    password: !secret gen_pw

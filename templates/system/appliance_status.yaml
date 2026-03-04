@@ -1,0 +1,9 @@
+sensor:
+  - name: "Washing Machine Status"
+    unique_id: washing_machine_status
+    state: >
+      {% from 'macros/appliance_macros.jinja' import typed_state %}
+      {{ typed_state('sensor.washing_machine', 'appliance') }}
+    attributes: >
+      {% from 'macros/appliance_macros.jinja' import attributes %}
+      {{ attributes('sensor.washing_machine', 'appliance') }}

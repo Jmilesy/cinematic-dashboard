@@ -1,0 +1,30 @@
+title: Weather
+path: weather
+type: sidebar
+theme: Google Dark Theme
+cards:
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: back
+    alignment: center
+
+  - type: custom:platinum-weather-card
+    entity_apparent_temp: sensor.pirateweather_apparent_temperature
+    entity_forecast_icon: sensor.pirateweather_icon
+    # Removed: sensor.home_realfeel_temperature_max_day_1, sensor.home_realfeel_temperature_min_day_1, sensor.home_condition_day_1, sensor.home_realfeel_temperature (all missing)
+    entity_humidity: sensor.pirateweather_humidity
+    entity_pop: sensor.pirateweather_precip_probability
+    entity_pressure: sensor.pirateweather_pressure
+    entity_temperature: sensor.pirateweather_temperature
+    entity_wind_speed: sensor.pirateweather_wind_speed
+    entity_wind_gust: sensor.pirateweather_wind_gust
+    entity_sun: sun.sun
+
+  - type: custom:mushroom-title-card
+    subtitle: Weather Extras
+
+  - type: entities
+    entities:
+      - sensor.pirateweather_uv_index
+      # Removed: sensor.pirateweather_fire_index (unknown state)
+      - sensor.pirateweather_wind_speed

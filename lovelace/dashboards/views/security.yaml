@@ -1,0 +1,44 @@
+title: Security
+path: security
+type: sidebar
+theme: Google Dark Theme
+cards:
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: back
+    alignment: center
+    card_mod:
+      style: |
+        ha-card {
+          background: {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+          border-radius: 20px;
+          border: 1px solid rgba(255,255,255,0.15);
+          box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+          backdrop-filter: blur(10px);
+          margin-bottom: 8px;
+        }
+
+  - type: custom:alarmo-card
+    entity: alarm_control_panel.alarmo
+    name: Home Alarm
+
+  # Camera and door sensors REMOVED - camera.front_door, binary_sensor.front_door_contact, binary_sensor.garage_motion missing
+  # - type: horizontal-stack
+  #   cards:
+  #     - type: picture-entity
+  #       entity: camera.front_door
+  #       camera_view: live
+  #       show_name: false
+  #     - type: entities
+  #       entities:
+  #         - binary_sensor.front_door_contact
+  #         - binary_sensor.garage_motion
+
+  - type: custom:mushroom-title-card
+    subtitle: Sensors
+
+  # Sensors REMOVED - sensor.door_left_open_duration and sensor.last_alarm_event missing
+  # - type: entities
+  #   entities:
+  #     - sensor.door_left_open_duration
+  #     - sensor.last_alarm_event

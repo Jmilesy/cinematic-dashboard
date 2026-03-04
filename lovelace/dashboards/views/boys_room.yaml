@@ -1,0 +1,298 @@
+title: Boys Room
+path: boys
+type: sidebar
+theme: Google Dark Theme
+cards:
+  # AI NEURAL HEADER SECTION
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: back
+    alignment: center
+    card_mod:
+      style: |
+        ha-card {
+          background: {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+          border-radius: 20px;
+          border: 1px solid rgba(255,255,255,0.15);
+          box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.1);
+          backdrop-filter: blur(10px);
+          margin-bottom: 8px;
+        }
+
+  # ENVIRONMENTAL INTELLIGENCE GRID (3 COLUMNS)
+  - type: grid
+    columns: 3
+    square: false
+    card_mod:
+      style:
+        grid:
+          gap: 4px
+    cards:
+      # Temperature Card with Advanced Styling
+      - type: custom:button-card
+        entity: sensor.boysroom_temperature
+        name: TEMP
+        layout: vertical
+        show_state: true
+        state_display: |
+          [[[ return (states['sensor.boysroom_temperature'].state || '0') + '°C'; ]]]
+        styles:
+          card:
+            - background: linear-gradient(135deg, rgba(255,150,0,0.15), rgba(255,100,0,0.08)), {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+            - border-radius: 16px
+            - border: 1px solid rgba(255,150,0,0.3)
+            - box-shadow: 0 0 20px rgba(255,150,0,0.2), 0 4px 16px rgba(0,0,0,0.3)
+            - backdrop-filter: blur(10px)
+            - padding: 16px
+          state:
+            - color: '#FFA500'
+            - font-weight: bold
+            - font-size: 24px
+
+      # Humidity Card (REMOVED - entity unavailable)
+      # - type: custom:button-card
+      #   entity: sensor.boys_room_humidity
+      #   name: HUMIDITY
+      #   layout: vertical
+      #   show_state: true
+      #   state_display: |
+      #     [[[ return (states['sensor.boys_room_humidity'].state || '0') + '%'; ]]]
+            - font-size: 24px
+
+      # Room Status Card with Door/Window Monitoring
+      - type: custom:button-card
+        entity: binary_sensor.boys_room_door
+        name: ROOM STATUS
+        layout: vertical
+        icon: |
+          [[[
+            return states['binary_sensor.boys_room_door'].state === 'on' ? 'mdi:door-open' : 'mdi:door-closed';
+          ]]]
+        styles:
+          card:
+            - background: linear-gradient(135deg, rgba(100,255,200,0.15), rgba(50,255,150,0.08)), {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+            - border-radius: 16px
+            - border: 1px solid rgba(100,255,200,0.3)
+            - box-shadow: 0 0 20px rgba(100,255,200,0.2), 0 4px 16px rgba(0,0,0,0.3)
+            - backdrop-filter: blur(10px)
+            - padding: 16px
+          state:
+            - color: '[[[return states["binary_sensor.boys_room_door"].state === "on" ? "#FF6B6B" : "#64FFC8";]]]'
+            - font-weight: bold
+            - font-size: 14px
+
+  # LIGHTING COMMAND CENTER (2 COLUMN LAYOUT)
+  - type: custom:mushroom-title-card
+    subtitle: 💡 LIGHTING SYSTEM
+    card_mod:
+      style: |
+        ha-card {
+          background: linear-gradient(135deg, rgba(255,200,0,0.15), rgba(255,150,0,0.08)), {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+          border-radius: 20px;
+          border: 1px solid rgba(255,200,0,0.3);
+          box-shadow: 0 0 25px rgba(255,200,0,0.15);
+          backdrop-filter: blur(10px);
+        }
+
+  - type: grid
+    columns: 2
+    square: false
+    card_mod:
+      style:
+        grid:
+          gap: 4px
+    cards:
+      - type: custom:mushroom-light-card
+        entity: light.boys_light
+        use_light_color: true
+        show_brightness_control: true
+        show_color_control: true
+        show_color_temp_control: true
+        name: Main Light
+        icon: mdi:lightbulb-on
+        tap_action:
+          action: toggle
+        card_mod:
+          style: |
+            ha-card {
+              background: {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+              border-radius: 20px;
+              border: 1px solid rgba(255,255,255,0.15);
+              box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+              backdrop-filter: blur(10px);
+            }
+
+      - type: custom:mushroom-light-card
+        entity: light.boys_led_light
+        use_light_color: true
+        show_brightness_control: true
+        icon: mdi:led-strip-variant
+        name: LED Strip
+        tap_action:
+          action: toggle
+        card_mod:
+          style: |
+            ha-card {
+              background: {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+              border-radius: 20px;
+              border: 1px solid rgba(255,255,255,0.15);
+              box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+              backdrop-filter: blur(10px);
+            }
+
+  # TEMPERATURE CONTROL & MEDIA ZONE
+  - type: custom:mushroom-title-card
+    subtitle: 🌡️ CLIMATE & ENTERTAINMENT
+    card_mod:
+      style: |
+        ha-card {
+          background: linear-gradient(135deg, rgba(138,43,226,0.15), rgba(75,0,130,0.08)), {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+          border-radius: 20px;
+          border: 1px solid rgba(138,43,226,0.3);
+          box-shadow: 0 0 25px rgba(138,43,226,0.15);
+          backdrop-filter: blur(10px);
+        }
+
+  - type: grid
+    columns: 2
+    square: false
+    card_mod:
+      style:
+        grid:
+          gap: 4px
+    cards:
+      # Aircon Control
+      - type: custom:mushroom-entity-card
+        entity: switch.boys_aircon
+        name: A/C System
+        icon: mdi:air-conditioner
+        tap_action:
+          action: toggle
+        card_mod:
+          style: |
+            ha-card {
+              background: {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(100,200,255,0.1), rgba(50,150,255,0.05)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+              border-radius: 20px;
+              border: 1px solid rgba(100,200,255,0.25);
+              box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+              backdrop-filter: blur(10px);
+            }
+
+      # Media Player
+      - type: custom:mushroom-media-player-card
+        entity: media_player.boy_s_new_dot
+        volume_controls:
+          - volume_mute
+          - volume_set
+        use_media_info: true
+        show_volume_level: true
+        media_controls:
+          - on_off
+          - play_pause
+        card_mod:
+          style: |
+            ha-card {
+              background: {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,200,0,0.1), rgba(255,150,0,0.05)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+              border-radius: 20px;
+              border: 1px solid rgba(255,200,0,0.25);
+              box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+              backdrop-filter: blur(10px);
+            }
+
+  # SMART COMPANION LIGHTS
+  - type: custom:mushroom-title-card
+    subtitle: 👥 COMPANION CONTROLS
+    card_mod:
+      style: |
+        ha-card {
+          background: linear-gradient(135deg, rgba(200,50,255,0.15), rgba(150,50,255,0.08)), {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+          border-radius: 20px;
+          border: 1px solid rgba(200,50,255,0.3);
+          box-shadow: 0 0 25px rgba(200,50,255,0.15);
+          backdrop-filter: blur(10px);
+        }
+
+  - type: grid
+    columns: 2
+    square: false
+    card_mod:
+      style:
+        grid:
+          gap: 4px
+    cards:
+      # Joseph's Light (REMOVED - light.joseph unavailable)
+      # - type: custom:mushroom-light-card
+      #   entity: light.joseph
+      #   use_light_color: true
+      #   show_brightness_control: true
+      #   show_color_control: true
+      #   show_color_temp_control: true
+      #   name: Joseph's Light
+      #   icon: mdi:lightbulb-multiple
+      #   tap_action:
+      #     action: toggle
+        card_mod:
+          style: |
+            ha-card {
+              background: {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+              border-radius: 20px;
+              border: 1px solid rgba(255,255,255,0.15);
+              box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+              backdrop-filter: blur(10px);
+            }
+
+  # ENERGY ANALYTICS & PERFORMANCE METRICS
+  - type: custom:mushroom-title-card
+    subtitle: ⚡ ENERGY INTELLIGENCE
+    card_mod:
+      style: |
+        ha-card {
+          background: linear-gradient(135deg, rgba(255,100,100,0.15), rgba(255,50,50,0.08)), {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+          border-radius: 20px;
+          border: 1px solid rgba(255,100,100,0.3);
+          box-shadow: 0 0 25px rgba(255,100,100,0.15);
+          backdrop-filter: blur(10px);
+        }
+
+  - type: grid
+    columns: 2
+    square: false
+    card_mod:
+      style:
+        grid:
+          gap: 4px
+    cards:
+      # Power Consumption Graph
+      - type: sensor
+        entity: sensor.boys_aircon_energy_power
+        graph: line
+        hours_to_show: 24
+        detail: 1
+        name: Power Draw
+        unit: W
+        card_mod:
+          style: |
+            ha-card {
+              background: {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,100,100,0.1), rgba(255,50,50,0.05)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+              border-radius: 20px;
+              border: 1px solid rgba(255,100,100,0.25);
+              box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+              backdrop-filter: blur(10px);
+            }
+
+      # Daily Energy Consumption
+      - type: sensor
+        entity: sensor.boys_aircon_energy_today
+        graph: none
+        detail: 2
+        name: Energy Today
+        unit: kWh
+        card_mod:
+          style: |
+            ha-card {
+              background: {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,100,100,0.1), rgba(255,50,50,0.05)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+              border-radius: 20px;
+              border: 1px solid rgba(255,100,100,0.25);
+              box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+              backdrop-filter: blur(10px);
+            }

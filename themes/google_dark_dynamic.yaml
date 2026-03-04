@@ -1,0 +1,28 @@
+Google Dark Theme:
+  # Time‑of‑day gradients
+  gdd-grad-night: "linear-gradient(135deg, #0d0d12, #1a1a24)"
+  gdd-grad-dawn: "linear-gradient(135deg, #1c2733, #2f3e4d)"
+  gdd-grad-day: "linear-gradient(135deg, #2a3f52, #3d5a6d)"
+  gdd-grad-dusk: "linear-gradient(135deg, #3b2a4d, #6a4f7d)"
+
+  # Weather tints
+  gdd-tint-cloud: "linear-gradient(rgba(120,120,120,0.25), rgba(120,120,120,0.25))"
+  gdd-tint-rain: "linear-gradient(rgba(60,90,140,0.25), rgba(60,90,140,0.25))"
+  gdd-tint-snow: "linear-gradient(rgba(180,200,255,0.25), rgba(180,200,255,0.25))"
+  gdd-tint-wind: "linear-gradient(rgba(70,120,120,0.20), rgba(70,120,120,0.20))"
+  gdd-tint-fog: "linear-gradient(rgba(150,150,150,0.20), rgba(150,150,150,0.20))"
+  gdd-tint-thunder: "linear-gradient(rgba(255,255,255,0.35), rgba(255,255,255,0.35))"
+
+  # Shimmer / atmospheric layer
+  gdd-shimmer: "linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.06))"
+
+  # Accent colours (based on Google Dark)
+  gdd-accent: "rgb(138, 180, 248)"
+  gdd-accent-soft: "rgba(138, 180, 248, 0.35)"
+
+  # Header / nav backgrounds
+  gdd-header-bg: "var(--secondary-background-color)"
+  gdd-nav-bg: "rgba(0,0,0,0.35)"
+
+  # Card background (for cinematic consistency if needed)
+  gdd-card-bg: "var(--card-background-color)"

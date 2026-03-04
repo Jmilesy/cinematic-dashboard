@@ -1,0 +1,23 @@
+###############################################################
+# LIGHTING VIEW - CINEMATIC V2
+# Location: config/lovelace/dashboards/views/cinematic_lighting.yaml
+###############################################################
+
+title: Lighting
+path: cinematic-lighting
+icon: mdi:lightbulb-group
+
+cards:
+  - type: custom:button-card
+    template: section_header
+    name: Rooms
+
+  - type: custom:button-card
+    template: lighting_overview_block
+
+  - type: custom:button-card
+    template: section_header
+    name: Scenes
+
+  - type: custom:button-card
+    template: scene_selector_block

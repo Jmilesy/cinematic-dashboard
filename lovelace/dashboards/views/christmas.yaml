@@ -1,0 +1,37 @@
+title: Christmas
+path: christmas
+type: sidebar
+theme: Google Dark Theme
+cards:
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: back
+    alignment: center
+
+  - type: custom:mushroom-title-card
+    title: Christmas Control
+
+  - type: horizontal-stack
+    cards:
+      - type: button
+        name: Christmas Master
+        tap_action:
+          action: toggle
+          entity: input_boolean.christmas_override
+        icon: mdi:snowflake
+      # Window LEDs and Tree buttons REMOVED - light.christmas_master and switch.christmas_switch unavailable
+      # - type: button
+      #   name: Window LEDs
+      #   tap_action:
+      #     action: toggle
+      #     entity: light.christmas_master
+      # - type: button
+      #   name: Tree
+      #   tap_action:
+      #     action: toggle
+      #     entity: switch.christmas_switch
+
+  - type: picture-entity
+    entity: sensor.anniversary_christmas
+    image: local/xmas.gif
+    camera_view: live

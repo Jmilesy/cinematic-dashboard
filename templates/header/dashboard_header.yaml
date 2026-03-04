@@ -1,0 +1,204 @@
+###############################################################
+# HEADER SENSORS - UPDATED
+# Location: config/templates/header_sensors.yaml
+# Add to configuration.yaml:
+#   template: !include_dir_merge_list templates/
+#
+# CHANGES:
+# - Temperature now uses pirateweather_temperature (not apparent)
+# - Display format: "5°C (3°C)" - actual (feels like)
+###############################################################
+
+- sensor:
+    ###############################################################
+    # TIME & GREETING
+    ###############################################################
+    - name: "Header Greeting"
+      unique_id: header_greeting
+      state: >
+        {% set hour = now().hour %}
+        {% if hour >= 22 or hour < 5 %}
+          Good Night
+        {% elif hour >= 18 %}
+          Good Evening
+        {% elif hour >= 12 %}
+          Good Afternoon
+        {% else %}
+          Good Morning
+        {% endif %}
+      attributes:
+        emoji: >
+          {% set hour = now().hour %}
+          {% if hour >= 22 or hour < 5 %}
+            🌙
+          {% elif hour >= 18 %}
+            🌆
+          {% elif hour >= 12 %}
+            ☀️
+          {% else %}
+            🌅
+          {% endif %}
+        greeting_text: >
+          {% set hour = now().hour %}
+          {% if hour >= 22 or hour < 5 %}
+            Good Night
+          {% elif hour >= 18 %}
+            Good Evening
+          {% elif hour >= 12 %}
+            Good Afternoon
+          {% else %}
+            Good Morning
+          {% endif %}
+
+    - name: "Header Time Period"
+      unique_id: header_time_period
+      state: >
+        {% set hour = now().hour %}
+        {% if hour < 6 %}
+          night
+        {% elif hour < 8 %}
+          dawn
+        {% elif hour < 12 %}
+          morning
+        {% elif hour < 17 %}
+          afternoon
+        {% elif hour < 19 %}
+          golden_hour
+        {% elif hour < 22 %}
+          evening
+        {% else %}
+          late_night
+        {% endif %}
+      attributes:
+        gradient: >
+          {% set hour = now().hour %}
+          {% if hour < 6 %}
+            linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #2a2f4a 100%)
+          {% elif hour < 8 %}
+            linear-gradient(135deg, #1a2332 0%, #3d4e6a 50%, #5f7095 100%)
+          {% elif hour < 12 %}
+            linear-gradient(135deg, #2c4159 0%, #3f5a78 50%, #5a7a9f 100%)
+          {% elif hour < 17 %}
+            linear-gradient(135deg, #3d5a75 0%, #4d6d8a 50%, #6a8caa 100%)
+          {% elif hour < 19 %}
+            linear-gradient(135deg, #4a3854 0%, #6d4d7a 50%, #916ba0 100%)
+          {% elif hour < 22 %}
+            linear-gradient(135deg, #2a2545 0%, #3d3560 50%, #534a7a 100%)
+          {% else %}
+            linear-gradient(135deg, #151825 0%, #252838 50%, #35384a 100%)
+          {% endif %}
+        sun_tint: >
+          {% set hour = now().hour %}
+          {% if hour >= 6 and hour < 8 %}
+            linear-gradient(rgba(255,180,120,0.15), rgba(255,180,120,0.15))
+          {% elif hour >= 17 and hour < 19 %}
+            linear-gradient(rgba(255,140,100,0.15), rgba(255,140,100,0.15))
+          {% else %}
+            none
+          {% endif %}
+
+    - name: "Header Current Time"
+      unique_id: header_current_time
+      state: "{{ now().strftime('%H:%M') }}"
+      attributes:
+        hour: "{{ now().strftime('%H') }}"
+        minute: "{{ now().strftime('%M') }}"
+        day: "{{ now().strftime('%a') }}"
+        date: "{{ now().strftime('%d') }}"
+        month: "{{ now().strftime('%b') }}"
+        full_date: "{{ now().strftime('%a, %b %d') }}"
+
+    ###############################################################
+    # WEATHER SUMMARY - UPDATED TEMPERATURE
+    ###############################################################
+    - name: "Header Weather Summary"
+      unique_id: header_weather_summary
+      state: >
+        {% set temp = states('sensor.pirateweather_temperature') | float(0) %}
+        {% set feels = states('sensor.pirateweather_apparent_temperature') | float(0) %}
+        {% set cond = states('weather.pirateweather') %}
+        The temperature is {{ temp }}°C (feels like {{ feels }}°C) and {{ cond.replace('_', ' ').replace('-', ' ') }}
+      attributes:
+        temperature: "{{ states('sensor.pirateweather_temperature') }}"
+        apparent_temperature: "{{ states('sensor.pirateweather_apparent_temperature') }}"
+        temperature_display: "{{ states('sensor.pirateweather_temperature') }}°C ({{ states('sensor.pirateweather_apparent_temperature') }}°C)"
+        condition: "{{ states('weather.pirateweather') }}"
+        condition_display: "{{ states('weather.pirateweather').replace('_', ' ').replace('-', ' ') | capitalize }}"
+        icon: "{{ states('sensor.pirateweather_icon') }}"
+        humidity: "{{ states('sensor.pirateweather_humidity') }}"
+        wind_speed: "{{ states('sensor.pirateweather_wind_speed') }}"
+        weather_overlay: >
+          {% set weather = states('weather.pirateweather') %}
+          {% if 'thunder' in weather or 'lightning' in weather %}
+            linear-gradient(rgba(40,40,60,0.35), rgba(40,40,60,0.35))
+          {% elif 'rain' in weather or 'drizzle' in weather %}
+            linear-gradient(rgba(60,90,140,0.25), rgba(60,90,140,0.25))
+          {% elif 'cloud' in weather %}
+            linear-gradient(rgba(80,80,80,0.25), rgba(80,80,80,0.25))
+          {% elif 'fog' in weather or 'mist' in weather %}
+            linear-gradient(rgba(120,120,120,0.20), rgba(120,120,120,0.20))
+          {% elif 'snow' in weather %}
+            linear-gradient(rgba(180,200,255,0.25), rgba(180,200,255,0.25))
+          {% elif 'wind' in weather %}
+            linear-gradient(rgba(70,120,120,0.20), rgba(70,120,120,0.20))
+          {% else %}
+            none
+          {% endif %}
+
+- binary_sensor:
+    ###############################################################
+    # WEATHER EFFECT FLAGS
+    ###############################################################
+    - name: "Weather Has Fog"
+      unique_id: weather_has_fog
+      state: >
+        {% set weather = states('weather.pirateweather') %}
+        {{ 'fog' in weather or 'mist' in weather }}
+      attributes:
+        opacity: >
+          {% set weather = states('weather.pirateweather') %}
+          {% if 'fog' in weather or 'mist' in weather %}
+            0.35
+          {% else %}
+            0
+          {% endif %}
+
+    - name: "Weather Has Rain"
+      unique_id: weather_has_rain
+      state: >
+        {% set weather = states('weather.pirateweather') %}
+        {{ 'rain' in weather or 'drizzle' in weather }}
+      attributes:
+        opacity: >
+          {% set weather = states('weather.pirateweather') %}
+          {% if 'rain' in weather or 'drizzle' in weather %}
+            0.25
+          {% else %}
+            0
+          {% endif %}
+
+    - name: "Weather Has Wind"
+      unique_id: weather_has_wind
+      state: >
+        {% set weather = states('weather.pirateweather') %}
+        {{ 'wind' in weather }}
+      attributes:
+        opacity: >
+          {% set weather = states('weather.pirateweather') %}
+          {% if 'wind' in weather %}
+            0.18
+          {% else %}
+            0
+          {% endif %}
+
+    - name: "Weather Has Thunder"
+      unique_id: weather_has_thunder
+      state: >
+        {% set weather = states('weather.pirateweather') %}
+        {{ 'thunder' in weather or 'lightning' in weather }}
+
+    - name: "Weather Has Snow"
+      unique_id: weather_has_snow
+      state: >
+        {% set weather = states('weather.pirateweather') %}
+        {{ 'snow' in weather }}

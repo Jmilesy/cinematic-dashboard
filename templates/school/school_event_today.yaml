@@ -1,0 +1,38 @@
+-  sensor:
+    - name: school_event_today
+      unique_id: school_event_today
+      state: >
+        {% set title = state_attr('calendar.sandown_school_calendar', 'message') %}
+        {% set start = state_attr('calendar.sandown_school_calendar', 'start_time') %}
+        {% set today = now().date() %}
+  
+        {# If no event or no start time #}
+        {% if not title or not start %}
+          No school events today.
+  
+        {% else %}
+          {# Convert start_time to date #}
+          {% set event_date = as_datetime(start).date() %}
+  
+          {% if event_date != today %}
+            No school events today.
+          {% else %}
+            {% set t = title | lower %}
+  
+            {% if 'whole school' in t %}
+              Whole‑school event today: {{ title }}
+  
+            {% elif 'year 6' in t %}
+              Year 6 event today: {{ title }}
+  
+            {% elif 'class 6s' in t %}
+              Class 6S event today: {{ title }}
+  
+            {% elif not ('year' in t or 'class' in t) %}
+              General school event today: {{ title }}
+  
+            {% else %}
+              School event today: {{ title }}
+            {% endif %}
+          {% endif %}
+        {% endif %}

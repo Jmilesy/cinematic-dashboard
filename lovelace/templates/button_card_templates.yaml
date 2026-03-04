@@ -1,0 +1,849 @@
+###############################################################
+# BUTTON CARD TEMPLATES
+# Location: config/lovelace/templates/button_card_templates.yaml
+# 
+# UPDATED: Fixed glow logic ONLY - away/home/charging states
+###############################################################
+
+###############################################################
+# CINEMATIC HEADER - MOBILE RESPONSIVE
+###############################################################
+cinematic_header:
+  show_icon: false
+  show_name: false
+  show_state: false
+  
+  card_mod:
+    style: |
+      ha-card {
+        position: relative;
+        overflow: hidden;
+        transition: background 0.8s ease, box-shadow 0.8s ease;
+        animation: headerGlow 8s ease-in-out infinite alternate;
+      }
+
+      ha-card > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Fog + wind layer */
+      ha-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        opacity: {{ state_attr('binary_sensor.weather_has_fog', 'opacity') | float(0) }};
+        background:
+          radial-gradient(circle at 10% 20%, rgba(255,255,255,0.06) 0, transparent 55%),
+          radial-gradient(circle at 80% 60%, rgba(255,255,255,0.04) 0, transparent 55%);
+        filter: blur(6px);
+        animation: fogDrift 55s linear infinite;
+      }
+
+      /* Rain streaks */
+      ha-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        opacity: {{ state_attr('binary_sensor.weather_has_rain', 'opacity') | float(0) }};
+        background-image:
+          linear-gradient(180deg, rgba(255,255,255,0.14) 0, transparent 60%),
+          linear-gradient(180deg, rgba(255,255,255,0.09) 0, transparent 55%);
+        background-size: 2px 40px, 1px 30px;
+        background-repeat: repeat;
+        animation: rainFall 35s linear infinite;
+      }
+
+      @keyframes fogDrift {
+        0%   { transform: translateX(-10%); }
+        50%  { transform: translateX(5%); }
+        100% { transform: translateX(15%); }
+      }
+
+      @keyframes rainFall {
+        0%   { background-position: 0 -40px, 0 -30px; }
+        100% { background-position: 0 40px, 0 30px; }
+      }
+
+      @keyframes headerGlow {
+        0%   { box-shadow: 0 0 18px rgba(0,0,0,0.25); }
+        100% { box-shadow: 0 0 26px rgba(0,0,0,0.45); }
+      }
+
+      @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(-20px); }
+        100% { opacity: 1; transform: translateY(0); }
+      }
+
+  styles:
+    card:
+      - margin: 0
+      - padding: clamp(12px, 2vw, 20px)
+      - border-radius: 24px
+      - color: white
+      - text-align: center
+      - animation: fadeIn 1s ease-out
+      - background: |
+          [[[
+            const baseGradient = states['sensor.header_time_period'].attributes.gradient;
+            const weatherOverlay = states['sensor.header_weather_summary'].attributes.weather_overlay;
+            const sunTint = states['sensor.header_time_period'].attributes.sun_tint;
+            const shimmer = "linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.06))";
+            
+            const layers = [shimmer];
+            if (sunTint !== 'none') layers.push(sunTint);
+            if (weatherOverlay !== 'none') layers.push(weatherOverlay);
+            layers.push(baseGradient);
+            
+            return layers.join(", ");
+          ]]]
+      - box-shadow: 0 12px 48px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,255,0.1)
+      - border: 1px solid rgba(255,255,255,0.15)
+      - backdrop-filter: blur(20px)
+    
+    grid:
+      - display: grid
+      - width: 100%
+      - grid-template-columns: 1fr
+      - grid-template-rows: auto auto auto auto auto
+      - grid-template-areas: |
+          "greeting"
+          "time"
+          "weather"
+          "subtext"
+          "presence"
+      - align-items: center
+      - column-gap: clamp(8px, 2vw, 16px)
+      - row-gap: clamp(6px, 1.5vh, 10px)
+      - padding: clamp(12px, 2vw, 20px)
+    
+    custom_fields:
+      time:
+        - grid-area: time
+        - justify-self: center
+        - text-align: center
+        - min-width: 0
+      greeting:
+        - grid-area: greeting
+        - justify-self: center
+        - text-align: center
+        - min-width: 0
+      subtext:
+        - grid-area: subtext
+        - justify-self: center
+        - text-align: center
+        - min-width: 0
+      weather:
+        - grid-area: weather
+        - justify-self: center
+        - text-align: center
+        - min-width: 0
+      presence:
+        - grid-area: presence
+        - justify-self: center
+        - text-align: center
+        - width: 100%
+        - min-width: 0
+
+  custom_fields:
+    time: |
+      [[[
+        const time = states['sensor.header_current_time'].state;
+        const fullDate = states['sensor.header_current_time'].attributes.full_date;
+        
+        return `
+          <div style="display:flex;flex-direction:column;align-items:center;">
+            <div style="
+              font-size:clamp(1.6rem, 4.5vw, 2.8rem);font-weight:700;
+              background:linear-gradient(135deg, #ffffff, #e0e0e0);
+              -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+              text-shadow:0 2px 12px rgba(0,0,0,0.3);
+              letter-spacing:-1px;
+              animation: timeGlow 4s ease-in-out infinite;
+              line-height: 1.1;
+            ">${time}</div>
+            <div style="
+              font-size:clamp(0.7rem, 1.8vw, 0.95rem);opacity:0.8;margin-top:4px;
+              color:rgba(255,255,255,0.9);
+              text-shadow:0 1px 4px rgba(0,0,0,0.5);
+            ">${fullDate}</div>
+          </div>
+          <style>
+            @keyframes timeGlow {
+              0%, 100% { filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); }
+              50% { filter: drop-shadow(0 0 16px rgba(255,255,255,0.6)); }
+            }
+          </style>
+        `;
+      ]]]
+    
+    greeting: |
+      [[[
+        const emoji = states['sensor.header_greeting'].attributes.emoji;
+        const greeting = states['sensor.header_greeting'].state;
+        const username = user ? user.name : 'Guest';
+        
+        return `
+          <div style="
+            font-size:clamp(1.1rem, 3.5vw, 2rem);font-weight:600;
+            background:linear-gradient(135deg, #ffffff, #f0f0f0);
+            -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+            text-shadow:0 2px 8px rgba(0,0,0,0.3);
+            letter-spacing:0.5px;
+            line-height: 1.2;
+          ">
+            ${emoji} ${greeting}, ${username}!
+          </div>
+        `;
+      ]]]
+    
+    subtext: |
+      [[[
+        const summary = states['sensor.header_weather_summary'].state;
+        
+        return `
+          <div style="
+            font-size:clamp(0.75rem, 2vw, 1rem);opacity:0.85;
+            color:rgba(255,255,255,0.9);
+            text-shadow:0 1px 4px rgba(0,0,0,0.5);
+            text-transform:capitalize;
+            line-height: 1.3;
+            max-width: 100%;
+            overflow-wrap: break-word;
+          ">
+            ${summary}
+          </div>
+        `;
+      ]]]
+    
+    weather: |
+      [[[
+        const temp = states['sensor.header_weather_summary'].attributes.temperature;
+        const icon = states['sensor.header_weather_summary'].attributes.icon;
+        const humidity = states['sensor.header_weather_summary'].attributes.humidity;
+        const wind = states['sensor.header_weather_summary'].attributes.wind_speed;
+
+        return `
+          <div style="display:flex;flex-direction:column;align-items:center;gap:clamp(4px, 1vh, 8px);">
+            <ha-icon icon="${icon}" style="
+              width:clamp(28px, 7vw, 48px);height:clamp(28px, 7vw, 48px);color:white;
+              filter:drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+              animation: weatherIcon 6s ease-in-out infinite;
+            "></ha-icon>
+            <div style="
+              font-size:clamp(1.3rem, 3.8vw, 2.2rem);font-weight:700;
+              background:linear-gradient(135deg, #ffffff, #e0e0e0);
+              -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+              text-shadow:0 2px 8px rgba(0,0,0,0.3);
+              line-height: 1;
+            ">${temp}°C</div>
+            <div style="
+              font-size:clamp(0.65rem, 1.6vw, 0.85rem);opacity:0.75;
+              color:rgba(255,255,255,0.9);
+              text-shadow:0 1px 4px rgba(0,0,0,0.5);
+              white-space: nowrap;
+            ">💧 ${humidity}% | 💨 ${wind} km/h</div>
+          </div>
+          <style>
+            @keyframes weatherIcon {
+              0%, 100% { transform: translateY(0) rotate(0deg); }
+              50% { transform: translateY(-4px) rotate(5deg); }
+            }
+          </style>
+        `;
+      ]]]
+    
+    presence: |
+      [[[
+        const summary = states['sensor.family_presence_summary'].state;
+        const length = summary.length;
+        const fontSize = length > 40 ? "clamp(0.7rem, 1.8vw, 0.9rem)" : "clamp(0.8rem, 2vw, 1rem)";
+
+        return `
+          <div style="
+            font-size:${fontSize};font-weight:500;margin-top:clamp(4px, 1vh, 6px);
+            color:rgba(255,255,255,0.95);
+            text-shadow:0 1px 4px rgba(0,0,0,0.5);
+            padding:clamp(6px, 1.5vw, 8px) clamp(12px, 3vw, 16px);
+            background:rgba(255,255,255,0.08);
+            border-radius:12px;
+            backdrop-filter:blur(8px);
+            border:1px solid rgba(255,255,255,0.1);
+            line-height: 1.4;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          ">🏠 ${summary}</div>
+        `;
+      ]]]
+
+###############################################################
+# PERSON CARD - GLOW LOGIC FIXED (ORIGINAL LAYOUT PRESERVED)
+###############################################################
+person_card:
+  show_entity_picture: true
+  show_name: true
+  show_label: true
+  
+  tap_action:
+    action: more-info
+  
+  card_mod:
+    style: |
+      @keyframes cardGlowCharging {
+        0% {
+          box-shadow: 
+            0 0 25px var(--glow-color-100), 
+            0 0 50px var(--glow-color-60), 
+            0 0 75px var(--glow-color-30),
+            0 8px 32px rgba(0,0,0,0.4);
+          filter: brightness(1);
+        }
+        50% {
+          box-shadow: 
+            0 0 45px var(--glow-color-100), 
+            0 0 90px var(--glow-color-60), 
+            0 0 120px var(--glow-color-30),
+            0 8px 32px rgba(0,0,0,0.4);
+          filter: brightness(1.15);
+        }
+        100% {
+          box-shadow: 
+            0 0 25px var(--glow-color-100), 
+            0 0 50px var(--glow-color-60), 
+            0 0 75px var(--glow-color-30),
+            0 8px 32px rgba(0,0,0,0.4);
+          filter: brightness(1);
+        }
+      }
+      @keyframes cardGlowWarning {
+        0%, 100% {
+          box-shadow: 0 0 25px #ff4444DD, 0 0 50px #ff444488, 0 8px 32px rgba(0,0,0,0.4);
+        }
+        50% {
+          box-shadow: 0 0 35px #ff4444DD, 0 0 70px #ff444488, 0 8px 32px rgba(0,0,0,0.4);
+        }
+      }
+      @keyframes borderPulse {
+        0%, 100% {
+          border-width: 2px;
+          border-color: var(--glow-color-80);
+        }
+        50% {
+          border-width: 3px;
+          border-color: var(--glow-color-100);
+        }
+      }
+      @keyframes cardScale {
+        0%, 100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.02);
+        }
+      }
+  
+  styles:
+    card:
+      - padding: 16px
+      - border-radius: 20px
+      - transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1)
+      - height: auto
+      - '--glow-color-100': |
+          [[[
+            const color = variables.status_sensor ? 
+              states[variables.status_sensor].attributes.color : '#ffffff';
+            return color + 'FF';
+          ]]]
+      - '--glow-color-80': |
+          [[[
+            const color = variables.status_sensor ? 
+              states[variables.status_sensor].attributes.color : '#ffffff';
+            return color + 'CC';
+          ]]]
+      - '--glow-color-60': |
+          [[[
+            const color = variables.status_sensor ? 
+              states[variables.status_sensor].attributes.color : '#ffffff';
+            return color + '99';
+          ]]]
+      - '--glow-color-30': |
+          [[[
+            const color = variables.status_sensor ? 
+              states[variables.status_sensor].attributes.color : '#ffffff';
+            return color + '4D';
+          ]]]
+      - border-style: solid
+      - border: |
+          [[[
+            const color = variables.status_sensor ? 
+              states[variables.status_sensor].attributes.color : '#ffffff';
+            const isCharging = variables.status_sensor ? 
+              states[variables.status_sensor].attributes.should_glow === 'True' : false;
+            const batteryLevel = variables.status_sensor ? 
+              parseInt(states[variables.status_sensor].attributes.battery_level) || 0 : 0;
+            const isLowBattery = batteryLevel < 15 && batteryLevel > 0;
+            
+            if (isLowBattery) return '2px solid #ff4444DD';
+            if (isCharging) return `2px solid ${color}80`;
+            return '1px solid rgba(255,255,255,0.15)';
+          ]]]
+      - box-shadow: |
+          [[[
+            const color = variables.status_sensor ? 
+              states[variables.status_sensor].attributes.color : '#ffffff';
+            const isHome = variables.status_sensor ? 
+              states[variables.status_sensor].attributes.is_home === 'True' : false;
+            const isCharging = variables.status_sensor ? 
+              states[variables.status_sensor].attributes.is_charging === 'True' : false;
+            const batteryLevel = variables.status_sensor ? 
+              parseInt(states[variables.status_sensor].attributes.battery_level) || 0 : 0;
+            const isLowBattery = batteryLevel < 15 && batteryLevel > 0;
+            
+            // Low battery - red glow (always)
+            if (isLowBattery) {
+              return '0 0 35px #ff4444DD, 0 0 70px #ff444488, 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.1)';
+            }
+            
+            // Home + charging - strong glow (will pulse)
+            if (isHome && isCharging) {
+              return `0 0 25px ${color}FF, 0 0 50px ${color}99, 0 0 75px ${color}4D, 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.1)`;
+            }
+            
+            // Home but not charging - static medium glow
+            if (isHome) {
+              return `0 0 20px ${color}CC, 0 0 40px ${color}66, 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.1)`;
+            }
+            
+            // Away - no glow
+            return '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.1)';
+          ]]]
+      - animation: |
+          [[[
+            const isHome = variables.status_sensor ? 
+              states[variables.status_sensor].attributes.is_home === 'True' : false;
+            const isCharging = variables.status_sensor ? 
+              states[variables.status_sensor].attributes.is_charging === 'True' : false;
+            const batteryLevel = variables.status_sensor ? 
+              parseInt(states[variables.status_sensor].attributes.battery_level) || 0 : 0;
+            const isLowBattery = batteryLevel < 15 && batteryLevel > 0;
+            
+            // Low battery - fast red pulse
+            if (isLowBattery) return 'cardGlowWarning 1.5s ease-in-out infinite';
+            
+            // Home + charging - PULSE (glow + border + scale)
+            if (isHome && isCharging) return 'cardGlowCharging 1.5s ease-in-out infinite, borderPulse 1.5s ease-in-out infinite, cardScale 1.5s ease-in-out infinite';
+            
+            // Everything else - no animation
+            return 'none';
+          ]]]
+      - background: |
+          [[[
+            const baseGradient = states['sensor.header_time_period'].attributes.gradient;
+            const weatherOverlay = states['sensor.header_weather_summary'].attributes.weather_overlay;
+            const sunTint = states['sensor.header_time_period'].attributes.sun_tint;
+            const shimmer = "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 100%)";
+            
+            const layers = [shimmer];
+            if (sunTint !== 'none') layers.push(sunTint);
+            if (weatherOverlay !== 'none') layers.push(weatherOverlay);
+            layers.push(baseGradient);
+            
+            return layers.join(", ");
+          ]]]
+    
+    grid:
+      - grid-template-areas: '"i n location" "i l location" "battery battery battery"'
+      - grid-template-columns: 64px 1fr auto
+      - grid-template-rows: auto auto auto
+      - column-gap: 12px
+      - row-gap: 8px
+    
+    img_cell:
+      - width: 64px
+      - height: 64px
+      - border-radius: 50%
+      - border: |
+          [[[
+            const color = variables.status_sensor ? 
+              states[variables.status_sensor].attributes.color : '#ffffff';
+            return `3px solid ${color}40`;
+          ]]]
+      - box-shadow: |
+          [[[
+            const color = variables.status_sensor ? 
+              states[variables.status_sensor].attributes.color : '#ffffff';
+            return `0 0 20px ${color}60, 0 4px 12px rgba(0,0,0,0.5)`;
+          ]]]
+      - overflow: hidden
+    
+    entity_picture:
+      - width: 100%
+      - height: 100%
+      - object-fit: cover
+      - border-radius: 50%
+    
+    name:
+      - font-size: 1.15rem
+      - font-weight: 700
+      - color: white
+      - text-shadow: 0 2px 8px rgba(0,0,0,0.5)
+      - justify-self: start
+      - align-self: end
+    
+    label:
+      - font-size: 0.95rem
+      - opacity: 0.9
+      - color: rgba(255,255,255,0.95)
+      - text-shadow: 0 1px 4px rgba(0,0,0,0.4)
+      - justify-self: start
+      - align-self: start
+    
+    custom_fields:
+      location:
+        - grid-area: location
+        - justify-self: end
+        - align-self: start
+      battery:
+        - grid-area: battery
+        - justify-self: stretch
+  
+  custom_fields:
+    location: |
+      [[[
+        if (!variables.status_sensor) return '';
+        
+        const location = states[variables.status_sensor].attributes.location;
+        const isHome = states[variables.status_sensor].attributes.is_home === 'True';
+        const color = states[variables.status_sensor].attributes.color;
+        
+        let icon = 'mdi:home';
+        let iconColor = color;
+        
+        // If not home, get the zone icon
+        if (!isHome && location) {
+          const zoneEntity = 'zone.' + location.toLowerCase().replace(/\s+/g, '_');
+          const zoneState = states[zoneEntity];
+          
+          if (zoneState && zoneState.attributes && zoneState.attributes.icon) {
+            icon = zoneState.attributes.icon;
+            iconColor = '#ff9800';
+          } else {
+            // Fallback to map marker if zone not found
+            icon = 'mdi:map-marker';
+            iconColor = '#ff9800';
+          }
+        }
+        
+        return `
+          <ha-icon icon="${icon}" style="
+            width:24px;height:24px;
+            color:${iconColor};
+            filter:drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+          "></ha-icon>
+        `;
+      ]]]
+    
+    battery: |
+      [[[
+        if (!variables.status_sensor) {
+          return '<div style="font-size:0.75rem;opacity:0.6;">No data</div>';
+        }
+        
+        const batteryDisplay = states[variables.status_sensor].attributes.battery_display;
+        const batteryLevel = parseInt(states[variables.status_sensor].attributes.battery_level) || 0;
+        const isCharging = states[variables.status_sensor].attributes.is_charging === 'True';
+        const isHome = states[variables.status_sensor].attributes.is_home === 'True';
+        const color = states[variables.status_sensor].attributes.color;
+        
+        let barColor = color;
+        if (batteryLevel < 15) barColor = "#ff4444";
+        else if (batteryLevel < 30) barColor = "#ffaa00";
+        else if (batteryLevel < 50) barColor = "#ffd700";
+        
+        const showAnimation = isHome && isCharging;
+        const showWarning = batteryLevel < 15;
+        
+        return `
+          <div style="
+            width:100%;height:18px;border-radius:8px;
+            background:rgba(0,0,0,0.3);
+            position:relative;overflow:hidden;
+            box-shadow:inset 0 2px 4px rgba(0,0,0,0.4);
+            border:1px solid rgba(255,255,255,0.1);
+            margin-top: 4px;
+          ">
+            <div style="
+              position:absolute;height:100%;width:${batteryLevel}%;
+              background:linear-gradient(90deg, ${barColor}BB 0%, ${barColor}FF 50%, ${barColor}BB 100%);
+              border-radius:6px;
+              transition:width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+              display:flex;align-items:center;justify-content:center;
+              font-size:9px;font-weight:700;color:white;
+              text-shadow:0 1px 3px rgba(0,0,0,0.8);
+              ${showAnimation ? `
+                background-size: 200% 100%;
+                animation: batteryFlow 2s linear infinite;
+                box-shadow: 0 0 15px ${barColor}FF, inset 0 1px 2px rgba(255,255,255,0.3);
+              ` : `box-shadow: 0 0 8px ${barColor}80, inset 0 1px 2px rgba(255,255,255,0.2);`}
+              ${showWarning ? 'animation: batteryWarning 0.6s ease-in-out infinite;' : ''}
+            ">
+              ${batteryDisplay}
+            </div>
+          </div>
+          
+          <style>
+            @keyframes batteryFlow {
+              0% { background-position: 200% 0; }
+              100% { background-position: -200% 0; }
+            }
+            @keyframes batteryWarning {
+              0%, 100% { opacity: 1; }
+              50% { opacity: 0.7; }
+            }
+          </style>
+        `;
+      ]]]
+
+###############################################################
+# BASE CARDS
+###############################################################
+cinematic_card:
+  styles:
+    card:
+      - border-radius: 20px
+      - padding: 16px
+      - box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.1)
+      - border: 1px solid rgba(255,255,255,0.1)
+      - backdrop-filter: blur(10px)
+      - transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1)
+      - overflow: hidden
+      - position: relative
+
+dynamic_background:
+  styles:
+    card:
+      - background: |
+          [[[
+            const baseGradient = states['sensor.header_time_period'].attributes.gradient;
+            const weatherOverlay = states['sensor.header_weather_summary'].attributes.weather_overlay;
+            const sunTint = states['sensor.header_time_period'].attributes.sun_tint;
+            const shimmer = "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 100%)";
+            
+            const layers = [shimmer];
+            if (sunTint !== 'none') layers.push(sunTint);
+            if (weatherOverlay !== 'none') layers.push(weatherOverlay);
+            layers.push(baseGradient);
+            
+            return layers.join(", ");
+          ]]]
+      - animation: backgroundPulse 20s ease-in-out infinite alternate
+
+###############################################################
+# NAV BUTTON - WITH DYNAMIC BACKGROUND
+###############################################################
+nav_button:
+  show_icon: true
+  show_name: true
+  
+  styles:
+    card:
+      - border-radius: 16px
+      - padding: 12px 8px
+      - min-height: 70px
+      - display: flex
+      - flex-direction: column
+      - align-items: center
+      - justify-content: center
+      - gap: 6px
+      - border: 1px solid rgba(255,255,255,0.15)
+      - transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1)
+      - box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.1)
+      - backdrop-filter: blur(10px)
+      - background: |
+          [[[
+            const baseGradient = states['sensor.header_time_period'].attributes.gradient;
+            const weatherOverlay = states['sensor.header_weather_summary'].attributes.weather_overlay;
+            const sunTint = states['sensor.header_time_period'].attributes.sun_tint;
+            const shimmer = "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 100%)";
+            
+            const layers = [shimmer];
+            if (sunTint !== 'none') layers.push(sunTint);
+            if (weatherOverlay !== 'none') layers.push(weatherOverlay);
+            layers.push(baseGradient);
+            
+            return layers.join(", ");
+          ]]]
+    
+    icon:
+      - width: 28px
+      - height: 28px
+      - color: |
+          [[[
+            return variables.icon_color || 'white';
+          ]]]
+      - filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5))
+    
+    name:
+      - font-size: 0.85rem
+      - font-weight: 500
+      - color: white
+      - text-shadow: 0 1px 3px rgba(0,0,0,0.5)
+      - margin-top: 2px
+
+###############################################################
+# ROOM CARD - WITH LIGHT-UP ICON & DYNAMIC BACKGROUND
+###############################################################
+room_card:
+  show_icon: true
+  show_name: true
+  show_label: true
+  
+  styles:
+    card:
+      - padding: 14px
+      - border-radius: 18px
+      - border: 1px solid rgba(255,255,255,0.15)
+      - box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.1)
+      - backdrop-filter: blur(10px)
+      - transition: all 0.35s ease
+      - height: auto
+      - background: |
+          [[[
+            const baseGradient = states['sensor.header_time_period'].attributes.gradient;
+            const weatherOverlay = states['sensor.header_weather_summary'].attributes.weather_overlay;
+            const sunTint = states['sensor.header_time_period'].attributes.sun_tint;
+            const shimmer = "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 100%)";
+            
+            const layers = [shimmer];
+            if (sunTint !== 'none') layers.push(sunTint);
+            if (weatherOverlay !== 'none') layers.push(weatherOverlay);
+            layers.push(baseGradient);
+            
+            return layers.join(", ");
+          ]]]
+    
+    grid:
+      - grid-template-areas: '"i n" "i l"'
+      - grid-template-columns: 48px 1fr
+      - grid-template-rows: auto auto
+      - column-gap: 12px
+      - row-gap: 4px
+    
+    img_cell:
+      - justify-self: center
+      - align-self: center
+    
+    icon:
+      - width: 36px
+      - height: 36px
+      - color: |
+          [[[
+            return entity.state === 'on' ? '#ffd700' : 'rgba(255,255,255,0.5)';
+          ]]]
+      - filter: |
+          [[[
+            return entity.state === 'on' 
+              ? 'drop-shadow(0 0 8px #ffd700) drop-shadow(0 2px 8px rgba(0,0,0,0.5))' 
+              : 'drop-shadow(0 2px 8px rgba(0,0,0,0.5))';
+          ]]]
+      - transition: all 0.3s ease
+    
+    name:
+      - font-size: 1.05rem
+      - font-weight: 600
+      - color: white
+      - text-shadow: 0 1px 4px rgba(0,0,0,0.5)
+      - justify-self: start
+      - align-self: end
+    
+    label:
+      - font-size: 0.9rem
+      - opacity: 0.85
+      - color: rgba(255,255,255,0.9)
+      - text-shadow: 0 1px 3px rgba(0,0,0,0.4)
+      - justify-self: start
+      - align-self: start
+
+###############################################################
+# SWITCH CARD - WITH DYNAMIC BACKGROUND
+###############################################################
+switch_card:
+  show_icon: true
+  show_name: true
+  
+  tap_action:
+    action: toggle
+  
+  styles:
+    card:
+      - display: flex
+      - flex-direction: column
+      - align-items: center
+      - justify-content: center
+      - padding: 16px 12px
+      - min-height: 90px
+      - gap: 8px
+      - border-radius: 16px
+      - border: |
+          [[[
+            const glowColor = variables.glow_color || '#ffd700';
+            return entity.state === 'on' ? `2px solid ${glowColor}60` : '1px solid rgba(255,255,255,0.15)';
+          ]]]
+      - box-shadow: |
+          [[[
+            const glowColor = variables.glow_color || '#ffd700';
+            return entity.state === 'on' 
+              ? `0 0 24px ${glowColor}40, 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.1)` 
+              : '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.1)';
+          ]]]
+      - backdrop-filter: blur(10px)
+      - background: |
+          [[[
+            const glowColor = variables.glow_color || '#ffd700';
+            const baseGradient = states['sensor.header_time_period'].attributes.gradient;
+            const weatherOverlay = states['sensor.header_weather_summary'].attributes.weather_overlay;
+            const sunTint = states['sensor.header_time_period'].attributes.sun_tint;
+            const shimmer = "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 100%)";
+            
+            const layers = [shimmer];
+            if (sunTint !== 'none') layers.push(sunTint);
+            if (weatherOverlay !== 'none') layers.push(weatherOverlay);
+            
+            if (entity.state === 'on') {
+              layers.push(`linear-gradient(135deg, ${glowColor}25, ${glowColor}08)`);
+            }
+            
+            layers.push(baseGradient);
+            
+            return layers.join(", ");
+          ]]]
+      - transition: all 0.35s ease
+    
+    icon:
+      - width: 32px
+      - height: 32px
+      - color: |
+          [[[
+            const glowColor = variables.glow_color || '#ffd700';
+            return entity.state === 'on' ? glowColor : 'rgba(255,255,255,0.6)';
+          ]]]
+      - filter: |
+          [[[
+            const glowColor = variables.glow_color || '#ffd700';
+            return entity.state === 'on' 
+              ? `drop-shadow(0 0 8px ${glowColor}80)` 
+              : 'drop-shadow(0 2px 4px rgba(0,0,0,0.5))';
+          ]]]
+      - transition: all 0.3s ease
+    
+    name:
+      - font-size: 0.9rem
+      - font-weight: 500
+      - color: white
+      - text-shadow: 0 1px 3px rgba(0,0,0,0.5)
+      - text-align: center

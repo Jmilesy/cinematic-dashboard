@@ -1,0 +1,73 @@
+# ═══════════════════════════════════════════════════════════════
+# 📺 SCREEN TIME WARNING (15 Minutes Before Limit)
+# ═══════════════════════════════════════════════════════════════
+#
+# Warns boys 15 minutes before screen time limit
+# Gives time to finish what they're doing
+#
+# Device: Boy's New Dot
+# Trigger: Based on screen time tracking (customize to your method)
+# Days: Any day
+#
+# Note: This assumes you have some way to track screen time
+#       (e.g., router-based, device tracking, manual input_number, etc.)
+#
+# ═══════════════════════════════════════════════════════════════
+
+alias: "Screen Time Warning - 15 Minutes"
+description: "Warn boys before screen time limit is reached"
+mode: single
+
+triggers:
+  # Example: Trigger based on a time input
+  # Customize this based on YOUR screen time tracking method
+  - at: "19:45:00"
+    trigger: time  # 15 minutes before 8 PM limit
+
+conditions:
+  - condition: time
+    weekday:
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri  # School nights only
+  
+  # Optional: Check if TV/gaming devices are on
+  - condition: or
+    conditions:
+      - condition: state
+        entity_id: media_player.boys_tv
+        state: "on"
+      - condition: state
+        entity_id: media_player.boys_xbox
+        state: "on"
+
+actions:
+  - action: notify.alexa_media_boy_s_new_dot
+    data:
+      message: >
+        Boys, you have 15 minutes of screen time left.
+        Start finishing up what you're doing.
+      data:
+        type: announce
+        volume_level: 0.6
+
+  # Optional: Follow-up when time is up
+  - delay:
+      minutes: 15
+  
+  - action: notify.alexa_media_boy_s_new_dot
+    data:
+      message: >
+        Screen time is over boys. Time to turn off the TV and games.
+      data:
+        type: announce
+        volume_level: 0.7
+
+  # Optional: Turn off devices automatically (be careful with this!)
+  # - service: media_player.turn_off
+  #   target:
+  #     entity_id: 
+  #       - media_player.boys_tv
+  #       - media_player.boys_xbox

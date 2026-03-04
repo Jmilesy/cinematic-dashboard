@@ -1,0 +1,31 @@
+title: F1 Racing
+path: f1
+type: sidebar
+theme: Google Dark Theme
+cards:
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: back
+    alignment: center
+
+  - type: custom:mushroom-title-card
+    title: Formula 1
+
+  - type: custom:formulaone-card
+    card_type: next_race
+    f1_font: true
+    title: Next Race
+    date_locale: uk
+
+  - type: custom:formulaone-card
+    card_type: countdown
+    f1_font: true
+
+  - type: custom:mushroom-title-card
+    subtitle: Live Timing
+
+  # F1 Live Timing REMOVED - sensor.f1_leader and sensor.f1_race_status missing
+  # - type: entities
+  #   entities:
+  #     - sensor.f1_leader
+  #     - sensor.f1_race_status

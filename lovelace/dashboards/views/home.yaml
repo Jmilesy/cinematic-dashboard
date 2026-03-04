@@ -1,0 +1,406 @@
+title: Home
+path: home
+type: sidebar
+cards:
+  ###############################################################
+  # HEADER
+  ###############################################################
+  - type: custom:button-card
+    template: cinematic_header
+    entity: sensor.header_greeting
+
+  ###############################################################
+  # MUSHROOM CHIPS BAR
+  ###############################################################
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: alarm-control-panel
+        entity: alarm_control_panel.alarmo
+        name: Alarm
+      - type: entity
+        entity: sensor.count_lights_on
+        icon_color: orange
+        icon: mdi:lightbulb
+      - type: action
+        tap_action:
+          action: navigate
+          navigation_path: /cinematic-dashboard/f1
+        icon: mdi:racing-helmet
+      # Washing machine cards REMOVED - sensor.washing_machine unavailable
+      # - type: conditional
+      #   conditions:
+      #     - entity: sensor.washing_machine
+      #       state_not: unavailable
+      #   chip:
+      #     type: entity
+      #     entity: sensor.wash_cycle_remaining_time
+      # - type: conditional
+      #   conditions:
+      #     - entity: sensor.washing_machine
+      #       state_not: unavailable
+      #   chip:
+      #     type: entity
+      #     entity: sensor.wash_cycle_status
+      - type: entity
+        entity: sensor.watchman_missing_entities
+    alignment: center
+    card_mod:
+      style: |
+        ha-card {
+          background: {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+          border-radius: 20px;
+          border: 1px solid rgba(255,255,255,0.15);
+          box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.1);
+          backdrop-filter: blur(10px);
+          margin-bottom: 8px;
+        }
+
+  ###############################################################
+  # SPACER
+  ###############################################################
+  - type: custom:button-card
+    color_type: blank-card
+    styles:
+      card:
+        - height: 8px
+        - background: transparent
+
+  ###############################################################
+  # FAMILY PRESENCE
+  ###############################################################
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+      # Jon
+      - type: custom:button-card
+        template: person_card
+        entity: person.jon
+        variables:
+          status_sensor: sensor.jon_status
+          person_name: Jon
+        name: |
+          [[[
+          return 'Jon - ' + states['sensor.jon_status'].state;
+          ]]]
+        label: |
+          [[[
+          return states['sensor.jon_status'].attributes.battery_display;
+          ]]]
+
+      # Natalie
+      - type: custom:button-card
+        template: person_card
+        entity: person.natalie
+        variables:
+          status_sensor: sensor.natalie_status
+          person_name: Natalie
+        name: |
+          [[[
+          return 'Natalie - ' + states['sensor.natalie_status'].state;
+          ]]]
+        label: |
+          [[[
+          return states['sensor.natalie_status'].attributes.battery_display;
+          ]]]
+
+      # Jacob
+      - type: custom:button-card
+        template: person_card
+        entity: person.jacob
+        variables:
+          status_sensor: sensor.jacob_status
+          person_name: Jacob
+        name: |
+          [[[
+          return 'Jacob - ' + states['sensor.jacob_status'].state;
+          ]]]
+        label: |
+          [[[
+          return states['sensor.jacob_status'].attributes.battery_display;
+          ]]]
+
+      # Joseph
+      - type: custom:button-card
+        template: person_card
+        entity: person.joseph
+        variables:
+          status_sensor: sensor.joseph_status
+          person_name: Joseph
+        name: |
+          [[[
+          return 'Joseph - ' + states['sensor.joseph_status'].state;
+          ]]]
+        label: |
+          [[[
+          return states['sensor.joseph_status'].attributes.battery_display;
+          ]]]
+
+  ###############################################################
+  # NAVIGATION
+  ###############################################################
+  - type: horizontal-stack
+    cards:
+      # light.home_lights card REMOVED - entity missing
+      # - type: custom:button-card
+      #   template: nav_button
+      #   entity: light.home_lights
+      #   name: House
+      #   icon: mdi:home
+      #   variables:
+      #     icon_color: '#00aaff'
+      #   tap_action:
+      #     action: navigate
+      #     navigation_path: /cinematic-dashboard/home
+
+      - type: custom:button-card
+        template: nav_button
+        entity: light.kitchen_light_2
+        name: Lights
+        icon: mdi:lightbulb
+        variables:
+          icon_color: '#ffaa00'
+        tap_action:
+          action: navigate
+          navigation_path: /cinematic-dashboard/lights
+
+      - type: custom:button-card
+        template: nav_button
+        entity: alarm_control_panel.alarmo
+        name: Security
+        icon: mdi:shield
+        variables:
+          icon_color: '#4ade80'
+        tap_action:
+          action: navigate
+          navigation_path: /cinematic-dashboard/security
+
+      - type: custom:button-card
+        template: nav_button
+        entity: binary_sensor.ugw3_wan_status
+        name: Network
+        icon: mdi:wifi
+        variables:
+          icon_color: '#ff4444'
+        tap_action:
+          action: navigate
+          navigation_path: /cinematic-dashboard/network
+
+      - type: custom:button-card
+        template: nav_button
+        entity: input_boolean.christmas
+        name: Christmas
+        icon: mdi:pine-tree-variant
+        variables:
+          icon_color: '#ffd700'
+        tap_action:
+          action: navigate
+          navigation_path: /cinematic-dashboard/christmas
+
+      - type: custom:button-card
+        template: nav_button
+        entity: media_player.living_room_tv
+        name: Media
+        icon: mdi:television-classic
+        variables:
+          icon_color: '#a855f7'
+        tap_action:
+          action: navigate
+          navigation_path: /cinematic-dashboard/media
+
+  ###############################################################
+  # SPACER
+  ###############################################################
+  - type: custom:button-card
+    color_type: blank-card
+    styles:
+      card:
+        - height: 16px
+        - background: transparent
+
+  ###############################################################
+  # ROOMS
+  ###############################################################
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+      - type: custom:button-card
+        template: room_card
+        entity: light.boys_light
+        name: Boys Room
+        icon: mdi:door
+        label: |
+          [[[
+          const temp = states['sensor.boysroom_temperature'].state;
+          const tempNum = parseFloat(temp);
+          return temp !== 'unknown' && temp !== 'unavailable' && !isNaN(tempNum) ? tempNum.toFixed(1) + '°C' : 'N/A';
+          ]]]
+        tap_action:
+          action: navigate
+          navigation_path: /cinematic-dashboard/boys
+        hold_action:
+          action: toggle
+
+      - type: custom:button-card
+        template: room_card
+        entity: light.kitchen_light_2
+        name: Kitchen
+        icon: mdi:silverware-fork-knife
+        label: |
+          [[[
+          const temp = states['sensor.kitchen_temperature'].state;
+          const tempNum = parseFloat(temp);
+          return temp !== 'unknown' && temp !== 'unavailable' && !isNaN(tempNum) ? tempNum.toFixed(1) + '°C' : 'N/A';
+          ]]]
+        tap_action:
+          action: navigate
+          navigation_path: /cinematic-dashboard/kitchen
+        hold_action:
+          action: toggle
+
+      - type: custom:button-card
+        template: room_card
+        entity: light.hall_light
+        name: Hallway
+        icon: mdi:home-floor-1
+        label: |
+          [[[
+          const temp = states['sensor.landing_temperature'].state;
+          const tempNum = parseFloat(temp);
+          return temp !== 'unknown' && temp !== 'unavailable' && !isNaN(tempNum) ? tempNum.toFixed(1) + '°C' : 'N/A';
+          ]]]
+        tap_action:
+          action: navigate
+          navigation_path: /cinematic-dashboard/landing
+        hold_action:
+          action: toggle
+
+      - type: custom:button-card
+        template: room_card
+        entity: light.bedroom_light
+        name: Bedroom
+        icon: mdi:bed-king
+        label: |
+          [[[
+          const temp = states['sensor.bedroom_temperature'].state;
+          const tempNum = parseFloat(temp);
+          return temp !== 'unknown' && temp !== 'unavailable' && !isNaN(tempNum) ? tempNum.toFixed(1) + '°C' : 'N/A';
+          ]]]
+        tap_action:
+          action: navigate
+          navigation_path: /cinematic-dashboard/bedroom
+        hold_action:
+          action: toggle
+
+      - type: custom:button-card
+        template: room_card
+        entity: light.medicine
+        name: Living Room
+        icon: mdi:sofa
+        label: |
+          [[[
+          const temp = states['sensor.first_air_quality_monitor_temperature'].state;
+          const tempNum = parseFloat(temp);
+          return temp !== 'unknown' && temp !== 'unavailable' && !isNaN(tempNum) ? tempNum.toFixed(1) + '°C' : 'N/A';
+          ]]]
+        tap_action:
+          action: navigate
+          navigation_path: /cinematic-dashboard/livingroom
+        hold_action:
+          action: toggle
+
+      - type: custom:button-card
+        template: room_card
+        entity: sensor.dining_room_temperature
+        name: Dining Room
+        icon: mdi:table-chair
+        label: |
+          [[[
+          const temp = states['sensor.dining_room_temperature'].state;
+          const tempNum = parseFloat(temp);
+          return temp !== 'unknown' && temp !== 'unavailable' && !isNaN(tempNum) ? tempNum.toFixed(1) + '°C' : 'N/A';
+          ]]]
+        tap_action:
+          action: navigate
+          navigation_path: /cinematic-dashboard/diningroom
+        hold_action:
+          action: none
+
+  ###############################################################
+  # SPACER
+  ###############################################################
+  - type: custom:button-card
+    color_type: blank-card
+    styles:
+      card:
+        - height: 16px
+        - background: transparent
+
+  ###############################################################
+  # SWITCHES
+  ###############################################################
+  - type: grid
+    columns: 4
+    square: false
+    cards:
+      - type: custom:button-card
+        template: switch_card
+        entity: input_boolean.boys_bedtime_switch
+        name: Boys Bedtime
+        icon: mdi:sleep
+        variables:
+          glow_color: '#6496ff'
+
+      - type: custom:button-card
+        template: switch_card
+        entity: switch.makeup_light
+        name: Makeup Light
+        icon: mdi:face-woman-shimmer
+        variables:
+          glow_color: '#ffb6c1'
+
+      - type: custom:button-card
+        template: switch_card
+        entity: input_boolean.wakeup_boys
+        name: Wakeup Boys
+        icon: mdi:alarm
+        variables:
+          glow_color: '#ffd700'
+
+      - type: custom:button-card
+        template: switch_card
+        entity: input_boolean.boys_white_light_switch
+        name: Boys Light
+        icon: mdi:ceiling-light
+        variables:
+          glow_color: '#ffffff'
+
+  ###############################################################
+  # SPACER
+  ###############################################################
+  - type: custom:button-card
+    color_type: blank-card
+    styles:
+      card:
+        - height: 16px
+        - background: transparent
+
+  ###############################################################
+  # CALENDAR
+  ###############################################################
+  - type: calendar
+    initial_view: listWeek
+    entities:
+      - calendar.anniversaries
+      - calendar.sandown_school_calendar
+    card_mod:
+      style: |
+        ha-card {
+          background: {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(138,43,226,0.15), rgba(75,0,130,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+          border-radius: 20px;
+          border: 1px solid rgba(138,43,226,0.3);
+          box-shadow: 0 0 20px rgba(138,43,226,0.3), 0 8px 32px rgba(0,0,0,0.4);
+          backdrop-filter: blur(10px);
+          overflow: hidden;
+        }

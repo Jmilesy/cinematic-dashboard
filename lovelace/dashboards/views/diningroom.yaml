@@ -1,0 +1,155 @@
+title: Dining Room
+path: diningroom
+type: sidebar
+theme: Google Dark Theme
+cards:
+  - type: custom:mushroom-chips-card
+    chips:
+      - type: back
+    alignment: center
+    card_mod:
+      style: |
+        ha-card {
+          background: {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+          border-radius: 20px;
+          border: 1px solid rgba(255,255,255,0.15);
+          box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+          backdrop-filter: blur(10px);
+          margin-bottom: 8px;
+        }
+
+  # ENVIRONMENTAL INTELLIGENCE GRID (3 COLUMNS)
+  - type: grid
+    columns: 3
+    square: false
+    card_mod:
+      style:
+        grid:
+          gap: 4px
+    cards:
+      # Temperature Card
+      - type: custom:button-card
+        entity: sensor.dining_room_temperature
+        name: TEMP
+        layout: vertical
+        show_state: true
+        state_display: |
+          [[[ return (states['sensor.dining_room_temperature'].state || '0') + '°C'; ]]]
+        styles:
+          card:
+            - background: linear-gradient(135deg, rgba(255,150,0,0.15), rgba(255,100,0,0.08)), {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+            - border-radius: 16px
+            - border: 1px solid rgba(255,150,0,0.3)
+            - box-shadow: 0 0 20px rgba(255,150,0,0.2), 0 4px 16px rgba(0,0,0,0.3)
+            - backdrop-filter: blur(10px)
+            - padding: 16px
+          state:
+            - color: '#FFA500'
+            - font-weight: bold
+            - font-size: 24px
+
+      # Humidity Card
+      - type: custom:button-card
+        entity: sensor.dining_room_humidity
+        name: HUMIDITY
+        layout: vertical
+        show_state: true
+        state_display: |
+          [[[ return (states['sensor.dining_room_humidity'].state || '0') + '%'; ]]]
+        styles:
+          card:
+            - background: linear-gradient(135deg, rgba(100,200,255,0.15), rgba(50,150,255,0.08)), {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+            - border-radius: 16px
+            - border: 1px solid rgba(100,200,255,0.3)
+            - box-shadow: 0 0 20px rgba(100,200,255,0.2), 0 4px 16px rgba(0,0,0,0.3)
+            - backdrop-filter: blur(10px)
+            - padding: 16px
+          state:
+            - color: '#64C8FF'
+            - font-weight: bold
+            - font-size: 24px
+
+      # Room Status Card
+      - type: custom:button-card
+        name: ROOM STATUS
+        layout: vertical
+        show_state: false
+        styles:
+          card:
+            - background: linear-gradient(135deg, rgba(100,255,200,0.15), rgba(50,255,150,0.08)), {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+            - border-radius: 16px
+            - border: 1px solid rgba(100,255,200,0.3)
+            - box-shadow: 0 0 20px rgba(100,255,200,0.2), 0 4px 16px rgba(0,0,0,0.3)
+            - backdrop-filter: blur(10px)
+            - padding: 16px
+          name:
+            - color: '#64FFC8'
+            - font-weight: bold
+            - font-size: 16px
+
+  # LIGHTING
+  - type: custom:mushroom-title-card
+    subtitle: 💡 LIGHTING SYSTEM
+    card_mod:
+      style: |
+        ha-card {
+          background: linear-gradient(135deg, rgba(255,178,0,0.15), rgba(255,140,0,0.08)), {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+          border-radius: 20px;
+          border: 1px solid rgba(255,178,0,0.3);
+          box-shadow: 0 0 25px rgba(255,178,0,0.15);
+          backdrop-filter: blur(10px);
+        }
+
+  - type: grid
+    columns: 2
+    square: false
+    card_mod:
+      style:
+        grid:
+          gap: 4px
+    cards:
+      # light.dining card REMOVED - entity missing
+      # - type: custom:mushroom-light-card
+      #   entity: light.dining
+      #   name: Main Light
+      #   use_light_color: true
+        card_mod:
+          style: |
+            ha-card {
+              background: {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,178,0,0.1), rgba(255,140,0,0.05)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+              border-radius: 16px;
+              border: 1px solid rgba(255,178,0,0.25);
+              box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+              backdrop-filter: blur(10px);
+            }
+
+  # DINING ROOM SETTINGS
+  - type: custom:mushroom-title-card
+    subtitle: ⚙️ ROOM SETTINGS
+    card_mod:
+      style: |
+        ha-card {
+          background: linear-gradient(135deg, rgba(150,100,255,0.15), rgba(120,70,255,0.08)), {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+          border-radius: 20px;
+          border: 1px solid rgba(150,100,255,0.3);
+          box-shadow: 0 0 25px rgba(150,100,255,0.15);
+          backdrop-filter: blur(10px);
+        }
+
+  - type: custom:button-card
+    name: Dining Room Configured
+    icon: mdi:check-circle
+    styles:
+      card:
+        - background: linear-gradient(135deg, rgba(150,100,255,0.1), rgba(120,70,255,0.05)), {% set base = state_attr('sensor.header_time_period','gradient') %}{% set weather = state_attr('sensor.header_weather_summary','weather_overlay') %}{% set sun = state_attr('sensor.header_time_period','sun_tint') %}linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.08)){% if sun != 'none' %}, {{ sun }}{% endif %}{% if weather != 'none' %}, {{ weather }}{% endif %}, {{ base }} !important;
+        - border-radius: 16px
+        - border: 1px solid rgba(150,100,255,0.25)
+        - box-shadow: 0 4px 16px rgba(0,0,0,0.3)
+        - backdrop-filter: blur(10px)
+        - padding: 16px
+      icon:
+        - color: '#9E64FF'
+      name:
+        - color: '#ffffff'
+        - font-weight: bold
+        - font-size: 14px

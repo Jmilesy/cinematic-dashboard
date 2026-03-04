@@ -1,0 +1,23 @@
+###############################################################
+# CLIMATE VIEW - CINEMATIC V2
+# Location: config/lovelace/dashboards/views/cinematic_climate.yaml
+###############################################################
+
+title: Climate
+path: cinematic-climate
+icon: mdi:thermometer
+
+cards:
+  - type: custom:button-card
+    template: section_header
+    name: Temperature
+
+  - type: custom:button-card
+    template: climate_overview_block
+
+  - type: custom:button-card
+    template: section_header
+    name: Humidity
+
+  - type: custom:button-card
+    template: humidity_block

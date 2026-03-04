@@ -1,0 +1,32 @@
+###############################################################
+# DASHBOARD HELPER SENSORS & ENTITIES
+# Location: config/templates/dashboard_helpers.yaml
+# Add to configuration.yaml:
+#   template: !include_dir_merge_list templates/
+###############################################################
+
+- sensor:
+    ###############################################################
+    # LIGHT COUNTER
+    ###############################################################
+    - name: "Count Lights On"
+      unique_id: count_lights_on
+      state: >
+        {{ states.light | selectattr('state', 'eq', 'on') | list | count }}
+      icon: mdi:lightbulb-multiple
+      unit_of_measurement: "lights"
+
+- binary_sensor:
+    ###############################################################
+    # INTERNET CONNECTION (Maps to UniFi Gateway)
+    ###############################################################
+    - name: "Internet Connection"
+      unique_id: internet_connection
+      state: "{{ is_state('binary_sensor.ugw3_wan_status', 'on') }}"
+      device_class: connectivity
+      icon: >
+        {% if is_state('binary_sensor.ugw3_wan_status', 'on') %}
+          mdi:wifi
+        {% else %}
+          mdi:wifi-off
+        {% endif %}

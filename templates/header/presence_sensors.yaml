@@ -1,0 +1,285 @@
+###############################################################
+# PRESENCE SENSORS
+# Location: config/templates/presence_sensors.yaml
+# Add to configuration.yaml:
+#   template: !include_dir_merge_list templates/
+###############################################################
+
+- sensor:
+    ###############################################################
+    # ROOM SENSORS (Placeholders until mmWave deployed)
+    ###############################################################
+    - name: "Jon Room"
+      unique_id: jon_room
+      state: >
+        {% if is_state('person.jon', 'home') %}
+          Home
+        {% else %}
+          {{ states('person.jon') | title }}
+        {% endif %}
+      icon: mdi:home-account
+    
+    - name: "Natalie Room"
+      unique_id: natalie_room
+      state: >
+        {% if is_state('person.natalie', 'home') %}
+          Home
+        {% else %}
+          {{ states('person.natalie') | title }}
+        {% endif %}
+      icon: mdi:home-account
+    
+    - name: "Jacob Room"
+      unique_id: jacob_room
+      state: >
+        {% if is_state('person.jacob', 'home') %}
+          Home
+        {% else %}
+          {{ states('person.jacob') | title }}
+        {% endif %}
+      icon: mdi:home-account
+    
+    - name: "Joseph Room"
+      unique_id: joseph_room
+      state: >
+        {% if is_state('person.joseph', 'home') %}
+          Home
+        {% else %}
+          {{ states('person.joseph') | title }}
+        {% endif %}
+      icon: mdi:home-account
+
+    ###############################################################
+    # INDIVIDUAL PERSON STATUS
+    ###############################################################
+    - name: "Jon Status"
+      unique_id: jon_status
+      state: >
+        {% set state = states('person.jon') %}
+        {% if state == 'home' %}
+          {% set room = states('sensor.jon_room') %}
+          {% if room not in ['unknown', 'unavailable', 'Home'] %}
+            {{ room.replace('_', ' ') | title }}
+          {% else %}
+            Home
+          {% endif %}
+        {% else %}
+          {{ state | title }}
+        {% endif %}
+      attributes:
+        is_home: "{{ is_state('person.jon', 'home') }}"
+        location: "{{ states('person.jon') }}"
+        room: "{{ states('sensor.jon_room') }}"
+        battery_level: "{{ states('sensor.jon_phone_battery_level') }}"
+        battery_state: "{{ states('sensor.jon_phone_battery_state') }}"
+        is_charging: "{{ is_state('sensor.jon_phone_battery_state', 'charging') }}"
+        should_glow: >
+          {{ is_state('person.jon', 'home') and 
+             is_state('sensor.jon_phone_battery_state', 'charging') }}
+        battery_display: >
+          {% set lvl = states('sensor.jon_phone_battery_level') | int(0) %}
+          {% set chg = states('sensor.jon_phone_battery_state') %}
+          {% if lvl == 0 or chg == 'unknown' %}
+            Battery N/A
+          {% elif chg == 'charging' %}
+            {{ lvl }}% ⚡ (Charging)
+          {% elif chg == 'full' %}
+            {{ lvl }}% (Full)
+          {% elif chg == 'not_charging' %}
+            {{ lvl }}% (Not Charging)
+          {% else %}
+            {{ lvl }}%
+          {% endif %}
+        color: "#ffcc00"
+
+    - name: "Natalie Status"
+      unique_id: natalie_status
+      state: >
+        {% set state = states('person.natalie') %}
+        {% if state == 'home' %}
+          {% set room = states('sensor.natalie_room') %}
+          {% if room not in ['unknown', 'unavailable', 'Home'] %}
+            {{ room.replace('_', ' ') | title }}
+          {% else %}
+            Home
+          {% endif %}
+        {% else %}
+          {{ state | title }}
+        {% endif %}
+      attributes:
+        is_home: "{{ is_state('person.natalie', 'home') }}"
+        location: "{{ states('person.natalie') }}"
+        room: "{{ states('sensor.natalie_room') }}"
+        battery_level: "{{ states('sensor.sm_a566b_battery_level') }}"
+        battery_state: "{{ states('sensor.sm_a566b_battery_state') }}"
+        is_charging: "{{ is_state('sensor.sm_a566b_battery_state', 'charging') }}"
+        should_glow: >
+          {{ is_state('person.natalie', 'home') and 
+             is_state('sensor.sm_a566b_battery_state', 'charging') }}
+        battery_display: >
+          {% set lvl = states('sensor.sm_a566b_battery_level') | int(0) %}
+          {% set chg = states('sensor.sm_a566b_battery_state') %}
+          {% if lvl == 0 or chg == 'unknown' %}
+            Battery N/A
+          {% elif chg == 'charging' %}
+            {{ lvl }}% ⚡ (Charging)
+          {% elif chg == 'full' %}
+            {{ lvl }}% (Full)
+          {% elif chg == 'not_charging' %}
+            {{ lvl }}% (Not Charging)
+          {% else %}
+            {{ lvl }}%
+          {% endif %}
+        color: "#00aaff"
+
+    - name: "Jacob Status"
+      unique_id: jacob_status
+      state: >
+        {% set state = states('person.jacob') %}
+        {% if state == 'home' %}
+          {% set room = states('sensor.jacob_room') %}
+          {% if room not in ['unknown', 'unavailable', 'Home'] %}
+            {{ room.replace('_', ' ') | title }}
+          {% else %}
+            Home
+          {% endif %}
+        {% else %}
+          {{ state | title }}
+        {% endif %}
+      attributes:
+        is_home: "{{ is_state('person.jacob', 'home') }}"
+        location: "{{ states('person.jacob') }}"
+        room: "{{ states('sensor.jacob_room') }}"
+        battery_level: "{{ states('sensor.sm_g990b2_battery_level') }}"
+        battery_state: "{{ states('sensor.sm_g990b2_battery_state') }}"
+        is_charging: "{{ is_state('sensor.sm_g990b2_battery_state', 'charging') }}"
+        should_glow: >
+          {{ is_state('person.jacob', 'home') and 
+             is_state('sensor.sm_g990b2_battery_state', 'charging') }}
+        battery_display: >
+          {% set lvl = states('sensor.sm_g990b2_battery_level') | int(0) %}
+          {% set chg = states('sensor.sm_g990b2_battery_state') %}
+          {% if lvl == 0 or chg == 'unknown' %}
+            Battery N/A
+          {% elif chg == 'charging' %}
+            {{ lvl }}% ⚡ (Charging)
+          {% elif chg == 'full' %}
+            {{ lvl }}% (Full)
+          {% elif chg == 'not_charging' %}
+            {{ lvl }}% (Not Charging)
+          {% else %}
+            {{ lvl }}%
+          {% endif %}
+        color: "#ff4444"
+
+    - name: "Joseph Status"
+      unique_id: joseph_status
+      state: >
+        {% set state = states('person.joseph') %}
+        {% if state == 'home' %}
+          {% set room = states('sensor.joseph_room') %}
+          {% if room not in ['unknown', 'unavailable', 'Home'] %}
+            {{ room.replace('_', ' ') | title }}
+          {% else %}
+            Home
+          {% endif %}
+        {% else %}
+          {{ state | title }}
+        {% endif %}
+      attributes:
+        is_home: "{{ is_state('person.joseph', 'home') }}"
+        location: "{{ states('person.joseph') }}"
+        room: "{{ states('sensor.joseph_room') }}"
+        battery_level: "{{ states('sensor.joseph_battery_level') }}"
+        battery_state: "{{ states('sensor.joseph_battery_state') }}"
+        is_charging: "{{ is_state('sensor.joseph_battery_state', 'charging') }}"
+        should_glow: >
+          {{ is_state('person.joseph', 'home') and 
+             is_state('sensor.joseph_battery_state', 'charging') }}
+        battery_display: >
+          {% set lvl = states('sensor.joseph_battery_level') | int(0) %}
+          {% set chg = states('sensor.joseph_battery_state') %}
+          {% if lvl == 0 or chg == 'unknown' %}
+            Battery N/A
+          {% elif chg == 'charging' %}
+            {{ lvl }}% ⚡ (Charging)
+          {% elif chg == 'full' %}
+            {{ lvl }}% (Full)
+          {% elif chg == 'not_charging' %}
+            {{ lvl }}% (Not Charging)
+          {% else %}
+            {{ lvl }}%
+          {% endif %}
+        color: "#ff00ff"
+
+    ###############################################################
+    # FAMILY SUMMARY
+    ###############################################################
+    - name: "Family Presence Summary"
+      unique_id: family_presence_summary
+      state: >
+        {% set people = [
+          ('Jon', 'person.jon', 'sensor.jon_room'),
+          ('Natalie', 'person.natalie', 'sensor.natalie_room'),
+          ('Jacob', 'person.jacob', 'sensor.jacob_room'),
+          ('Joseph', 'person.joseph', 'sensor.joseph_room')
+        ] %}
+        {% set ns = namespace(present=[]) %}
+        {% for name, entity, room in people %}
+          {% if is_state(entity, 'home') %}
+            {% set room_state = states(room) %}
+            {% if room_state not in ['unknown', 'unavailable', 'Home'] %}
+              {% set ns.present = ns.present + [name ~ ' in ' ~ room_state.replace('_', ' ')] %}
+            {% else %}
+              {% set ns.present = ns.present + [name ~ ' home'] %}
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+        {% if ns.present | length == 0 %}
+          Nobody home
+        {% else %}
+          {{ ns.present | join(' • ') }}
+        {% endif %}
+      attributes:
+        count_home: >
+          {{ [
+            states('person.jon'),
+            states('person.natalie'),
+            states('person.jacob'),
+            states('person.joseph')
+          ] | select('eq', 'home') | list | count }}
+        count_away: >
+          {{ 4 - ([
+            states('person.jon'),
+            states('person.natalie'),
+            states('person.jacob'),
+            states('person.joseph')
+          ] | select('eq', 'home') | list | count) }}
+        jon_home: "{{ is_state('person.jon', 'home') }}"
+        natalie_home: "{{ is_state('person.natalie', 'home') }}"
+        jacob_home: "{{ is_state('person.jacob', 'home') }}"
+        joseph_home: "{{ is_state('person.joseph', 'home') }}"
+        everyone_home: >
+          {{ is_state('person.jon', 'home') and
+             is_state('person.natalie', 'home') and
+             is_state('person.jacob', 'home') and
+             is_state('person.joseph', 'home') }}
+        everyone_away: >
+          {{ not is_state('person.jon', 'home') and
+             not is_state('person.natalie', 'home') and
+             not is_state('person.jacob', 'home') and
+             not is_state('person.joseph', 'home') }}
+        icon: >
+          {% set count = [
+            states('person.jon'),
+            states('person.natalie'),
+            states('person.jacob'),
+            states('person.joseph')
+          ] | select('eq', 'home') | list | count %}
+          {% if count == 0 %}
+            mdi:home-outline
+          {% elif count == 4 %}
+            mdi:home-account
+          {% else %}
+            mdi:home-circle
+          {% endif %}

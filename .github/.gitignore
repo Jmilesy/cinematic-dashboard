@@ -1,0 +1,39 @@
+# HA internals
+.storage/
+.cloud/
+backups/
+deps/
+tts/
+archive/
+image/
+f1_replay_cache/
+glances/
+gtfs2/
+espresense/
+everything-presence-zone-configurator/
+
+# HACS - reinstall, don't track
+custom_components/
+www/
+
+# Node-RED - has its own backup
+node-red/
+
+# ESPHome - separate project
+esphome/
+
+# Zigbee2MQTT - logs only, keep config
+zigbee2mqtt/log/
+
+# HA runtime files
+*.log
+*.log.1
+*.log.fault
+*.db
+*.db-shm
+*.db-wal
+secrets.yaml
+
+# OS junk
+.DS_Store
+Thumbs.db

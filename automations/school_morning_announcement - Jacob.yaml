@@ -1,0 +1,48 @@
+# ═══════════════════════════════════════════════════════════════
+# 🎓 SCHOOL MORNING ANNOUNCEMENT (7:45 AM)
+# ═══════════════════════════════════════════════════════════════
+#
+# Announces to the boys at 7:45 AM on school days
+# Uses input_boolean.school_day (managed by Node-RED from calendar)
+#
+# Device: Lounge Plus (main living area)
+# Time: 7:45 AM
+# Days: Monday-Friday (when school_day is ON)
+#
+# ═══════════════════════════════════════════════════════════════
+
+id: school_morning_announcement_Jacob
+alias: "School Morning Announcement"
+description: "Announce to Jacob at 8:00 AM on school days via Lounge Plus"
+mode: single
+
+triggers:
+  - at: "08:00:00"
+    trigger: time
+
+conditions:
+  - condition: time
+    weekday:
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri
+  - condition: state
+    entity_id: input_boolean.school_day
+    state: "on"
+
+actions:
+  - data:
+      data:
+        type: announce
+        method: speak
+      message: "Jacob,Get your bags ready"
+    action: notify.alexa_media_lounge_plus
+  
+  - data:
+      message: "Bag Ready"
+      title: "School Reminder"
+    action: notify.mobile_app_sm_g990b2
+  
+

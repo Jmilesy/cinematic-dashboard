@@ -1,0 +1,49 @@
+# ═══════════════════════════════════════════════════════════════
+# 🚨 ALARM TRIGGERED ANNOUNCEMENT
+# ═══════════════════════════════════════════════════════════════
+#
+# Announces when the house alarm is triggered
+# LOUD and to ALL devices for emergency
+#
+# Device: All Alexa devices
+# Trigger: Alarm state change to "triggered"
+# Days: Any day
+#
+# ═══════════════════════════════════════════════════════════════
+
+alias: "Alarm Triggered Announcement"
+description: "Alert everyone when alarm is triggered"
+mode: single
+
+triggers:
+  - trigger: state
+    entity_id: alarm_control_panel.alarmo
+    to: "triggered"
+
+actions:
+  - action: notify.alexa_media
+    data:
+      message: >
+        <speak>
+          <emphasis level="strong">Attention! The home alarm has been triggered!</emphasis>
+          <break time="500ms"/>
+          Check all doors and windows immediately!
+        </speak>
+      data:
+        type: announce
+        method: all
+        volume_level: 0.8  # LOUD for emergency
+      target:
+        - media_player.lounge_plus
+        - media_player.boy_s_new_dot
+        - media_player.bedroom_dot
+        - media_player.diningroom_dot
+
+  # Also send to phones
+  - action: notify.mobile_app_jon_phone
+    data:
+      title: "🚨 Alarm Triggered!"
+      message: "Home alarm has been triggered at {{ now().strftime('%I:%M %p') }}"
+      data:
+        priority: high
+        ttl: 0
