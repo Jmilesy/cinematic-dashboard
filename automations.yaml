@@ -48,7 +48,7 @@
   - data:
       message: Ablutions!!!
       title: School Reminder
-    action: notify.mobile_app_sm_g990b2
+    action: notify.jacob_notify
   - action: notify.mobile_app_joseph
     data:
       message: Ablutions!!!
@@ -81,7 +81,7 @@
   - data:
       message: Ablutions!!!
       title: School Reminder
-    action: notify.mobile_app_sm_g990b2
+    action: notify.jacob_notify
   - action: notify.mobile_app_joseph
     data:
       message: Ablutions!!!
@@ -381,7 +381,7 @@
   - data:
       message: Bags
       title: School Reminder
-    action: notify.mobile_app_sm_g990b2
+    action: notify.jacob_notify
   mode: single
 - id: '1769605762600'
   alias: Joseph Bags
@@ -544,7 +544,7 @@
       - media_player.boy_s_new_dot
       - media_player.bedroom_dot
       - media_player.kitchen_dot
-  - action: notify.mobile_app_sm_g990b2
+  - action: notify.jacob_notify
     metadata: {}
     data:
       message: '{{ agent.response.speech.plain.speech }}'
@@ -779,11 +779,11 @@
     data:
       title: School Prep
       message: '{{ agent_response.response.speech.plain.speech }}'
-  - action: notify.mobile_app_sm_g990b2
+  - action: notify.jacob_notify
     data:
       title: School Prep
       message: '{{ agent_response.response.speech.plain.speech }}'
-  - action: notify.mobile_app_sm_g990b2
+  - action: notify.jacob_notify
     data:
       title: Drink bottles
       message: Jacob. How many drink bottles have you got in the fridge for tomorrow?
@@ -800,7 +800,7 @@
       entity_id: input_boolean.jacob_pe_tomorrow
       state: 'on'
     then:
-    - action: notify.mobile_app_sm_g990b2
+    - action: notify.jacob_notify
       data:
         title: PE kit
         message: Jacob. PE tomorrow. Is your kit sorted and ready to go?
@@ -851,7 +851,7 @@
       entity_id: input_boolean.jacob_drink_confirmed
       state: 'off'
     then:
-    - action: notify.mobile_app_sm_g990b2
+    - action: notify.jacob_notify
       data:
         title: Still waiting...
         message: 'Jacob. The drink bottle. Still no answer.
@@ -877,7 +877,7 @@
         entity_id: input_boolean.jacob_pe_kit_confirmed
         state: 'off'
     then:
-    - action: notify.mobile_app_sm_g990b2
+    - action: notify.jacob_notify
       data:
         title: PE kit. Again.
         message: 'Jacob. PE tomorrow. Your kit. Still no confirmation.
@@ -908,7 +908,7 @@
   - action: input_boolean.turn_on
     target:
       entity_id: input_boolean.jacob_drink_confirmed
-  - action: notify.mobile_app_sm_g990b2
+  - action: notify.jacob_notify
     data:
       title: Logged
       message: Drink bottle confirmed. Only took you a few reminders. Well done.
@@ -925,7 +925,7 @@
   - action: input_boolean.turn_on
     target:
       entity_id: input_boolean.jacob_pe_kit_confirmed
-  - action: notify.mobile_app_sm_g990b2
+  - action: notify.jacob_notify
     data:
       title: PE kit logged
       message: PE kit confirmed. You're almost organised. Almost.

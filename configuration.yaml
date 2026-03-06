@@ -74,7 +74,26 @@ sensor:
     add_days_to: true
 
 
-
+notify:
+  - platform: group
+    name: jon_notify
+    services:
+      - service: mobile_app_jon_phone
+      
+  - platform: group
+    name: jacob_notify
+    services:
+      - service: mobile_app_sm_g990b2
+      
+  - platform: group
+    name: joseph_notify
+    services:
+      - service: mobile_app_joseph
+      
+  - platform: group
+    name: natalie_notify
+    services:
+      - service: mobile_app_sm_a566b 
 
 #python_script:
 

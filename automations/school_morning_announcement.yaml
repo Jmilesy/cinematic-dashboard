@@ -43,7 +43,7 @@ actions:
   - data:
       message: "Ablutions!!!"
       title: "School Reminder"
-    action: notify.mobile_app_sm_g990b2
+    action: notify.jacob_notify
   
   - action: notify.mobile_app_joseph
     data:

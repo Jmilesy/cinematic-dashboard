@@ -43,6 +43,6 @@ actions:
   - data:
       message: "Bag Ready"
       title: "School Reminder"
-    action: notify.mobile_app_sm_g990b2
+    action: notify.jacob_notify
   
 

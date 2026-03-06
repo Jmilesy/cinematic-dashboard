@@ -17,7 +17,7 @@ This is a **Home Assistant** smart home automation configuration featuring famil
 ### Device/Entity Patterns
 - **Input booleans** (e.g., `input_boolean.school_day`): Managed by Node-RED from external calendars; used in automation conditions
 - **Alexa Media Player**: Notification target for announcements (`notify.alexa_media_lounge_plus`)
-- **Mobile app entities**: Push notifications to family members (`notify.mobile_app_sm_g990b2`)
+- **Mobile app entities**: Push notifications to family members (`notify.jacob_notify`)
 - **Custom components** (HACS): alarmo, alexa_media, F1 sensor, anniversary, family_safety, GTFS2, Falcon PI Player
 
 ## Critical Patterns & Conventions
