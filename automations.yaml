@@ -695,7 +695,6 @@
   alias: Jacob school evening prep
   description: Evening school prep with AI announcement, PE detection, and actionable
     notifications
-  mode: single
   triggers:
   - trigger: time
     at: '19:00:00'
@@ -775,10 +774,6 @@
         type: announce
         volume: 0.5
         method: all
-  - action: notify.mobile_app_sm_g991b
-    data:
-      title: School Prep
-      message: '{{ agent_response.response.speech.plain.speech }}'
   - action: notify.jacob_notify
     data:
       title: School Prep
@@ -810,6 +805,7 @@
             title: Yes sorted
           - action: JACOB_PE_NOT_YET
             title: Not yet
+  mode: single
 - id: jacob_task_nagger
   alias: Jacob task nagger
   description: Reminds Jacob every 30 mins if tasks are still unconfirmed
@@ -1074,3 +1070,14 @@
           entity_id: light.washing
         action: light.turn_off
   mode: single
+- id: '1773558836583'
+  alias: F1 Track Status Light
+  description: ''
+  use_blueprint:
+    path: EvertJob/f1.yaml
+    input:
+      light_entity: light.medicine
+      transition_time: 0.5
+      flash_time: 1
+      track_status_sensor: sensor.f1_track_status
+      session_status_sensor: sensor.f1_session_status

@@ -95,6 +95,16 @@ notify:
     services:
       - service: mobile_app_sm_a566b 
 
+recorder:
+  purge_keep_days: 30
+  purge_interval: 1
+  commit_interval: 30
+  exclude:
+    entities:
+      # Add any entities that change too frequently here
+      - sensor.sm_g990b2_active_notification_count  # This one was causing large attributes
+    
+
 #python_script:
 
 #media_player:
