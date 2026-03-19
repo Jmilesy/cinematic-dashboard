@@ -24,38 +24,6 @@
 - id: school_morning_announcement
   alias: School Morning Announcement
   description: Announce to the boys at 7:45 AM on school days via Lounge Plus
-  triggers:
-  - at: 07:45:00
-    trigger: time
-  conditions:
-  - condition: time
-    weekday:
-    - mon
-    - tue
-    - wed
-    - thu
-    - fri
-  - condition: state
-    entity_id: input_boolean.school_day
-    state: 'on'
-  actions:
-  - data:
-      data:
-        type: announce
-        method: speak
-      message: Oi boys! Ablutions!
-    action: notify.alexa_media_lounge_plus
-  - data:
-      message: Ablutions!!!
-      title: School Reminder
-    action: notify.jacob_notify
-  - action: notify.mobile_app_joseph
-    data:
-      message: Ablutions!!!
-      title: School Reminder
-- id: school_morning_announcement
-  alias: School Morning Announcement
-  description: Announce to the boys at 7:45 AM on school days via Lounge Plus
   mode: single
   triggers:
   - at: 07:45:00

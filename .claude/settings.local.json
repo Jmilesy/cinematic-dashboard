@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -lh /c/Users/jon_m/cinematic-dashboard/automations/*.yaml)",
+      "Read(//c/Users/jon_m/cinematic-dashboard/**)"
+    ]
+  }
+}
