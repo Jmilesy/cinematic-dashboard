@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "🚀 Deploy to Home Assistant",
+      "type": "shell",
+      "command": "pwsh.exe -File C:\\Users\\jon_m\\cinematic-dashboard\\deploy.ps1",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      }
+    }
+  ]
+}
