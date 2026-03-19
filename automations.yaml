@@ -941,7 +941,7 @@
       - input_boolean.jacob_pe_tomorrow
 - id: '1772643456996'
   alias: Fridge Door
-  description: ''
+  description: Flash light, wigwag bins/recycling and buzz when fridge opens. Announce if open for 30s.
   triggers:
   - type: opened
     device_id: 8a1d964ca02d98160fcc83f805e93259
@@ -950,11 +950,65 @@
     trigger: device
   conditions: []
   actions:
+  # Short buzz on mon_buzzer (0.5 seconds)
+  - action: switch.turn_on
+    target:
+      entity_id: switch.mon_buzzer
+  - delay:
+      milliseconds: 500
+  - action: switch.turn_off
+    target:
+      entity_id: switch.mon_buzzer
+  # Wigwag bins/recycling and flash boys_info while door is open (up to 30 seconds)
+  - alias: Wigwag and flash while door is open
+    repeat:
+      while:
+        - condition: state
+          entity_id: 9bdf92f12f090b5cb937ec8615d3e22b
+          state: "on"
+        - condition: template
+          value_template: "{{ repeat.index <= 15 }}"
+      sequence:
+        - action: light.turn_on
+          target:
+            entity_id: light.boys_info
+        - action: switch.turn_on
+          target:
+            entity_id: switch.bins
+        - action: switch.turn_off
+          target:
+            entity_id: switch.recycling
+        - delay:
+            seconds: 1
+        - action: light.turn_off
+          target:
+            entity_id: light.boys_info
+        - action: switch.turn_off
+          target:
+            entity_id: switch.bins
+        - action: switch.turn_on
+          target:
+            entity_id: switch.recycling
+        - delay:
+            seconds: 1
+  # Stop wigwag — turn everything off
+  - action: switch.turn_off
+    target:
+      entity_id:
+        - switch.bins
+        - switch.recycling
+  - action: light.turn_off
+    target:
+      entity_id: light.boys_info
+  # If the door is still open after 30 seconds, announce
+  - condition: state
+    entity_id: 9bdf92f12f090b5cb937ec8615d3e22b
+    state: "on"
   - action: notify.alexa_media_kitchen_dot
     metadata: {}
     data:
       message: The Fridge door is open
-  mode: single
+  mode: restart
 - id: '1772810384558'
   alias: Washing Machine Status Indicator
   description: Change light color based on washing machine state
