@@ -79,13 +79,13 @@ cards:
         variables:
           status_sensor: sensor.jon_status
           person_name: Jon
-        name: |
-          [[[
-          return 'Jon - ' + states['sensor.jon_status'].state;
-          ]]]
+        name: Jon
         label: |
           [[[
-          return states['sensor.jon_status'].attributes.battery_display;
+          const s = states['sensor.jon_status'];
+          const loc = s?.state || 'Unknown';
+          const batt = s?.attributes?.battery_display || '';
+          return `${loc}${batt ? ' · ' + batt : ''}`;
           ]]]
 
       # Natalie
@@ -95,13 +95,13 @@ cards:
         variables:
           status_sensor: sensor.natalie_status
           person_name: Natalie
-        name: |
-          [[[
-          return 'Natalie - ' + states['sensor.natalie_status'].state;
-          ]]]
+        name: Natalie
         label: |
           [[[
-          return states['sensor.natalie_status'].attributes.battery_display;
+          const s = states['sensor.natalie_status'];
+          const loc = s?.state || 'Unknown';
+          const batt = s?.attributes?.battery_display || '';
+          return `${loc}${batt ? ' · ' + batt : ''}`;
           ]]]
 
       # Jacob
@@ -111,13 +111,13 @@ cards:
         variables:
           status_sensor: sensor.jacob_status
           person_name: Jacob
-        name: |
-          [[[
-          return 'Jacob - ' + states['sensor.jacob_status'].state;
-          ]]]
+        name: Jacob
         label: |
           [[[
-          return states['sensor.jacob_status'].attributes.battery_display;
+          const s = states['sensor.jacob_status'];
+          const loc = s?.state || 'Unknown';
+          const batt = s?.attributes?.battery_display || '';
+          return `${loc}${batt ? ' · ' + batt : ''}`;
           ]]]
 
       # Joseph
@@ -127,13 +127,13 @@ cards:
         variables:
           status_sensor: sensor.joseph_status
           person_name: Joseph
-        name: |
-          [[[
-          return 'Joseph - ' + states['sensor.joseph_status'].state;
-          ]]]
+        name: Joseph
         label: |
           [[[
-          return states['sensor.joseph_status'].attributes.battery_display;
+          const s = states['sensor.joseph_status'];
+          const loc = s?.state || 'Unknown';
+          const batt = s?.attributes?.battery_display || '';
+          return `${loc}${batt ? ' · ' + batt : ''}`;
           ]]]
 
   ###############################################################

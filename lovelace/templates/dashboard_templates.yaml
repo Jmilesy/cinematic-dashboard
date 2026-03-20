@@ -210,15 +210,15 @@ person_card:
   styles:
     card:
       - display: grid
-      - grid-template-columns: 64px 1fr
+      - grid-template-columns: 48px 1fr
       - grid-template-rows: auto auto 16px
       - grid-template-areas: |
           "picture name"
           "picture location"
           "picture battery"
-      - column-gap: 12px
-      - row-gap: 4px
-      - padding: 14px
+      - column-gap: 10px
+      - row-gap: 3px
+      - padding: 12px
       - border: 2px solid [[[ return `${variables.accent}40` ]]]
       - box-shadow: |
           [[[
@@ -227,25 +227,33 @@ person_card:
 
     name:
       - grid-area: name
-      - font-size: 1.1rem
+      - font-size: 0.9rem
       - font-weight: 600
       - color: white
       - justify-self: start
       - align-self: center
+      - white-space: nowrap
+      - overflow: hidden
+      - text-overflow: ellipsis
+      - max-width: 100%
 
     label:
       - grid-area: location
-      - font-size: 0.9rem
+      - font-size: 0.8rem
       - opacity: 0.85
       - color: white
       - justify-self: start
       - align-self: center
+      - white-space: nowrap
+      - overflow: hidden
+      - text-overflow: ellipsis
+      - max-width: 100%
 
     custom_fields:
       picture:
         - grid-area: picture
-        - width: 64px
-        - height: 64px
+        - width: 48px
+        - height: 48px
         - border-radius: 50%
         - overflow: hidden
         - display: flex
@@ -272,7 +280,7 @@ person_card:
             <div style="width:100%;height:100%;border-radius:50%;
                 background:linear-gradient(135deg, ${variables.accent}60, ${variables.accent}40);
                 display:flex;align-items:center;justify-content:center;
-                font-size:1.8rem;font-weight:700;color:white;">
+                font-size:1.4rem;font-weight:700;color:white;">
               ${initials}
             </div>
           `;
