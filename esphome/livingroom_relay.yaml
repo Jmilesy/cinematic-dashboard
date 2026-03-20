@@ -20,10 +20,11 @@ logger:
 
 # Enable Home Assistant API
 api:
-  password: "Month@2018"
+  password: !secret api_password
 
 ota:
-  password: "Month@2018"
+  - platform: esphome
+    password: !secret ota_password
 
 switch:
   - platform: gpio
