@@ -34,6 +34,9 @@ zigbee2mqtt/log/
 *.db-wal
 secrets.yaml
 
+# Arduino secrets
+arduino/alarm_panel/secrets.h
+
 # OS junk
 .DS_Store
 Thumbs.db
