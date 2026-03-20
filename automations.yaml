@@ -1132,3 +1132,51 @@
   - action: light.turn_off
     target:
       entity_id: light.boys_info
+
+# ============================================================
+# KITCHEN LIGHT - Migrated from Node-RED (temporary - mmwave coming)
+# ============================================================
+- id: kitchen_light_motion
+  alias: Kitchen Light - Motion Auto On/Off
+  description: Turns kitchen lights on when motion detected, off after 2 mins no motion
+  mode: restart
+  triggers:
+  - trigger: state
+    entity_id:
+      - binary_sensor.kitchen_pir_sensor
+      - binary_sensor.kitchen_mw_sensor
+      - binary_sensor.kitchen_motion
+    to: 'on'
+  conditions: []
+  actions:
+  - action: light.turn_on
+    target:
+      entity_id:
+        - light.kitchen_light
+        - light.kitchen_light_2
+  - action: switch.turn_on
+    target:
+      entity_id: switch.counter_light
+  - wait_for_trigger:
+    - trigger: state
+      entity_id:
+        - binary_sensor.kitchen_pir_sensor
+        - binary_sensor.kitchen_mw_sensor
+        - binary_sensor.kitchen_motion
+      to: 'on'
+    timeout:
+      minutes: 2
+    continue_on_timeout: true
+  - condition: template
+    value_template: >
+      {{ is_state('binary_sensor.kitchen_pir_sensor', 'off') and
+         is_state('binary_sensor.kitchen_mw_sensor', 'off') and
+         is_state('binary_sensor.kitchen_motion', 'off') }}
+  - action: light.turn_off
+    target:
+      entity_id:
+        - light.kitchen_light
+        - light.kitchen_light_2
+  - action: switch.turn_off
+    target:
+      entity_id: switch.counter_light
