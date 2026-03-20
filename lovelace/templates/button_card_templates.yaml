@@ -349,8 +349,8 @@ person_card:
   
   styles:
     card:
-      - padding: 16px
-      - border-radius: 20px
+      - padding: 10px
+      - border-radius: 16px
       - transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1)
       - height: auto
       - '--glow-color-100': |
@@ -458,14 +458,14 @@ person_card:
     
     grid:
       - grid-template-areas: '"i n location" "i l location" "battery battery battery"'
-      - grid-template-columns: 64px 1fr auto
+      - grid-template-columns: 44px 1fr 24px
       - grid-template-rows: auto auto auto
-      - column-gap: 12px
-      - row-gap: 8px
-    
+      - column-gap: 8px
+      - row-gap: 4px
+
     img_cell:
-      - width: 64px
-      - height: 64px
+      - width: 44px
+      - height: 44px
       - border-radius: 50%
       - border: |
           [[[
@@ -488,20 +488,28 @@ person_card:
       - border-radius: 50%
     
     name:
-      - font-size: 1.15rem
+      - font-size: 0.9rem
       - font-weight: 700
       - color: white
       - text-shadow: 0 2px 8px rgba(0,0,0,0.5)
       - justify-self: start
       - align-self: end
-    
+      - white-space: nowrap
+      - overflow: hidden
+      - text-overflow: ellipsis
+      - max-width: 100%
+
     label:
-      - font-size: 0.95rem
+      - font-size: 0.78rem
       - opacity: 0.9
       - color: rgba(255,255,255,0.95)
       - text-shadow: 0 1px 4px rgba(0,0,0,0.4)
       - justify-self: start
       - align-self: start
+      - white-space: nowrap
+      - overflow: hidden
+      - text-overflow: ellipsis
+      - max-width: 100%
     
     custom_fields:
       location:
@@ -541,7 +549,7 @@ person_card:
         
         return `
           <ha-icon icon="${icon}" style="
-            width:24px;height:24px;
+            width:20px;height:20px;
             color:${iconColor};
             filter:drop-shadow(0 2px 6px rgba(0,0,0,0.6));
           "></ha-icon>
