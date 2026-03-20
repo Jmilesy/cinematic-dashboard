@@ -210,15 +210,15 @@ person_card:
   styles:
     card:
       - display: grid
-      - grid-template-columns: 48px 1fr
-      - grid-template-rows: auto auto 16px
+      - grid-template-columns: 36px 1fr
+      - grid-template-rows: auto auto 12px
       - grid-template-areas: |
           "picture name"
           "picture location"
-          "picture battery"
-      - column-gap: 10px
-      - row-gap: 3px
-      - padding: 12px
+          "battery battery"
+      - column-gap: 8px
+      - row-gap: 2px
+      - padding: 10px
       - border: 2px solid [[[ return `${variables.accent}40` ]]]
       - box-shadow: |
           [[[
@@ -227,7 +227,7 @@ person_card:
 
     name:
       - grid-area: name
-      - font-size: 0.9rem
+      - font-size: 0.82rem
       - font-weight: 600
       - color: white
       - justify-self: start
@@ -236,10 +236,11 @@ person_card:
       - overflow: hidden
       - text-overflow: ellipsis
       - max-width: 100%
+      - display: block
 
     label:
       - grid-area: location
-      - font-size: 0.8rem
+      - font-size: 0.72rem
       - opacity: 0.85
       - color: white
       - justify-self: start
@@ -248,12 +249,13 @@ person_card:
       - overflow: hidden
       - text-overflow: ellipsis
       - max-width: 100%
+      - display: block
 
     custom_fields:
       picture:
         - grid-area: picture
-        - width: 48px
-        - height: 48px
+        - width: 36px
+        - height: 36px
         - border-radius: 50%
         - overflow: hidden
         - display: flex
@@ -264,7 +266,7 @@ person_card:
       battery:
         - grid-area: battery
         - width: 100%
-        - height: 100%
+        - height: 12px
         - display: flex
         - align-items: center
 
@@ -280,7 +282,7 @@ person_card:
             <div style="width:100%;height:100%;border-radius:50%;
                 background:linear-gradient(135deg, ${variables.accent}60, ${variables.accent}40);
                 display:flex;align-items:center;justify-content:center;
-                font-size:1.4rem;font-weight:700;color:white;">
+                font-size:1.1rem;font-weight:700;color:white;">
               ${initials}
             </div>
           `;
@@ -317,7 +319,7 @@ person_card:
         const showPulse = isHome && (isCharging || lvl < 20);
         
         return `
-          <div style="width:100%;height:16px;border-radius:6px;
+          <div style="width:100%;height:12px;border-radius:6px;
                       background:rgba(255,255,255,0.12);position:relative;
                       overflow:hidden;">
             <div style="
@@ -419,7 +421,7 @@ cinematic_header:
         
         if (hour >= 18) {
           emoji = "🌙";
-          text = "Good Evening, Jon!";
+          text = "Good Evening, Jon! ✓";
         } else if (hour >= 12) {
           emoji = "☀️";
           text = "Good Afternoon, Jon!";
