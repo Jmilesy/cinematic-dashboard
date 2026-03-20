@@ -1180,3 +1180,134 @@
   - action: switch.turn_off
     target:
       entity_id: switch.counter_light
+
+# ============================================================
+# BOYS BEDTIME - Migrated from Node-RED
+# ============================================================
+- id: boys_bedtime
+  alias: Boys Bedtime
+  description: Sets bedtime lighting when boys_bedtime_switch turns on
+  mode: single
+  triggers:
+  - trigger: state
+    entity_id: input_boolean.boys_bedtime_switch
+    to: 'on'
+  conditions: []
+  actions:
+  - action: input_boolean.turn_on
+    target:
+      entity_id: input_boolean.boys_bedtime
+  - action: light.turn_on
+    target:
+      entity_id: light.hall_light
+    data:
+      color_name: blue
+      brightness_pct: 25
+  - action: light.turn_on
+    target:
+      entity_id: light.boys_led_light
+    data:
+      brightness: 110
+      effect: Rainbow Effect With Custom Values
+  - action: light.turn_on
+    target:
+      entity_id:
+        - light.boys_light
+        - light.joseph
+    data:
+      color_name: red
+      brightness: 35
+
+- id: boys_bedtime_off
+  alias: Boys Bedtime Off
+  description: Turns off boys lights when boys_bedtime_switch turns off
+  mode: single
+  triggers:
+  - trigger: state
+    entity_id: input_boolean.boys_bedtime_switch
+    to: 'off'
+  conditions: []
+  actions:
+  - action: input_boolean.turn_off
+    target:
+      entity_id:
+        - input_boolean.boys_bedtime
+        - input_boolean.wakeup_boys
+  - action: light.turn_off
+    target:
+      entity_id:
+        - light.boys_light
+        - light.joseph
+        - light.boys_led_light
+
+- id: boys_bedtime_reset
+  alias: Boys Bedtime - Daily Reset
+  description: Clears bedtime flag at 6:30 AM daily
+  mode: single
+  triggers:
+  - trigger: time
+    at: '06:30:00'
+  conditions: []
+  actions:
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.boys_bedtime
+
+# ============================================================
+# BOYS MORNING SUNRISE - Migrated from Node-RED
+# ============================================================
+- id: boys_morning_sunrise
+  alias: Boys Morning - Sunrise Light
+  description: Gradual red to white transition 15 mins before Boy's Dot alarm on school days
+  mode: single
+  triggers:
+  - trigger: time_pattern
+    minutes: /1
+  conditions:
+  - condition: template
+    value_template: >
+      {% set alarm = states('sensor.boy_s_new_dot_next_alarm') %}
+      {% if alarm not in ['unknown', 'unavailable'] %}
+        {% set alarm_dt = alarm | as_datetime | as_local %}
+        {% set sunrise_dt = alarm_dt - timedelta(minutes=15) %}
+        {{ now().strftime('%H:%M') == sunrise_dt.strftime('%H:%M') }}
+      {% else %}
+        false
+      {% endif %}
+  - condition: time
+    weekday:
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri
+  - condition: state
+    entity_id: input_boolean.school_day
+    state: 'on'
+  - condition: state
+    entity_id: input_boolean.boys_bedtime
+    state: 'on'
+  actions:
+  - repeat:
+      count: 60
+      sequence:
+      - action: light.turn_on
+        target:
+          entity_id:
+            - light.boys_light
+            - light.joseph
+        data:
+          transition: 5
+          rgb_color: >
+            {% set progress = repeat.index / 60 %}
+            {% if progress < 0.5 %}
+              {% set t = progress * 2 %}
+              {{ [255, (200 * t) | int, 0] }}
+            {% else %}
+              {% set t = (progress - 0.5) * 2 %}
+              {{ [255, (200 + 55 * t) | int, (100 * t) | int] }}
+            {% endif %}
+          brightness: >
+            {{ (2.55 + (252.45 * (repeat.index / 60))) | int }}
+      - delay:
+          seconds: 5
