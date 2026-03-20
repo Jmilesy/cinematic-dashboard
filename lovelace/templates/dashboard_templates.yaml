@@ -421,7 +421,7 @@ cinematic_header:
         
         if (hour >= 18) {
           emoji = "🌙";
-          text = "Good Evening, Jon! ✓";
+          text = "Good Evening, Jon!";
         } else if (hour >= 12) {
           emoji = "☀️";
           text = "Good Afternoon, Jon!";
