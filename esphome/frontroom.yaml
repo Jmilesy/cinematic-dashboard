@@ -37,7 +37,7 @@ binary_sensor:
     pin: 
       number: D1
       mode: INPUT_PULLUP
-    name: "Window Left Botttom"
+    name: "Window Left Bottom"
     id: "window_left_bottom"
     device_class: Window
   - platform: gpio

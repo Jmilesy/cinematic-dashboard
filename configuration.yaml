@@ -105,6 +105,21 @@ recorder:
       - sensor.sm_g990b2_active_notification_count  # This one was causing large attributes
     
 
+input_boolean:
+  alert_active:
+    name: Alert Active
+    icon: mdi:alert
+
+wake_on_lan:
+
+rest_command:
+  shutdown_jon_pc:
+    url: "http://192.168.1.107:8000/?action=System.Shutdown"
+    method: POST
+  shutdown_games_pc:
+    url: "http://192.168.1.108:8000/?action=System.Shutdown"
+    method: POST
+
 #python_script:
 
 #media_player:

@@ -74,7 +74,7 @@ sensor:
     update_interval: 120s
   - platform: dallas_temp
     address: 0x76031720F843FF28
-    name: Kitchen Temperature"
+    name: "Kitchen Temperature"
   - platform: adc
     pin: A0
     name: "Kitchen Brightness"
