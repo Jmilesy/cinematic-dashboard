@@ -1311,3 +1311,128 @@
             {{ (2.55 + (252.45 * (repeat.index / 60))) | int }}
       - delay:
           seconds: 5
+
+# ============================================================
+# PIRs - Hall/Landing motion lighting - Migrated from Node-RED
+# ============================================================
+- id: pir_hall_motion_on
+  alias: PIR - Hall Motion Detected
+  description: Turns on hall light and landing switch on motion. Blue at bedtime, white during day.
+  mode: restart
+  triggers:
+  - trigger: state
+    entity_id:
+      - binary_sensor.pir_bathroom
+      - binary_sensor.pir_frontdoor
+    to: 'on'
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.boys_bedtime
+        state: 'on'
+      sequence:
+      - action: light.turn_on
+        target:
+          entity_id: light.hall_light
+        data:
+          color_name: blue
+          brightness_pct: 75
+    default:
+      - action: light.turn_on
+        target:
+          entity_id: light.hall_light
+        data:
+          brightness_pct: 100
+          color_temp_kelvin: 6535
+  - action: switch.turn_on
+    target:
+      entity_id: switch.landing
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.boys_bedtime
+        state: 'on'
+      sequence:
+      - wait_for_trigger:
+        - trigger: state
+          entity_id:
+            - binary_sensor.pir_bathroom
+            - binary_sensor.pir_frontdoor
+          to: 'on'
+          timeout:
+            seconds: 30
+          continue_on_timeout: true
+    default:
+      - wait_for_trigger:
+        - trigger: state
+          entity_id:
+            - binary_sensor.pir_bathroom
+            - binary_sensor.pir_frontdoor
+          to: 'on'
+          timeout:
+            seconds: 10
+          continue_on_timeout: true
+  - condition: template
+    value_template: >
+      {{ is_state('binary_sensor.pir_bathroom', 'off') and
+         is_state('binary_sensor.pir_frontdoor', 'off') }}
+  - action: light.turn_off
+    target:
+      entity_id: light.hall_light
+  - action: switch.turn_off
+    target:
+      entity_id: switch.landing
+
+# ============================================================
+# SWITCHES - Migrated from Node-RED
+# ============================================================
+- id: boys_white_light_switch
+  alias: Boys White Light Switch
+  description: Turns boys light on/off in white mode from dashboard toggle
+  mode: single
+  triggers:
+  - trigger: state
+    entity_id: input_boolean.boys_white_light_switch
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.boys_white_light_switch
+        state: 'on'
+      sequence:
+      - action: light.turn_on
+        target:
+          entity_id: light.boys_light
+        data:
+          color_mode: white
+          brightness: 255
+    default:
+      - action: light.turn_off
+        target:
+          entity_id: light.boys_light
+
+- id: makeup_light_switch
+  alias: Makeup Light Switch
+  description: Controls makeup light from Natalie's dashboard toggle
+  mode: single
+  triggers:
+  - trigger: state
+    entity_id: input_boolean.natalie_makeup
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: input_boolean.natalie_makeup
+        state: 'on'
+      sequence:
+      - action: switch.turn_on
+        target:
+          entity_id: switch.makeup_light
+    default:
+      - action: switch.turn_off
+        target:
+          entity_id: switch.makeup_light

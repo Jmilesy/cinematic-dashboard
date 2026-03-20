@@ -109,6 +109,9 @@ input_boolean:
   alert_active:
     name: Alert Active
     icon: mdi:alert
+  natalie_makeup:
+    name: Natalie Makeup Light
+    icon: mdi:mirror
 
 wake_on_lan:
 
