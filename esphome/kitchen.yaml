@@ -1,0 +1,98 @@
+
+
+esphome:
+    name: kitchen
+    comment: Kitchen room ESP8266 controller
+    area: kitchen
+
+esp8266:
+    board: d1_mini_lite
+  
+substitutions:
+  device_name: Kitchen_monitor
+  friendly_name: Kitchen
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Kitchen Fallback Hotspot"
+    password: "xDKRE3EsM1Ia"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  #password: !secret api_password
+
+ota:
+  - platform: esphome
+    password: !secret api_password
+  
+text_sensor:
+  - platform: version
+    hide_timestamp: true
+    name: '${friendly_name} - ESPHome Version'
+  - platform: wifi_info
+    ip_address:
+      name: '${friendly_name} - IP Address'
+      icon: mdi:wifi
+    ssid:
+      name: '${friendly_name} - Connected SSID'
+      icon: mdi:wifi-strength-
+  
+
+one_wire:
+  - platform: gpio
+    pin: 16
+
+binary_sensor:
+  - platform: gpio
+    pin: GPIO4
+    name: "Kitchen PIR Sensor"
+    device_class: motion
+  - platform: gpio
+    pin: GPIO13
+    name: "Kitchen MW Sensor"
+    device_class: motion
+  - platform: gpio
+    pin: D5
+    name: "Kitchen bright"
+    device_class: light
+    filters:
+      - invert:
+      - delayed_on: 10ms
+sensor:
+  - platform: wifi_signal
+    name: "${friendly_name} - WiFi Signal"
+    update_interval: 120s
+  - platform: dallas_temp
+    address: 0x76031720F843FF28
+    name: Kitchen Temperature"
+  - platform: adc
+    pin: A0
+    name: "Kitchen Brightness"
+    unit_of_measurement: lux
+    update_interval: 5s
+    filters:
+      - lambda: |-
+          auto r = map(((x * 5) / 10000.0) * 2000000.0, 0, 1023, 1000, 0);
+          if (r > 0) return r;
+          return 0;
+#return (x / 10000.0) * 2000000.0;
+
+
+    
+switch:
+  - platform: gpio
+    name: "Counter Light"
+    pin: GPIO0
+  - platform: gpio
+    name: "Pump"
+    pin: GPIO12

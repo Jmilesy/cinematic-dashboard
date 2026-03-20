@@ -1,0 +1,82 @@
+esphome:
+    name: landing
+    comment: landing controller
+    area: landing
+
+esp8266:
+    board: d1_mini_lite
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Landing Fallback Hotspot"
+    password: "rPeDpfrAiFhg"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+  - platform: esphome
+    password: !secret api_password
+
+binary_sensor:
+  - platform: gpio
+    pin: 5
+    name: "PIR Bathroom"
+    device_class: motion
+  - platform: gpio
+    pin: 16
+    name: "PIR Frontdoor"
+    device_class: motion
+  - platform: gpio
+    pin: 12
+    name: "Landing Light sensor"
+    device_class: light
+    filters:
+      - invert:
+      - delayed_on: 100ms
+      - delayed_off: 100ms
+    
+# 5 dht11
+# 4 dallas 
+
+one_wire:
+  - platform: gpio
+    pin: 02
+  
+switch:
+  - platform: gpio
+    pin: D2
+    name: makeup_light
+  
+sensor:
+  - platform: dallas_temp
+    address: 0x70041720D9D2FF28
+    name: "Landing Temperature"
+  - platform: dht
+    pin: D5
+    model: DHT11
+    temperature:
+      name: "Landing Temp"
+    humidity:
+      name: "Landing Humidity"
+    update_interval: 60s
+  - platform: adc
+    pin: A0
+    name: "Landing Brightness"
+    unit_of_measurement: lux
+    update_interval: 5s
+    filters:
+      - lambda: |-
+          auto r = map(((x * 5) / 10000.0) * 2000000.0, 0, 1023, 1000, 0);
+          if (r > 0) return r;
+          return 0;

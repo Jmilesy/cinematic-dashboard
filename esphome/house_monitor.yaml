@@ -1,0 +1,229 @@
+esphome:
+    name: house_monitor
+    comment: House monitor controller
+    area: Dining Room
+    
+esp32:
+    board: esp32dev
+    framework:
+      type: esp-idf    
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "House Monitor Fallback Hotspot"
+    password: "kmSypzXfDrl2"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+  - platform: esphome
+    password: !secret api_password
+
+
+
+switch:
+  - platform: gpio
+    pin: 15
+    name: "Mon_Buzzer"
+    inverted: yes
+    
+  - platform: gpio
+    pin: GPIO23
+    name: "Boys_door_red"
+    id: Boys_door_red
+    interlock: [Boys_door_green]
+
+  - platform: gpio
+    pin: GPIO22
+    name: "Boys_door_green"
+    id: Boys_door_green
+    interlock: [Boys_door_red]
+    
+  - platform: gpio
+    pin: GPIO21
+    name: "jonPC_green"
+    id: jonPC_green
+    interlock: [jonPC_red]
+  - platform: gpio
+    pin: GPIO19
+    name: "jonPC_red"
+    id: jonPC_red
+    interlock: [jonPC_green]
+    
+  - platform: gpio
+    pin: GPIO2
+    name: "GamePC_green"
+    id: GamePC_green
+    interlock: [GamePC_red]
+  - platform: gpio
+    pin: GPIO4
+    name: "GamePC_red"
+    id: GamePC_red
+    interlock: [GamePC_green]
+    
+  - platform: gpio
+    pin: GPIO05
+    name: "spare_green"
+    id: spare_green
+    interlock: [spare_red]
+  - platform: gpio
+    pin: GPIO18
+    name: "spare_red"
+    id: spare_red
+    interlock: [spare_green]
+
+  - platform: gpio
+    pin: GPIO27
+    name: "recycling"
+    id: recycling
+  - platform: template
+    name: Recycling_flash
+    id: Recycling_flash
+    optimistic: true
+    turn_on_action:
+    - switch.turn_on: recycling
+    - delay: 500ms 
+    - switch.turn_off: recycling
+    - delay: 500ms
+  # turn self on again if still enabled
+    - if:
+        condition:
+          lambda: 'return id(Recycling_flash).state;'
+        then:
+        - switch.turn_on: Recycling_flash
+    turn_off_action:
+      - switch.turn_off: recycling  
+      
+  - platform: gpio
+    pin: GPIO13
+    name: "bins"
+    id: bins
+  - platform: template
+    name: bins_flash
+    id: bins_flash
+    optimistic: true
+    turn_on_action:
+    - switch.turn_on: bins
+    - delay: 500ms 
+    - switch.turn_off: bins
+    - delay: 500ms
+  # turn self on again if still enabled
+    - if:
+        condition:
+          lambda: 'return id(bins_flash).state;'
+        then:
+        - switch.turn_on: bins_flash
+    turn_off_action:
+      - switch.turn_off: bins  
+ 
+  - platform: template
+    name: House_mon
+    id: House_mon
+    optimistic: true
+
+    
+binary_sensor:    
+  - platform: gpio
+    pin:
+      number: 33
+      mode: INPUT_PULLUP
+      inverted: true
+    filters:
+    - delayed_on: 50ms
+    name: "acknowledge"
+  - platform: gpio
+    pin:
+      number: 25
+      mode: INPUT_PULLUP
+      inverted: true
+    filters:
+    - delayed_on: 50ms
+    name: "gamepc"
+  - platform: gpio
+    pin:
+      number: 34
+      mode: INPUT
+      inverted: true
+    filters:
+    - delayed_on: 50ms
+    name: "jonpc"
+  - platform: gpio
+    pin:
+      number: 32
+      mode: INPUT_PULLUP
+      inverted: true
+    filters:
+    - delayed_on: 50ms
+    name: "cctv_mon"
+
+light:
+  - platform: esp32_rmt_led_strip
+    chipset: WS2812
+    pin: GPIO26
+    num_leds: 4
+    rgb_order: GRB
+    name: "rubbishbin"
+    effects:
+    - addressable_flicker:
+    - addressable_flicker:
+        name: Flicker Effect With Custom Values
+        update_interval: 16ms
+        intensity: 5%
+    - addressable_twinkle:
+    - addressable_twinkle:
+        name: Twinkle Effect With Custom Values
+        twinkle_probability: 5%
+        progress_interval: 4ms
+    - random:
+    - random:
+        name: Random Effect With Custom Values
+        transition_length: 5s
+        update_interval: 7s
+    - addressable_scan:
+    - addressable_scan:
+        name: Scan Effect With Custom Values
+        move_interval: 100ms
+        scan_width: 1
+    - strobe:
+    - strobe:
+         name: Strobe Effect With Custom Values
+         colors:
+           - state: True
+             brightness: 100%
+             red: 100%
+             green: 0%
+             blue: 0%
+             duration: 500ms
+           - state: False
+             duration: 25ms
+           - state: True
+             brightness: 100%
+             red: 0%
+             green: 0%
+             blue: 100%
+             duration: 500ms
+    - addressable_rainbow:
+    - addressable_rainbow:
+        name: Rainbow Effect With Custom Values
+        speed: 10
+        width: 50
+    - addressable_fireworks:
+    - addressable_fireworks:
+        name: Fireworks Effect With Custom Values
+        update_interval: 32ms
+        spark_probability: 10%
+        use_random_color: false
+        fade_out_rate: 120
+

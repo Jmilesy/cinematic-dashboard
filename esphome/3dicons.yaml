@@ -1,0 +1,356 @@
+esphome:
+  name: 3dicons
+
+esp8266:
+  board: d1_mini_lite
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+  - platform: esphome
+    password: "68b48110dd8425c0b7a0355c0eba29cc"
+
+wifi:
+  ssid: "USR5462"
+  password: "NorwichCity"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "3Dicons Fallback Hotspot"
+    password: "pxQAHsvZiPsF"
+
+captive_portal:
+
+
+binary_sensor:
+  - platform: gpio
+    pin: 2
+    name: "Lounge Movement"
+    device_class: motion
+
+light:
+  - platform: neopixelbus
+    variant: ws2812x
+    type: GRB
+    pin: D1
+    num_leds: 2
+    name: "Boys Info"
+    effects:
+    - pulse:
+    - pulse:
+        name: "Fast Pulse"
+        transition_length: 0.5s
+        update_interval: 0.5s
+    - pulse:
+        name: "Slow Pulse"
+        # transition_length: 1s      # defaults to 1s
+        update_interval: 2s    
+    - addressable_flicker:
+    - addressable_flicker:
+        name: Flicker Effect With Custom Values
+        update_interval: 16ms
+        intensity: 5%
+    - addressable_twinkle:
+    - addressable_twinkle:
+        name: Twinkle Effect With Custom Values
+        twinkle_probability: 5%
+        progress_interval: 4ms
+    - random:
+    - random:
+        name: Random Effect With Custom Values
+        transition_length: 5s
+        update_interval: 7s
+    - addressable_scan:
+    - addressable_scan:
+        name: Scan Effect With Custom Values
+        move_interval: 500ms
+        scan_width: 1
+    - strobe:
+    - strobe:
+         name: Strobe Effect With Custom Values
+         colors:
+           - state: True
+             brightness: 100%
+             red: 100%
+             green: 0%
+             blue: 0%
+             duration: 500ms
+           - state: False
+             duration: 25ms
+           - state: True
+             brightness: 100%
+             red: 0%
+             green: 0%
+             blue: 100%
+             duration: 500ms
+    - addressable_rainbow:
+    - addressable_rainbow:
+        name: Rainbow Effect With Custom Values
+        speed: 10
+        width: 50
+    - addressable_fireworks:
+    - addressable_fireworks:
+        name: Fireworks Effect With Custom Values
+        update_interval: 32ms
+        spark_probability: 10%
+        use_random_color: false
+        fade_out_rate: 120
+  - platform: neopixelbus
+    variant: ws2812x
+    type: GRB
+    pin: D2
+    num_leds: 2
+    name: "Washing"
+    effects:
+    - pulse:
+    - pulse:
+        name: "Fast Pulse"
+        transition_length: 0.5s
+        update_interval: 0.5s
+    - pulse:
+        name: "Slow Pulse"
+        # transition_length: 1s      # defaults to 1s
+        update_interval: 2s    
+    - addressable_flicker:
+    - addressable_flicker:
+        name: Flicker Effect With Custom Values
+        update_interval: 16ms
+        intensity: 5%
+    - addressable_twinkle:
+    - addressable_twinkle:
+        name: Twinkle Effect With Custom Values
+        twinkle_probability: 5%
+        progress_interval: 4ms
+    - random:
+    - random:
+        name: Random Effect With Custom Values
+        transition_length: 5s
+        update_interval: 7s
+    - addressable_scan:
+    - addressable_scan:
+        name: Scan Effect With Custom Values
+        move_interval: 500ms
+        scan_width: 1
+    - strobe:
+    - strobe:
+         name: Strobe Effect With Custom Values
+         colors:
+           - state: True
+             brightness: 100%
+             red: 100%
+             green: 0%
+             blue: 0%
+             duration: 500ms
+           - state: False
+             duration: 25ms
+           - state: True
+             brightness: 100%
+             red: 0%
+             green: 0%
+             blue: 100%
+             duration: 500ms
+    - addressable_rainbow:
+    - addressable_rainbow:
+        name: Rainbow Effect With Custom Values
+        speed: 10
+        width: 50
+    - addressable_fireworks:
+    - addressable_fireworks:
+        name: Fireworks Effect With Custom Values
+        update_interval: 32ms
+        spark_probability: 10%
+        use_random_color: false
+        fade_out_rate: 120
+  - platform: neopixelbus
+    variant: ws2812x
+    type: GRB
+    pin: D3
+    num_leds: 4
+    name: "Medicine"
+    effects:
+    - pulse:
+    - pulse:
+        name: "Fast Pulse"
+        transition_length: 0.5s
+        update_interval: 0.5s
+    - pulse:
+        name: "Slow Pulse"
+        # transition_length: 1s      # defaults to 1s
+        update_interval: 2s    
+    - addressable_flicker:
+    - addressable_flicker:
+        name: Flicker Effect With Custom Values
+        update_interval: 16ms
+        intensity: 5%
+    - addressable_twinkle:
+    - addressable_twinkle:
+        name: Twinkle Effect With Custom Values
+        twinkle_probability: 5%
+        progress_interval: 4ms
+    - random:
+    - random:
+        name: Random Effect With Custom Values
+        transition_length: 5s
+        update_interval: 7s
+    - addressable_scan:
+    - addressable_scan:
+        name: Scan Effect With Custom Values
+        move_interval: 500ms
+        scan_width: 1
+    - strobe:
+    - strobe:
+         name: Strobe Effect With Custom Values
+         colors:
+           - state: True
+             brightness: 100%
+             red: 100%
+             green: 0%
+             blue: 0%
+             duration: 500ms
+           - state: False
+             duration: 25ms
+           - state: True
+             brightness: 100%
+             red: 0%
+             green: 0%
+             blue: 100%
+             duration: 500ms
+    - addressable_rainbow:
+    - addressable_rainbow:
+        name: Rainbow Effect With Custom Values
+        speed: 10
+        width: 50
+    - addressable_fireworks:
+    - addressable_fireworks:
+        name: Fireworks Effect With Custom Values
+        update_interval: 32ms
+        spark_probability: 10%
+        use_random_color: false
+        fade_out_rate: 120
+  - platform: neopixelbus
+    variant: ws2812x
+    type: GRB
+    pin: D6
+    num_leds: 3
+    name: "Village"
+    effects:
+    - pulse:
+    - pulse:
+        name: "Fast Pulse"
+        transition_length: 0.5s
+        update_interval: 0.5s
+    - pulse:
+        name: "Slow Pulse"
+        # transition_length: 1s      # defaults to 1s
+        update_interval: 2s    
+    - addressable_flicker:
+    - addressable_flicker:
+        name: Flicker Effect With Custom Values
+        update_interval: 16ms
+        intensity: 5%
+    - addressable_twinkle:
+    - addressable_twinkle:
+        name: Twinkle Effect With Custom Values
+        twinkle_probability: 5%
+        progress_interval: 4ms
+    - random:
+    - random:
+        name: Random Effect With Custom Values
+        transition_length: 5s
+        update_interval: 7s
+    - addressable_scan:
+    - addressable_scan:
+        name: Scan Effect With Custom Values
+        move_interval: 500ms
+        scan_width: 1
+    - strobe:
+    - strobe:
+         name: Strobe Effect With Custom Values
+         colors:
+           - state: True
+             brightness: 100%
+             red: 100%
+             green: 0%
+             blue: 0%
+             duration: 500ms
+           - state: False
+             duration: 25ms
+           - state: True
+             brightness: 100%
+             red: 0%
+             green: 0%
+             blue: 100%
+             duration: 500ms
+    - addressable_rainbow:
+    - addressable_rainbow:
+        name: Rainbow Effect With Custom Values
+        speed: 10
+        width: 50
+    - addressable_fireworks:
+    - addressable_fireworks:
+        name: Fireworks Effect With Custom Values
+        update_interval: 32ms
+        spark_probability: 10%
+        use_random_color: false
+        fade_out_rate: 120
+  - platform: neopixelbus
+    variant: ws2812x
+    type: GRB
+    pin: D5
+    num_leds: 4
+    name: "rubbishbin"
+    effects:
+    - addressable_flicker:
+    - addressable_flicker:
+        name: Flicker Effect With Custom Values
+        update_interval: 16ms
+        intensity: 5%
+    - addressable_twinkle:
+    - addressable_twinkle:
+        name: Twinkle Effect With Custom Values
+        twinkle_probability: 5%
+        progress_interval: 4ms
+    - random:
+    - random:
+        name: Random Effect With Custom Values
+        transition_length: 5s
+        update_interval: 7s
+    - addressable_scan:
+    - addressable_scan:
+        name: Scan Effect With Custom Values
+        move_interval: 100ms
+        scan_width: 1
+    - strobe:
+    - strobe:
+         name: Strobe Effect With Custom Values
+         colors:
+           - state: True
+             brightness: 100%
+             red: 100%
+             green: 0%
+             blue: 0%
+             duration: 500ms
+           - state: False
+             duration: 25ms
+           - state: True
+             brightness: 100%
+             red: 0%
+             green: 0%
+             blue: 100%
+             duration: 500ms
+    - addressable_rainbow:
+    - addressable_rainbow:
+        name: Rainbow Effect With Custom Values
+        speed: 10
+        width: 50
+    - addressable_fireworks:
+    - addressable_fireworks:
+        name: Fireworks Effect With Custom Values
+        update_interval: 32ms
+        spark_probability: 10%
+        use_random_color: false
+        fade_out_rate: 120

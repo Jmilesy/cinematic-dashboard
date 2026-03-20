@@ -79,44 +79,6 @@
         volume_level: 0.8
       message: Boys, time to get up please.
     action: notify.alexa_media_boy_s_new_dot
-- id: 847ee1a2bb244002a91bb6ef5583fb2f
-  alias: School Evening Prep Reminder
-  description: Remind boys to prepare for school tomorrow
-  triggers:
-  - at: '19:00:00'
-    trigger: time
-  conditions:
-  - condition: time
-    weekday:
-    - sun
-    - mon
-    - tue
-    - wed
-    - thu
-  - condition: state
-    entity_id: input_boolean.school_day
-    state: 'on'
-  actions:
-  - action: notify.alexa_media
-    data:
-      message: 'Boys, school tomorrow. Make sure you have: your bags packed, your
-        PE kit ready if you need it, drink in the fridge Jacob, and your homework
-        done.
-
-        {% if states(''sensor.school_event_tomorrow'') %} School Update for Tomorrow:
-        {{ states(''sensor.school_event_tomorrow'') }} {% endif %}
-
-        '
-      data:
-        type: announce
-        method: all
-        volume_level: 0.5
-      target:
-      - media_player.lounge_plus
-      - media_player.boy_s_new_dot
-      - media_player.bedroom_dot
-      - media_player.kitchen_dot
-  mode: single
 - id: bedtime_reminder
   alias: Bedtime Reminder - School Nights
   description: Remind boys to go to bed on school nights
@@ -383,59 +345,6 @@
       message: '{{agent.response.speech.plain.speech}}'
       title: School Reminder
     enabled: true
-  mode: single
-- id: '1770390775158'
-  alias: New school evening
-  description: Remind boys to prepare for school tomorrow
-  triggers:
-  - at: '19:00:00'
-    trigger: time
-  conditions:
-  - condition: time
-    weekday:
-    - sun
-    - mon
-    - tue
-    - wed
-    - thu
-  - condition: state
-    entity_id: input_boolean.school_day
-    state: 'on'
-  actions:
-  - action: conversation.process
-    metadata: {}
-    data:
-      text: "You are announcing a school event to two kids aged 11 and 14. Use chaotic
-        dad humour, dry sarcasm, and short sentences. No emojis. No baby talk. No
-        long explanations.    \n\ninclude this:\n\"Boys, school tomorrow. Make sure
-        you have: your bags packed, your PE kit ready if you need it, drink in the
-        fridge Jacob, and your homework done. {% if states('sensor.school_event_tomorrow')
-        %} School Update for Tomorrow: {{ states('sensor.school_event_tomorrow') }}
-        {% endif %}\""
-      agent_id: conversation.evening_prep
-    response_variable: agent
-  - action: notify.alexa_media
-    data:
-      message: '{{ agent.response.speech.plain.speech }}
-
-        '
-      data:
-        type: announce
-        method: all
-        volume_level: 0.5
-      target:
-      - media_player.lounge_plus
-      - media_player.boy_s_new_dot
-      - media_player.bedroom_dot
-      - media_player.kitchen_dot
-  - action: notify.jacob_notify
-    metadata: {}
-    data:
-      message: '{{ agent.response.speech.plain.speech }}'
-  - action: notify.mobile_app_jon_phone
-    metadata: {}
-    data:
-      message: '{{ agent.response.speech.plain.speech }}'
   mode: single
 - id: '1770795001627'
   alias: Check if Google Mini was used tonight
@@ -798,6 +707,26 @@
     data:
       title: Logged
       message: Drink bottle confirmed. Only took you a few reminders. Well done.
+- id: jacob_drink_none_yet
+  alias: Jacob drink bottle - none yet
+  description: Jacob tapped None yet - acknowledge and nudge via Alexa
+  mode: single
+  triggers:
+  - trigger: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: JACOB_DRINK_NONE
+  actions:
+  - action: notify.jacob_notify
+    data:
+      title: Right then.
+      message: Go put one in the fridge then. I'll ask again later.
+  - action: notify.alexa_media_boy_s_new_dot
+    data:
+      message: Jacob. Drink bottle. Fridge. Now please.
+      data:
+        type: tts
+        volume_level: 0.6
 - id: jacob_pe_kit_confirmed
   alias: Jacob PE kit confirmed
   description: Marks PE kit as confirmed when Jacob responds
@@ -815,6 +744,26 @@
     data:
       title: PE kit logged
       message: PE kit confirmed. You're almost organised. Almost.
+- id: jacob_pe_not_yet
+  alias: Jacob PE kit - not yet
+  description: Jacob tapped Not yet - acknowledge and nudge via Alexa
+  mode: single
+  triggers:
+  - trigger: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: JACOB_PE_NOT_YET
+  actions:
+  - action: notify.jacob_notify
+    data:
+      title: Sort it out.
+      message: Go get your PE kit ready then. I'll check again later.
+  - action: notify.alexa_media_boy_s_new_dot
+    data:
+      message: Jacob. PE kit. Go sort it out now please.
+      data:
+        type: tts
+        volume_level: 0.6
 - id: jacob_task_reset
   alias: Jacob task reset
   description: Resets all Jacob task booleans at midnight

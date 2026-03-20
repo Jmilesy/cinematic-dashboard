@@ -19,8 +19,8 @@ www/
 # Node-RED - has its own backup
 node-red/
 
-# ESPHome - separate project
-esphome/
+# ESPHome - track device configs, secrets.yaml excluded via secrets.yaml rule above
+esphome/archive/
 
 # Zigbee2MQTT - logs only, keep config
 zigbee2mqtt/log/

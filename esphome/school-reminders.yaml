@@ -1,0 +1,153 @@
+esphome:
+  name: school-reminders
+  comment: school-reminders
+  area: school-reminders
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf  
+  
+logger:
+  
+
+# Enable Home Assistant API
+api:
+
+ota:
+  - platform: esphome
+    password: "fc9c31e55047132f35d517e11896f8a7"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "School-Reminders"
+    password: "bFIORnHv7Gof"
+
+captive_portal:
+
+
+
+
+text_sensor:
+  - platform: homeassistant
+    id: school
+    name: school
+    entity_id: input_text.boys_school
+    internal: true
+    on_value:
+     then:
+      - logger.log: "Hello World"
+
+    # Formatted:
+      - logger.log:
+          format: "The school reminders show as %s "
+          args: [ 'id(school).state.c_str()' ]
+
+
+
+i2c:
+  sda: 21
+  scl: 22
+
+display:
+  - platform: lcd_pcf8574
+    dimensions: 20x4
+    address: 0x27
+    lambda: |-
+      std::string str = id(school).state;
+      std::vector<std::string> v;
+      char * token;
+      char seps[] = ",";
+      token = strtok (&str[0],seps);
+      while (token != NULL)
+      {
+        v.push_back(token);
+        token = strtok (NULL, seps);
+      }
+      int n=0;
+      for ( std::string s : v ) {
+          
+          it.printf(0, n,"%s", s.c_str());
+          n++;
+      }
+
+switch:
+  - platform: gpio
+    pin: GPIO4
+    name: "Joseph_trip"
+    id: Joseph_trip
+    
+  - platform: gpio
+    pin: GPIO13
+    name: "Jacob_in"
+    id: Jacob_in
+ 
+  - platform: gpio
+    pin: GPIO15
+    name: "Joseph_in"
+    id: Joseph_in
+      
+  - platform: gpio
+    pin: GPIO14
+    name: "Jacob_out"
+    id: Jacob_out
+ 
+  - platform: gpio
+    pin: GPIO16
+    name: "Joseph_out"
+    id: Joseph_out
+
+  - platform: gpio
+    pin: GPIO17
+    name: "Jacob_club"
+    id: Jacob_club
+    
+  - platform: gpio
+    pin: GPIO18
+    name: "Joseph_club"
+    id: Joseph_club
+    
+  - platform: gpio
+    pin: GPIO5
+    name: "Jacob_project"
+    id: Jacob_project
+    
+  - platform: gpio
+    pin: GPIO23
+    name: "Joseph_project"
+    id: Joseph_project
+    
+  - platform: gpio
+    pin: GPIO19
+    name: "Jacob_trip"
+    id: Jacob_trip
+    
+  - platform: gpio
+    pin: GPIO26
+    name: "today"
+    id: today
+    restore_mode: ALWAYS_ON
+    
+  - platform: gpio
+    pin: GPIO25
+    name: "tomorrow"
+    id: tomorrow
+    restore_mode: ALWAYS_OFF
+    
+binary_sensor:
+  - platform: gpio
+    id: switch_day
+    name: "Switch_day"
+    filters:
+      - delayed_off: 500ms
+    pin:
+      number: GPIO33
+      inverted: true
+      mode:
+        pullup: true
+        input: true

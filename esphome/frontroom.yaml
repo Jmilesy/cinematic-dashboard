@@ -1,0 +1,63 @@
+substitutions:
+  device_name: frontroom
+  friendly_name: frontroom
+  device_description: "esp8266 by tv"
+
+esphome:
+  name: '${device_name}'
+  comment: '${device_description}'
+  project:
+    name: "jon.frontroom"
+    version: "0.0.1"
+  platform: ESP8266
+  board: d1_mini_lite
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+  - platform: esphome
+    password: !secret api_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Frontroom Fallback Hotspot"
+    password: "PHT5xtZ6SpOV"
+
+captive_portal:
+
+binary_sensor:
+  - platform: gpio
+    pin: 
+      number: D1
+      mode: INPUT_PULLUP
+    name: "Window Left Botttom"
+    id: "window_left_bottom"
+    device_class: Window
+  - platform: gpio
+    pin: 
+      number: D2
+      mode: INPUT_PULLUP
+    name: "Window Left Top"
+    id: "window_left_top"
+    device_class: Window
+  - platform: gpio
+    pin: 
+      number: D3
+      mode: INPUT_PULLUP
+    name: "Window Right Bottom"
+    id: "window_right_bottom"
+    device_class: Window
+  - platform: gpio
+    pin: 
+      number: D4
+      mode: INPUT_PULLUP
+    name: "Window Right Top"
+    id: "window_right_top"
+    device_class: Window

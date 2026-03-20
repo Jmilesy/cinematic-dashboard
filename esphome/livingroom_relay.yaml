@@ -1,0 +1,33 @@
+esphome:
+  name: octoprint_sw
+  platform: ESP8266
+  board: nodemcuv2
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Livingroom Relay"
+    password: "ePB12ywRvDRT"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: "Month@2018"
+
+ota:
+  password: "Month@2018"
+
+switch:
+  - platform: gpio
+    name: "octoprint"
+    pin:
+      number: 5
+      inverted: yes
