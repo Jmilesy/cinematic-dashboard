@@ -384,90 +384,6 @@
       title: School Reminder
     enabled: true
   mode: single
-- id: '1769617267764'
-  alias: weather
-  description: Weather announcement with UK backup services
-  triggers:
-  - trigger: time
-    at: 07:20:00
-    weekday:
-    - mon
-    - tue
-    - wed
-    - thu
-    - fri
-  conditions: []
-  actions:
-  - action: weather.get_forecasts
-    metadata: {}
-    target:
-      entity_id: "{% if has_value('weather.met_office_deal') %}\n  weather.met_office_deal\n{%
-        elif has_value('weather.openmeteo') %}\n  weather.openmeteo\n{% else %}\n
-        \ weather.met_no\n{% endif %}\n"
-    data:
-      type: daily
-    response_variable: daily_forecast
-  - action: conversation.process
-    metadata: {}
-    data:
-      text: "You are an advanced smart home with a built in personal weather station.
-        Weather updates will be spoken out loud and should be funny and creative because
-        two children 11 years old and 14 years old will be listening. Please use whole
-        numbers and try to make it educational! This should be less than 30 seconds
-        in length. it is important that the school update comes first\n{% if states('sensor.school_event_today')
-        %} School Update: {{ states('sensor.school_event_today') }} {% endif %}\nCurrent
-        Conditions: Current time is {{ now().strftime('%I:%M %p') }}.\nTemperature
-        is {% if has_value('sensor.met_office_deal_temperature') %}\n  {{ states('sensor.met_office_deal_temperature')
-        | round(0) }}°C\n{% elif has_value('sensor.openmeteo_temperature') %}\n  {{
-        states('sensor.openmeteo_temperature') | round(0) }}°C\n{% elif has_value('sensor.met_no_temperature')
-        %}\n  {{ states('sensor.met_no_temperature') | round(0) }}°C\n{% else %}\n
-        \ {{ states('sensor.pirateweather_temperature') | round(0) }}°C\n{% endif
-        %}.\nFeels like {% if has_value('sensor.pirateweather_apparent_temperature')
-        %}\n  {{ states('sensor.pirateweather_apparent_temperature') | round(0) }}°C\n{%
-        elif has_value('sensor.openmeteo_apparent_temperature') %}\n  {{ states('sensor.openmeteo_apparent_temperature')
-        | round(0) }}°C\n{% elif has_value('sensor.met_office_deal_feels_like_temperature')
-        %}\n  {{ states('sensor.met_office_deal_feels_like_temperature') | round(0)
-        }}°C\n{% else %}\n  the same\n{% endif %}.\nHumidity is {% if has_value('weather.pirateweather')
-        %}\n  {{ state_attr('weather.pirateweather', 'humidity') | round(0) }}%\n{%
-        elif has_value('weather.met_office_deal') %}\n  {{ state_attr('weather.met_office_deal',
-        'humidity') | round(0) }}%\n{% elif has_value('sensor.openmeteo_relative_humidity')
-        %}\n  {{ states('sensor.openmeteo_relative_humidity') | round(0) }}%\n{% endif
-        %}.\n{% if has_value('sensor.pirateweather_uv_index') %} UV Index is {{ states('sensor.pirateweather_uv_index')
-        | round(0) }}. {% elif has_value('sensor.openmeteo_uv_index') %} UV Index
-        is {{ states('sensor.openmeteo_uv_index') | round(0) }}. {% endif %}\nCurrent
-        conditions: {% if has_value('weather.met_office_deal') %}\n  {{ states('weather.met_office_deal')
-        }}\n{% elif has_value('weather.openmeteo') %}\n  {{ states('weather.openmeteo')
-        }}\n{% elif has_value('weather.met_no') %}\n  {{ states('weather.met_no')
-        }}\n{% else %}\n  {{ states('weather.pirateweather') }}\n{% endif %}.\nToday's
-        Forecast: {% if has_value('sensor.pirateweather_hourly_summary') %} Forecasted
-        Conditions for Today {{ states('sensor.pirateweather_hourly_summary') }} {%
-        elif has_value('sensor.openmeteo_weather_code') %} Forecasted Conditions for
-        Today {{ states('sensor.openmeteo_weather_code') }} {% endif %}\n{% set forecast_entity
-        = 'weather.met_office_deal' if has_value('weather.met_office_deal') \n                         else
-        'weather.openmeteo' if has_value('weather.openmeteo')\n                         else
-        'weather.met_no' %}\n\nTemperature for Today {{ daily_forecast[forecast_entity].forecast[0].temperature
-        }}\nForecasted Low Temperature for Today {{ daily_forecast[forecast_entity].forecast[0].templow
-        }}\nForecasted Precipitation Probability {{ daily_forecast[forecast_entity].forecast[0].precipitation_probability
-        }}"
-      agent_id: conversation.kids_weather
-    response_variable: agent
-  - action: notify.alexa_media
-    data:
-      message: '{{ agent.response.speech.plain.speech }}'
-      data:
-        type: announce
-        method: all
-        volume_level: 0.5
-      target:
-      - media_player.lounge_plus
-      - media_player.boy_s_new_dot
-      - media_player.bedroom_dot
-      - media_player.kitchen_dot
-  - action: notify.mobile_app_jon_phone
-    metadata: {}
-    data:
-      message: '{{ agent.response.speech.plain.speech }}'
-  mode: single
 - id: '1770390775158'
   alias: New school evening
   description: Remind boys to prepare for school tomorrow
@@ -638,6 +554,12 @@
 
         Forecasted Precipitation Probability {{ daily_forecast[forecast_entity].forecast[0].precipitation_probability
         }}
+
+        {% set pollen_level = state_attr(''weather.silam_pollen_home_forecast'', ''next_condition'')
+        %}{% set pollen_culprit = state_attr(''weather.silam_pollen_home_forecast'',
+        ''responsible_elevated'') %}{% if pollen_level in [''medium'', ''high'', ''very_high'']
+        %}Pollen Alert: {{ pollen_level }} levels today, mainly {{ pollen_culprit }}.{%
+        endif %}
 
         '
       agent_id: conversation.kids_weather
