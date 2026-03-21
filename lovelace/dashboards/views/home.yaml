@@ -258,7 +258,12 @@ cards:
           ]]]
         tap_action:
           action: navigate
-          navigation_path: /cinematic-dashboard/boys
+          navigation_path: |
+            [[[
+              if (user?.id === 'e617fddf927246aeb1e5da57434b8d25') return '/cinematic-dashboard/jacob';
+              if (user?.id === 'fb6e617e2f884840b29367be0bebb3d7') return '/cinematic-dashboard/joseph';
+              return '/cinematic-dashboard/boys';
+            ]]]
         hold_action:
           action: toggle
 
