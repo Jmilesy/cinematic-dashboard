@@ -71,7 +71,7 @@ cards:
   - type: custom:layout-card
     layout_type: grid
     layout:
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr))
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr))
       grid-gap: 8px
     cards:
       # Jon
@@ -226,7 +226,7 @@ cards:
   - type: custom:layout-card
     layout_type: grid
     layout:
-      grid-template-columns: repeat(auto-fill, minmax(185px, 1fr))
+      grid-template-columns: repeat(auto-fit, minmax(185px, 1fr))
       grid-gap: 8px
     cards:
       - type: custom:button-card
@@ -344,11 +344,9 @@ cards:
   ###############################################################
   # SWITCHES
   ###############################################################
-  - type: custom:layout-card
-    layout_type: grid
-    layout:
-      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr))
-      grid-gap: 8px
+  - type: grid
+    columns: 4
+    square: false
     cards:
       - type: custom:button-card
         template: switch_card
