@@ -189,7 +189,7 @@ cards:
       - type: custom:button-card
         template: nav_button
         entity: input_boolean.christmas
-        name: Christmas
+        name: Xmas
         icon: mdi:pine-tree-variant
         variables:
           icon_color: '#ffd700'
