@@ -15,7 +15,6 @@ theme: Google Dark Theme
 kiosk_mode:
   non_admin_settings:
     hide_header: true
-    ignore_entity_settings: true
     hide_sidebar: true
     hide_menubutton: true
 
