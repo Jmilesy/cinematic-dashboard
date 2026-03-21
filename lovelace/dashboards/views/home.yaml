@@ -1,6 +1,7 @@
 title: Home
 path: home
 type: sidebar
+theme: Google Dark Theme
 cards:
   ###############################################################
   # HEADER
