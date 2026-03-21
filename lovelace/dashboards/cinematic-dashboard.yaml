@@ -12,6 +12,13 @@ button_card_templates: !include ../templates/button_card_templates.yaml
 title: Cinematic Home
 theme: Google Dark Theme
 
+kiosk_mode:
+  non_admin_settings:
+    hide_header: true
+    ignore_entity_settings: true
+    hide_sidebar: true
+    hide_menubutton: true
+
 views:
   # Main Home View
   - !include ../dashboards/views/home.yaml
