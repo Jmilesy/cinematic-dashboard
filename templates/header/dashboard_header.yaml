@@ -196,9 +196,25 @@
       state: >
         {% set weather = states('weather.pirateweather') %}
         {{ 'thunder' in weather or 'lightning' in weather }}
+      attributes:
+        opacity: >
+          {% set weather = states('weather.pirateweather') %}
+          {% if 'thunder' in weather or 'lightning' in weather %}
+            1
+          {% else %}
+            0
+          {% endif %}
 
     - name: "Weather Has Snow"
       unique_id: weather_has_snow
       state: >
         {% set weather = states('weather.pirateweather') %}
         {{ 'snow' in weather }}
+      attributes:
+        opacity: >
+          {% set weather = states('weather.pirateweather') %}
+          {% if 'snow' in weather %}
+            0.6
+          {% else %}
+            0
+          {% endif %}
