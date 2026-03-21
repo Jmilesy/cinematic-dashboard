@@ -1000,9 +1000,6 @@
   - action: wake_on_lan.send_magic_packet
     data:
       mac: 18-C0-4D-AF-4D-19
-  - action: switch.turn_on
-    target:
-      entity_id: switch.jon_pc
 
 - id: jon_pc_status_leds
   alias: Jon PC - Status LEDs on House Monitor
@@ -1044,9 +1041,6 @@
   - action: wake_on_lan.send_magic_packet
     data:
       mac: 70:8b:cd:a8:3e:d6
-  - action: switch.turn_on
-    target:
-      entity_id: switch.games_pc
 
 - id: games_pc_status_leds
   alias: Games PC - Status LEDs on House Monitor
@@ -1349,31 +1343,15 @@
   - action: switch.turn_on
     target:
       entity_id: switch.landing
-  - choose:
-    - conditions:
-      - condition: state
-        entity_id: input_boolean.boys_bedtime
-        state: 'on'
-      sequence:
-      - wait_for_trigger:
-        - trigger: state
-          entity_id:
-            - binary_sensor.pir_bathroom
-            - binary_sensor.pir_frontdoor
-          to: 'on'
-          timeout:
-            seconds: 30
-          continue_on_timeout: true
-    default:
-      - wait_for_trigger:
-        - trigger: state
-          entity_id:
-            - binary_sensor.pir_bathroom
-            - binary_sensor.pir_frontdoor
-          to: 'on'
-          timeout:
-            seconds: 10
-          continue_on_timeout: true
+  - wait_for_trigger:
+    - trigger: state
+      entity_id:
+        - binary_sensor.pir_bathroom
+        - binary_sensor.pir_frontdoor
+      to: 'on'
+    timeout:
+      seconds: "{{ 30 if is_state('input_boolean.boys_bedtime', 'on') else 10 }}"
+    continue_on_timeout: true
   - condition: template
     value_template: >
       {{ is_state('binary_sensor.pir_bathroom', 'off') and
