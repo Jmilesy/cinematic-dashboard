@@ -81,6 +81,25 @@ cards:
             }
 
       - type: custom:mushroom-light-card
+        entity: light.joseph
+        name: Joseph's Light
+        use_light_color: true
+        show_brightness_control: true
+        show_color_control: true
+        show_color_temp_control: true
+        tap_action:
+          action: toggle
+        card_mod:
+          style: |
+            ha-card {
+              background: rgba(255,255,255,0.05) !important;
+              border-radius: 20px;
+              border: 1px solid rgba(255,255,255,0.1);
+              box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+              backdrop-filter: blur(12px);
+            }
+
+      - type: custom:mushroom-light-card
         entity: light.boys_led_light
         name: LED Strip
         icon: mdi:led-strip-variant
