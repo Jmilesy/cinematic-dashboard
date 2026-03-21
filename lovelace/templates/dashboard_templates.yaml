@@ -26,8 +26,8 @@ people_config:
             name: "Jacob", 
             entity: "person.jacob", 
             room: "sensor.jacob_room",
-            battery: "sensor.sm_g990b2_battery_level",
-            battery_state: "sensor.sm_g990b2_battery_state",
+            battery: "sensor.jacob_phone_battery_level",
+            battery_state: "sensor.jacob_phone_battery_state",
             color: "#ff4444"
           },
           { 

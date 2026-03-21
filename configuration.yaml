@@ -85,7 +85,7 @@ notify:
   - platform: group
     name: jacob_notify
     services:
-      - service: mobile_app_sm_g990b2
+      - service: mobile_app_jacob_phone
       
   - platform: group
     name: joseph_notify
@@ -104,7 +104,7 @@ recorder:
   exclude:
     entities:
       # Add any entities that change too frequently here
-      - sensor.sm_g990b2_active_notification_count  # This one was causing large attributes
+      - sensor.jacob_phone_active_notification_count  # This one was causing large attributes
     
 
 input_boolean:
