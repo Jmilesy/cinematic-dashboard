@@ -325,29 +325,21 @@ person_card:
   card_mod:
     style: |
       @keyframes cardGlowCharging {
-        0% {
-          box-shadow: 
-            0 0 25px var(--glow-color-100), 
-            0 0 50px var(--glow-color-60), 
-            0 0 75px var(--glow-color-30),
+        0%, 100% {
+          box-shadow:
+            0 0 20px var(--glow-color-100),
+            0 0 50px var(--glow-color-60),
+            0 0 80px var(--glow-color-30),
             0 8px 32px rgba(0,0,0,0.4);
           filter: brightness(1);
         }
         50% {
-          box-shadow: 
-            0 0 45px var(--glow-color-100), 
-            0 0 90px var(--glow-color-60), 
-            0 0 120px var(--glow-color-30),
+          box-shadow:
+            0 0 60px var(--glow-color-100),
+            0 0 120px var(--glow-color-60),
+            0 0 180px var(--glow-color-30),
             0 8px 32px rgba(0,0,0,0.4);
-          filter: brightness(1.15);
-        }
-        100% {
-          box-shadow: 
-            0 0 25px var(--glow-color-100), 
-            0 0 50px var(--glow-color-60), 
-            0 0 75px var(--glow-color-30),
-            0 8px 32px rgba(0,0,0,0.4);
-          filter: brightness(1);
+          filter: brightness(1.25);
         }
       }
       @keyframes cardGlowWarning {
@@ -424,13 +416,13 @@ person_card:
           ]]]
       - box-shadow: |
           [[[
-            const color = variables.status_sensor ? 
+            const color = variables.status_sensor ?
               states[variables.status_sensor].attributes.color : '#ffffff';
-            const isHome = variables.status_sensor ? 
-              states[variables.status_sensor].attributes.is_home === 'True' : false;
-            const isCharging = variables.status_sensor ? 
-              states[variables.status_sensor].attributes.is_charging === 'True' : false;
-            const batteryLevel = variables.status_sensor ? 
+            const _ih = variables.status_sensor ? states[variables.status_sensor].attributes.is_home : false;
+            const isHome = _ih === true || _ih === 'True' || _ih === 'true';
+            const _ic = variables.status_sensor ? states[variables.status_sensor].attributes.is_charging : false;
+            const isCharging = _ic === true || _ic === 'True' || _ic === 'true';
+            const batteryLevel = variables.status_sensor ?
               parseInt(states[variables.status_sensor].attributes.battery_level) || 0 : 0;
             const isLowBattery = batteryLevel < 15 && batteryLevel > 0;
             
@@ -454,11 +446,11 @@ person_card:
           ]]]
       - animation: |
           [[[
-            const isHome = variables.status_sensor ? 
-              states[variables.status_sensor].attributes.is_home === 'True' : false;
-            const isCharging = variables.status_sensor ? 
-              states[variables.status_sensor].attributes.is_charging === 'True' : false;
-            const batteryLevel = variables.status_sensor ? 
+            const _ih2 = variables.status_sensor ? states[variables.status_sensor].attributes.is_home : false;
+            const isHome = _ih2 === true || _ih2 === 'True' || _ih2 === 'true';
+            const _ic2 = variables.status_sensor ? states[variables.status_sensor].attributes.is_charging : false;
+            const isCharging = _ic2 === true || _ic2 === 'True' || _ic2 === 'true';
+            const batteryLevel = variables.status_sensor ?
               parseInt(states[variables.status_sensor].attributes.battery_level) || 0 : 0;
             const isLowBattery = batteryLevel < 15 && batteryLevel > 0;
             
@@ -554,29 +546,47 @@ person_card:
     location: |
       [[[
         if (!variables.status_sensor) return '';
-        
+
         const location = states[variables.status_sensor].attributes.location;
-        const isHome = states[variables.status_sensor].attributes.is_home === 'True';
+        const _ih = states[variables.status_sensor].attributes.is_home;
+        const isHome = _ih === true || _ih === 'True' || _ih === 'true';
+        const _ic = states[variables.status_sensor].attributes.is_charging;
+        const isCharging = _ic === true || _ic === 'True' || _ic === 'true';
         const color = states[variables.status_sensor].attributes.color;
-        
+
+        // Show ⚡ charging badge when charging — replaces location icon
+        if (isCharging) {
+          return `
+            <ha-icon icon="mdi:lightning-bolt" style="
+              width:clamp(20px,2.5vw,32px);height:clamp(20px,2.5vw,32px);
+              color:${color};
+              filter:drop-shadow(0 0 8px ${color}) drop-shadow(0 0 16px ${color}88);
+              animation:chargeBadge 1s ease-in-out infinite;
+            "></ha-icon>
+            <style>
+              @keyframes chargeBadge {
+                0%,100% { opacity:1; transform:scale(1); }
+                50%      { opacity:0.6; transform:scale(1.3); }
+              }
+            </style>
+          `;
+        }
+
         let icon = 'mdi:home';
         let iconColor = color;
-        
-        // If not home, get the zone icon
+
         if (!isHome && location) {
           const zoneEntity = 'zone.' + location.toLowerCase().replace(/\s+/g, '_');
           const zoneState = states[zoneEntity];
-          
           if (zoneState && zoneState.attributes && zoneState.attributes.icon) {
             icon = zoneState.attributes.icon;
             iconColor = '#ff9800';
           } else {
-            // Fallback to map marker if zone not found
             icon = 'mdi:map-marker';
             iconColor = '#ff9800';
           }
         }
-        
+
         return `
           <ha-icon icon="${icon}" style="
             width:clamp(20px,2.5vw,32px);height:clamp(20px,2.5vw,32px);
@@ -594,8 +604,10 @@ person_card:
         
         const batteryDisplay = states[variables.status_sensor].attributes.battery_display;
         const batteryLevel = parseInt(states[variables.status_sensor].attributes.battery_level) || 0;
-        const isCharging = states[variables.status_sensor].attributes.is_charging === 'True';
-        const isHome = states[variables.status_sensor].attributes.is_home === 'True';
+        const _ic3 = states[variables.status_sensor].attributes.is_charging;
+        const isCharging = _ic3 === true || _ic3 === 'True' || _ic3 === 'true';
+        const _ih3 = states[variables.status_sensor].attributes.is_home;
+        const isHome = _ih3 === true || _ih3 === 'True' || _ih3 === 'true';
         const color = states[variables.status_sensor].attributes.color;
         
         let barColor = color;

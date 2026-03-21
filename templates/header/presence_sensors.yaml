@@ -72,10 +72,10 @@
         room: "{{ states('sensor.jon_room') }}"
         battery_level: "{{ states('sensor.jon_phone_battery_level') }}"
         battery_state: "{{ states('sensor.jon_phone_battery_state') }}"
-        is_charging: "{{ is_state('sensor.jon_phone_battery_state', 'charging') }}"
+        is_charging: "{{ is_state('sensor.jon_phone_battery_state', 'charging') or is_state('sensor.jon_phone_battery_state', 'full') }}"
         should_glow: >
-          {{ is_state('person.jon', 'home') and 
-             is_state('sensor.jon_phone_battery_state', 'charging') }}
+          {{ is_state('person.jon', 'home') and
+             (is_state('sensor.jon_phone_battery_state', 'charging') or is_state('sensor.jon_phone_battery_state', 'full')) }}
         battery_display: >
           {% set lvl = states('sensor.jon_phone_battery_level') | int(0) %}
           {% set chg = states('sensor.jon_phone_battery_state') %}
@@ -112,10 +112,10 @@
         room: "{{ states('sensor.natalie_room') }}"
         battery_level: "{{ states('sensor.sm_a566b_battery_level') }}"
         battery_state: "{{ states('sensor.sm_a566b_battery_state') }}"
-        is_charging: "{{ is_state('sensor.sm_a566b_battery_state', 'charging') }}"
+        is_charging: "{{ is_state('sensor.sm_a566b_battery_state', 'charging') or is_state('sensor.sm_a566b_battery_state', 'full') }}"
         should_glow: >
-          {{ is_state('person.natalie', 'home') and 
-             is_state('sensor.sm_a566b_battery_state', 'charging') }}
+          {{ is_state('person.natalie', 'home') and
+             (is_state('sensor.sm_a566b_battery_state', 'charging') or is_state('sensor.sm_a566b_battery_state', 'full')) }}
         battery_display: >
           {% set lvl = states('sensor.sm_a566b_battery_level') | int(0) %}
           {% set chg = states('sensor.sm_a566b_battery_state') %}
@@ -152,10 +152,10 @@
         room: "{{ states('sensor.jacob_room') }}"
         battery_level: "{{ states('sensor.sm_g990b2_battery_level') }}"
         battery_state: "{{ states('sensor.sm_g990b2_battery_state') }}"
-        is_charging: "{{ is_state('sensor.sm_g990b2_battery_state', 'charging') }}"
+        is_charging: "{{ is_state('sensor.sm_g990b2_battery_state', 'charging') or is_state('sensor.sm_g990b2_battery_state', 'full') }}"
         should_glow: >
-          {{ is_state('person.jacob', 'home') and 
-             is_state('sensor.sm_g990b2_battery_state', 'charging') }}
+          {{ is_state('person.jacob', 'home') and
+             (is_state('sensor.sm_g990b2_battery_state', 'charging') or is_state('sensor.sm_g990b2_battery_state', 'full')) }}
         battery_display: >
           {% set lvl = states('sensor.sm_g990b2_battery_level') | int(0) %}
           {% set chg = states('sensor.sm_g990b2_battery_state') %}
@@ -192,10 +192,10 @@
         room: "{{ states('sensor.joseph_room') }}"
         battery_level: "{{ states('sensor.joseph_battery_level') }}"
         battery_state: "{{ states('sensor.joseph_battery_state') }}"
-        is_charging: "{{ is_state('sensor.joseph_battery_state', 'charging') }}"
+        is_charging: "{{ is_state('sensor.joseph_battery_state', 'charging') or is_state('sensor.joseph_battery_state', 'full') }}"
         should_glow: >
-          {{ is_state('person.joseph', 'home') and 
-             is_state('sensor.joseph_battery_state', 'charging') }}
+          {{ is_state('person.joseph', 'home') and
+             (is_state('sensor.joseph_battery_state', 'charging') or is_state('sensor.joseph_battery_state', 'full')) }}
         battery_display: >
           {% set lvl = states('sensor.joseph_battery_level') | int(0) %}
           {% set chg = states('sensor.joseph_battery_state') %}
