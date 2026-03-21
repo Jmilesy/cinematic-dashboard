@@ -902,3 +902,97 @@ switch_card:
       - color: white
       - text-shadow: 0 1px 3px rgba(0,0,0,0.5)
       - text-align: center
+
+###############################################################
+# ROOM STAT - Environment stat card for room views
+# Usage: template: room_stat
+# variables:
+#   accent: RGB string e.g. "255,150,0" (default orange)
+#   unit:   fallback unit if entity has none
+###############################################################
+room_stat:
+  show_icon: false
+  show_units: false
+  show_last_changed: false
+  layout: vertical
+  tap_action:
+    action: more-info
+  state_display: |
+    [[[
+      const s = entity?.state;
+      const u = entity?.attributes?.unit_of_measurement || variables.unit || '';
+      if (!s || s === 'unavailable' || s === 'unknown') return '—';
+      const n = parseFloat(s);
+      return isNaN(n) ? s : (n % 1 === 0 ? n : parseFloat(n.toFixed(1))) + u;
+    ]]]
+  styles:
+    card:
+      - background: |
+          [[[
+            const a = variables.accent || '255,150,0';
+            const base = states['sensor.header_time_period']?.attributes?.gradient || 'linear-gradient(135deg,#1a1f3a,#2a2f4a)';
+            const weather = states['sensor.header_weather_summary']?.attributes?.weather_overlay || 'none';
+            const sun = states['sensor.header_time_period']?.attributes?.sun_tint || 'none';
+            const layers = [
+              `linear-gradient(135deg,rgba(${a},0.15),rgba(${a},0.06))`,
+              'linear-gradient(135deg,rgba(255,255,255,0.04),rgba(255,255,255,0.08))'
+            ];
+            if (sun !== 'none') layers.push(sun);
+            if (weather !== 'none') layers.push(weather);
+            layers.push(base);
+            return layers.join(',');
+          ]]]
+      - border-radius: 16px
+      - border: |
+          [[[return `1px solid rgba(${variables.accent||'255,150,0'},0.3)`;]]]
+      - box-shadow: |
+          [[[return `0 0 16px rgba(${variables.accent||'255,150,0'},0.15),0 4px 16px rgba(0,0,0,0.3)`;]]]
+      - backdrop-filter: blur(10px)
+      - padding: clamp(12px,2vh,20px) clamp(8px,1.5vw,16px)
+    state:
+      - color: |
+          [[[return `rgb(${variables.accent||'255,150,0'})`;]]]
+      - font-size: clamp(1.2rem,3vw,1.8rem)
+      - font-weight: bold
+    name:
+      - font-size: clamp(0.6rem,1.2vw,0.75rem)
+      - font-weight: "600"
+      - letter-spacing: "0.08em"
+      - opacity: "0.7"
+      - text-transform: uppercase
+
+###############################################################
+# ROOM SECTION TITLE - Section header for room views
+# Usage: template: room_section_title
+# variables:
+#   title:  label text e.g. "💡 LIGHTING"
+#   accent: RGB string e.g. "255,200,0"
+###############################################################
+room_section_title:
+  show_state: false
+  show_icon: false
+  tap_action:
+    action: none
+  name: |
+    [[[ return variables.title || 'Section'; ]]]
+  styles:
+    card:
+      - background: |
+          [[[return `rgba(${variables.accent||'255,200,0'},0.08)`;]]]
+      - border-radius: 10px
+      - border: |
+          [[[return `1px solid rgba(${variables.accent||'255,200,0'},0.2)`;]]]
+      - border-left: |
+          [[[return `3px solid rgba(${variables.accent||'255,200,0'},0.7)`;]]]
+      - backdrop-filter: blur(8px)
+      - padding: 10px 16px
+      - margin-top: 8px
+      - margin-bottom: 2px
+    name:
+      - font-size: "0.8rem"
+      - font-weight: "700"
+      - letter-spacing: "0.1em"
+      - text-transform: uppercase
+      - color: |
+          [[[return `rgb(${variables.accent||'255,200,0'})`;]]]
+      - text-align: left
