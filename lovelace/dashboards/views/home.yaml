@@ -71,6 +71,16 @@ cards:
   - type: grid
     columns: 2
     square: false
+    card_mod:
+      style: |
+        .root {
+          grid-template-columns: repeat(2, 1fr) !important;
+        }
+        @media (min-width: 600px) {
+          .root {
+            grid-template-columns: repeat(4, 1fr) !important;
+          }
+        }
     cards:
       # Jon
       - type: custom:button-card
@@ -224,6 +234,16 @@ cards:
   - type: grid
     columns: 2
     square: false
+    card_mod:
+      style: |
+        .root {
+          grid-template-columns: repeat(2, 1fr) !important;
+        }
+        @media (min-width: 600px) {
+          .root {
+            grid-template-columns: repeat(3, 1fr) !important;
+          }
+        }
     cards:
       - type: custom:button-card
         template: room_card

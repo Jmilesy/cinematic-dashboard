@@ -82,7 +82,7 @@ cinematic_header:
   styles:
     card:
       - margin: 0
-      - padding: 12px 14px
+      - padding: clamp(12px, 2.5vh, 28px) clamp(14px, 2.5vw, 32px)
       - border-radius: 24px
       - color: white
       - text-align: center
@@ -116,8 +116,8 @@ cinematic_header:
           "subtext subtext"
           "presence presence"
       - align-items: center
-      - column-gap: 8px
-      - row-gap: 4px
+      - column-gap: clamp(8px, 2vw, 20px)
+      - row-gap: clamp(4px, 1.2vh, 14px)
       - padding: 0
     
     custom_fields:
@@ -159,7 +159,7 @@ cinematic_header:
         return `
           <div style="display:flex;flex-direction:column;align-items:flex-end;">
             <div style="
-              font-size:1.8rem;font-weight:700;
+              font-size:clamp(1.8rem, 4.5vw, 3.2rem);font-weight:700;
               background:linear-gradient(135deg, #ffffff, #e0e0e0);
               -webkit-background-clip:text;-webkit-text-fill-color:transparent;
               letter-spacing:-1px;
@@ -167,7 +167,7 @@ cinematic_header:
               line-height: 1.1;
             ">${time}</div>
             <div style="
-              font-size:0.72rem;opacity:0.8;margin-top:2px;
+              font-size:clamp(0.65rem, 1.2vw, 0.9rem);opacity:0.8;margin-top:2px;
               color:rgba(255,255,255,0.9);
             ">${fullDate}</div>
           </div>
@@ -188,7 +188,7 @@ cinematic_header:
 
         return `
           <div style="
-            font-size:1rem;font-weight:600;
+            font-size:clamp(1rem, 2.5vw, 1.8rem);font-weight:600;
             color:rgba(255,255,255,0.95);
             letter-spacing:0.3px;
             line-height: 1.2;
@@ -232,21 +232,21 @@ cinematic_header:
         const wind = states['sensor.header_weather_summary'].attributes.wind_speed;
 
         return `
-          <div style="display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;margin:2px 0;">
+          <div style="display:flex;flex-direction:row;align-items:center;justify-content:center;gap:clamp(8px,1.5vw,16px);margin:2px 0;">
             <ha-icon icon="${icon}" style="
-              width:28px;height:28px;color:white;
+              width:clamp(28px,4vw,44px);height:clamp(28px,4vw,44px);color:white;
               filter:drop-shadow(0 2px 8px rgba(0,0,0,0.5));
               animation: weatherIcon 6s ease-in-out infinite;
               flex-shrink:0;
             "></ha-icon>
             <div style="
-              font-size:1.6rem;font-weight:700;
+              font-size:clamp(1.6rem, 3.5vw, 2.4rem);font-weight:700;
               background:linear-gradient(135deg, #ffffff, #e0e0e0);
               -webkit-background-clip:text;-webkit-text-fill-color:transparent;
               line-height: 1;
             ">${temp}°C</div>
             <div style="
-              font-size:0.72rem;opacity:0.75;
+              font-size:clamp(0.68rem, 1.2vw, 0.9rem);opacity:0.75;
               color:rgba(255,255,255,0.9);
               white-space:nowrap;
             ">💧 ${humidity}% | 💨 ${wind} km/h</div>
