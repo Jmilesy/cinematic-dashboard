@@ -912,6 +912,7 @@ switch_card:
 ###############################################################
 room_stat:
   show_icon: false
+  show_state: true
   show_units: false
   show_last_changed: false
   layout: vertical
