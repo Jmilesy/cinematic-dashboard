@@ -68,19 +68,11 @@ cards:
   ###############################################################
   # FAMILY PRESENCE
   ###############################################################
-  - type: grid
-    columns: 2
-    square: false
-    card_mod:
-      style: |
-        .root {
-          grid-template-columns: repeat(2, 1fr) !important;
-        }
-        @media (min-width: 600px) {
-          .root {
-            grid-template-columns: repeat(4, 1fr) !important;
-          }
-        }
+  - type: custom:layout-card
+    layout_type: grid
+    layout:
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr))
+      grid-gap: 8px
     cards:
       # Jon
       - type: custom:button-card
@@ -231,19 +223,11 @@ cards:
   ###############################################################
   # ROOMS
   ###############################################################
-  - type: grid
-    columns: 2
-    square: false
-    card_mod:
-      style: |
-        .root {
-          grid-template-columns: repeat(2, 1fr) !important;
-        }
-        @media (min-width: 600px) {
-          .root {
-            grid-template-columns: repeat(3, 1fr) !important;
-          }
-        }
+  - type: custom:layout-card
+    layout_type: grid
+    layout:
+      grid-template-columns: repeat(auto-fill, minmax(185px, 1fr))
+      grid-gap: 8px
     cards:
       - type: custom:button-card
         template: room_card
@@ -360,9 +344,11 @@ cards:
   ###############################################################
   # SWITCHES
   ###############################################################
-  - type: grid
-    columns: 4
-    square: false
+  - type: custom:layout-card
+    layout_type: grid
+    layout:
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr))
+      grid-gap: 8px
     cards:
       - type: custom:button-card
         template: switch_card
