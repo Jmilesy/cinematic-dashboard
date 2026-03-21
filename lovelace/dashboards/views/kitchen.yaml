@@ -196,7 +196,14 @@ cards:
     name: WASHING MACHINE
     icon: mdi:washing-machine
     show_state: true
+    show_label: true
     layout: icon_name_state
+    label: |
+      [[[
+        const remaining = states['sensor.wash_cycle_remaining_time']?.state;
+        if (!remaining || ['unavailable','unknown','0'].includes(remaining)) return '';
+        return remaining;
+      ]]]
     tap_action:
       action: none
     styles:
@@ -247,6 +254,11 @@ cards:
               if (!s || ['Stopped','unavailable','unknown'].includes(s)) return 'rgba(255,255,255,0.4)';
               return '#64C8FF';
             ]]]
+      label:
+        - font-size: 0.9rem
+        - text-align: left
+        - opacity: "0.75"
+        - color: "#64C8FF"
     extra_styles: |
       @keyframes spin {
         from { transform: rotate(0deg); }
