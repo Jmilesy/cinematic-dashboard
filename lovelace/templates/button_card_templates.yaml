@@ -203,8 +203,8 @@ cinematic_header:
         const raw = states['sensor.header_weather_summary'].state;
         const summary = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
 
-        const pollenLevel = state_attr('weather.silam_pollen_home_forecast', 'next_condition') || '';
-        const pollenCulprit = state_attr('weather.silam_pollen_home_forecast', 'responsible_elevated') || '';
+        const pollenLevel = states['weather.silam_pollen_home_forecast']?.attributes?.next_condition || '';
+        const pollenCulprit = states['weather.silam_pollen_home_forecast']?.attributes?.responsible_elevated || '';
         const pollenEmoji = { low: '🟢', medium: '🟡', high: '🟠', very_high: '🔴' }[pollenLevel] || '';
         const pollenText = pollenLevel
           ? ` · ${pollenEmoji} Pollen: ${pollenLevel.replace('_', ' ')}${pollenCulprit ? ' (' + pollenCulprit + ')' : ''}`
