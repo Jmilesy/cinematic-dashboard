@@ -71,7 +71,7 @@ cards:
   - type: custom:layout-card
     layout_type: grid
     layout:
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr))
+      grid-template-columns: repeat(2, 1fr)
       grid-gap: 8px
     cards:
       # Jon
@@ -85,9 +85,13 @@ cards:
         label: |
           [[[
           const s = states['sensor.jon_status'];
+          const p = states['person.jon'];
           const loc = s?.state || 'Unknown';
           const batt = s?.attributes?.battery_display || '';
-          return `${loc}${batt ? ' · ' + batt : ''}`;
+          const lc = p?.last_changed;
+          const mins = lc ? Math.round((Date.now() - new Date(lc).getTime()) / 60000) : null;
+          const since = mins === null ? '' : mins < 2 ? ' · just now' : mins < 60 ? ` · ${mins}m ago` : ` · ${Math.round(mins/60)}h ago`;
+          return `${loc}${batt ? ' · ' + batt : ''}${since}`;
           ]]]
 
       # Natalie
@@ -101,9 +105,13 @@ cards:
         label: |
           [[[
           const s = states['sensor.natalie_status'];
+          const p = states['person.natalie'];
           const loc = s?.state || 'Unknown';
           const batt = s?.attributes?.battery_display || '';
-          return `${loc}${batt ? ' · ' + batt : ''}`;
+          const lc = p?.last_changed;
+          const mins = lc ? Math.round((Date.now() - new Date(lc).getTime()) / 60000) : null;
+          const since = mins === null ? '' : mins < 2 ? ' · just now' : mins < 60 ? ` · ${mins}m ago` : ` · ${Math.round(mins/60)}h ago`;
+          return `${loc}${batt ? ' · ' + batt : ''}${since}`;
           ]]]
 
       # Jacob
@@ -117,9 +125,13 @@ cards:
         label: |
           [[[
           const s = states['sensor.jacob_status'];
+          const p = states['person.jacob'];
           const loc = s?.state || 'Unknown';
           const batt = s?.attributes?.battery_display || '';
-          return `${loc}${batt ? ' · ' + batt : ''}`;
+          const lc = p?.last_changed;
+          const mins = lc ? Math.round((Date.now() - new Date(lc).getTime()) / 60000) : null;
+          const since = mins === null ? '' : mins < 2 ? ' · just now' : mins < 60 ? ` · ${mins}m ago` : ` · ${Math.round(mins/60)}h ago`;
+          return `${loc}${batt ? ' · ' + batt : ''}${since}`;
           ]]]
 
       # Joseph
@@ -133,9 +145,13 @@ cards:
         label: |
           [[[
           const s = states['sensor.joseph_status'];
+          const p = states['person.joseph'];
           const loc = s?.state || 'Unknown';
           const batt = s?.attributes?.battery_display || '';
-          return `${loc}${batt ? ' · ' + batt : ''}`;
+          const lc = p?.last_changed;
+          const mins = lc ? Math.round((Date.now() - new Date(lc).getTime()) / 60000) : null;
+          const since = mins === null ? '' : mins < 2 ? ' · just now' : mins < 60 ? ` · ${mins}m ago` : ` · ${Math.round(mins/60)}h ago`;
+          return `${loc}${batt ? ' · ' + batt : ''}${since}`;
           ]]]
 
   ###############################################################
