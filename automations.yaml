@@ -1597,3 +1597,32 @@
         entity_id: light.boys_led_light
       data:
         brightness_pct: 100
+
+# ============================================================
+# Mimics
+# ============================================================
+
+- id: mimics_boys_light
+  alias: Mimics - Boys Light to FastLED
+  description: Mirror boys light colour to fastled_ws2812b at reduced brightness
+  triggers:
+    - trigger: state
+      entity_id: light.boys_light
+  actions:
+    - choose:
+        - conditions:
+            - condition: state
+              entity_id: light.boys_light
+              state: 'on'
+          sequence:
+            - action: light.turn_on
+              target:
+                entity_id: light.fastled_ws2812b_light
+              data:
+                rgb_color: "{{ state_attr('light.boys_light', 'rgb_color') }}"
+                brightness: 35
+                effect: None
+      default:
+        - action: light.turn_off
+          target:
+            entity_id: light.fastled_ws2812b_light
