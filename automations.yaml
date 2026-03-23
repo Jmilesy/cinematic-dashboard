@@ -1414,3 +1414,186 @@
       - action: switch.turn_off
         target:
           entity_id: switch.makeup_light
+
+# ============================================================
+# Alarm Panel MQTT Bridge
+# ============================================================
+
+- id: alarm_panel_heartbeat
+  alias: Alarm Panel Heartbeat
+  description: Send heartbeat to Mega every minute
+  triggers:
+    - trigger: time_pattern
+      minutes: /1
+  actions:
+    - action: mqtt.publish
+      data:
+        topic: alarm/hbeat
+        payload: "{{ now().timestamp() | int * 1000 }}"
+
+- id: alarm_panel_state_sync
+  alias: Alarm Panel State Sync
+  description: Push Alarmo state to Mega whenever it changes
+  triggers:
+    - trigger: state
+      entity_id: alarm_control_panel.alarmo
+  actions:
+    - action: mqtt.publish
+      data:
+        topic: alarm/state
+        payload: "{{ trigger.to_state.state }}"
+
+- id: alarm_panel_state_on_reconnect
+  alias: Alarm Panel State on Reconnect
+  description: Re-send current state when Mega reconnects (heartbeat reply received)
+  triggers:
+    - trigger: mqtt
+      topic: alarm/hbeatret
+  actions:
+    - action: mqtt.publish
+      data:
+        topic: alarm/state
+        payload: "{{ states('alarm_control_panel.alarmo') }}"
+
+- id: alarm_panel_pin_handler
+  alias: Alarm Panel PIN Handler
+  description: Receive PIN from Mega, arm/disarm Alarmo, respond right/wrong
+  triggers:
+    - trigger: mqtt
+      topic: alarm/pin
+  actions:
+    - choose:
+        - conditions:
+            - condition: state
+              entity_id: alarm_control_panel.alarmo
+              state: disarmed
+          sequence:
+            - action: alarm_control_panel.alarm_arm_away
+              target:
+                entity_id: alarm_control_panel.alarmo
+              data:
+                code: "{{ trigger.payload }}"
+      default:
+        - action: alarm_control_panel.alarm_disarm
+          target:
+            entity_id: alarm_control_panel.alarmo
+          data:
+            code: "{{ trigger.payload }}"
+    - wait_for_trigger:
+        - trigger: state
+          entity_id: alarm_control_panel.alarmo
+      timeout:
+        seconds: 3
+      continue_on_timeout: true
+    - choose:
+        - conditions: "{{ wait.completed }}"
+          sequence:
+            - action: mqtt.publish
+              data:
+                topic: alarm/pinin
+                payload: right
+      default:
+        - action: mqtt.publish
+          data:
+            topic: alarm/pinin
+            payload: wrong
+
+- id: alarm_panel_rfid_success
+  alias: Alarm Panel RFID Success
+  description: Known card scanned — toggle arm/disarm in Alarmo
+  triggers:
+    - trigger: mqtt
+      topic: alarm/rfid_success
+  actions:
+    - choose:
+        - conditions:
+            - condition: state
+              entity_id: alarm_control_panel.alarmo
+              state: disarmed
+          sequence:
+            - action: alarm_control_panel.alarm_arm_away
+              target:
+                entity_id: alarm_control_panel.alarmo
+              data: {}
+      default:
+        - action: alarm_control_panel.alarm_disarm
+          target:
+            entity_id: alarm_control_panel.alarmo
+          data: {}
+
+- id: alarm_panel_rfid_fail
+  alias: Alarm Panel RFID Fail
+  description: Unknown card scanned — notify
+  triggers:
+    - trigger: mqtt
+      topic: alarm/rfid_fail
+  actions:
+    - action: notify.mobile_app_jon_phone
+      data:
+        title: "Alarm Panel — Unknown Card"
+        message: "Unknown RFID card scanned: {{ trigger.payload }}"
+
+- id: alarm_panel_sound_on_trigger
+  alias: Alarm Panel Sound on Trigger
+  description: Activate siren/strobe on Mega when alarm is triggered
+  triggers:
+    - trigger: state
+      entity_id: alarm_control_panel.alarmo
+      to: triggered
+  actions:
+    - action: mqtt.publish
+      data:
+        topic: alarm/sound
+        payload: "on"
+
+- id: alarm_panel_sound_off
+  alias: Alarm Panel Sound Off
+  description: Stop siren/strobe on Mega when alarm is disarmed
+  triggers:
+    - trigger: state
+      entity_id: alarm_control_panel.alarmo
+      to: disarmed
+  actions:
+    - action: mqtt.publish
+      data:
+        topic: alarm/sound
+        payload: "off"
+
+- id: alarm_panel_entry_buzzer
+  alias: Alarm Panel Entry Buzzer
+  description: Sound buzzer on Mega during entry delay
+  triggers:
+    - trigger: state
+      entity_id: alarm_control_panel.alarmo
+      to: pending
+  actions:
+    - action: mqtt.publish
+      data:
+        topic: alarm/buzzer
+        payload: "on"
+
+- id: alarm_panel_buzzer_off
+  alias: Alarm Panel Buzzer Off
+  description: Stop buzzer when alarm leaves entry delay
+  triggers:
+    - trigger: state
+      entity_id: alarm_control_panel.alarmo
+      from: pending
+  actions:
+    - action: mqtt.publish
+      data:
+        topic: alarm/buzzer
+        payload: "off"
+
+- id: alarm_panel_poverride_ack
+  alias: Alarm Panel Parent Override Ack
+  description: Turn on boys room light when Mega acknowledges parent override
+  triggers:
+    - trigger: mqtt
+      topic: alarm/poverride_ack
+  actions:
+    - action: light.turn_on
+      target:
+        entity_id: light.boys_led_light
+      data:
+        brightness_pct: 100

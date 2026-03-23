@@ -97,6 +97,14 @@ notify:
     services:
       - service: mobile_app_sm_a566b 
 
+mqtt:
+  sensor:
+    - name: "Alarm Panel Heartbeat"
+      unique_id: alarm_panel_hbeatret
+      state_topic: alarm/hbeatret
+      expire_after: 120
+      icon: mdi:shield-home
+
 recorder:
   purge_keep_days: 30
   purge_interval: 1
