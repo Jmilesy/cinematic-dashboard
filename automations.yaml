@@ -1673,3 +1673,22 @@
         entity_id: input_text.boys_school
       data:
         value: Enjoy your day off
+- id: valance_morning_sunrise
+  alias: Valance Morning Sunrise
+  description: >
+    Triggers WLED nightlight sunrise on valance at 06:15 Mon-Fri.
+    10 minute fade from off to full brightness. No school_day gate (Natalie's wake-up).
+  mode: single
+  triggers:
+  - trigger: time
+    at: '06:15:00'
+  conditions:
+  - condition: time
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  actions:
+  - action: rest_command.valance_sunrise

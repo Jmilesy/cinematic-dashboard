@@ -132,6 +132,9 @@ rest_command:
   shutdown_games_pc:
     url: "http://192.168.1.108:8000/?action=System.Shutdown"
     method: POST
+  valance_sunrise:
+    url: "http://10.0.0.50/win&A=0&NL=10&NT=255&NF=3"
+    method: GET
 
 #python_script:
 
