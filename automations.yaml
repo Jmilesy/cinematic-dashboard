@@ -1628,3 +1628,48 @@
         - action: light.turn_off
           target:
             entity_id: light.fastled_ws2812b_light
+- id: school_day_manager
+  alias: School Day Manager
+  description: >
+    Replaces Node-RED logic. At midnight: get today's events from
+    calendar.sandown_school_calendar. If any event summary contains 'School'
+    -> school day ON. Otherwise -> school day OFF + set boys_school text.
+  mode: single
+  triggers:
+  - trigger: time
+    at: '00:01:00'
+  actions:
+  - action: calendar.get_events
+    target:
+      entity_id: calendar.sandown_school_calendar
+    data:
+      start_date_time: "{{ now().strftime('%Y-%m-%d') }} 00:00:00"
+      end_date_time: "{{ now().strftime('%Y-%m-%d') }} 23:59:59"
+    response_variable: todays_events
+  - if:
+    - condition: template
+      value_template: >
+        {{ todays_events['calendar.sandown_school_calendar']['events'] |
+           selectattr('summary', 'search', 'School', ignorecase=True) |
+           list | count > 0 }}
+    then:
+    - action: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.school_day
+    - action: input_text.set_value
+      target:
+        entity_id: input_text.boys_school
+      data:
+        value: >
+          {{ todays_events['calendar.sandown_school_calendar']['events'] |
+             selectattr('summary', 'search', 'School', ignorecase=True) |
+             map(attribute='summary') | join(', ') }}
+    else:
+    - action: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.school_day
+    - action: input_text.set_value
+      target:
+        entity_id: input_text.boys_school
+      data:
+        value: Enjoy your day off
