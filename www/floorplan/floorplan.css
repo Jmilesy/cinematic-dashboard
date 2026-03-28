@@ -1,3 +1,16 @@
+/* Fix SVG sizing — prevent tall letterboxing */
+#floorplan-container {
+  width: 100%;
+  aspect-ratio: 1336 / 552;
+  max-height: calc(100vh - 56px);
+  overflow: hidden;
+}
+
+#floorplan-container svg {
+  width: 100% !important;
+  height: 100% !important;
+}
+
 /* Base room styles */
 #room-boys,
 #room-bedroom,
