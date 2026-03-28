@@ -1,7 +1,6 @@
 title: Floor Plan
 path: floorplan
 icon: mdi:floor-plan
-panel: true
 cards:
   - type: custom:floorplan-card
     config: /local/floorplan/floorplan.yaml
