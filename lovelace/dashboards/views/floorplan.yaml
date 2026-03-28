@@ -5,3 +5,10 @@ icon: mdi:floor-plan
 cards:
   - type: custom:floorplan-card
     config: /local/floorplan/floorplan.yaml
+    card_mod:
+      style: |
+        :host {
+          height: calc(100vw * 552 / 1336) !important;
+          max-height: calc(100vh - 56px) !important;
+          display: block !important;
+        }
