@@ -1,5 +1,6 @@
 title: Floor Plan
 path: floorplan
+type: panel
 icon: mdi:floor-plan
 cards:
   - type: custom:floorplan-card
