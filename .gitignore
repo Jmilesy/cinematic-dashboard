@@ -14,7 +14,8 @@ everything-presence-zone-configurator/
 
 # HACS - reinstall, don't track
 custom_components/
-www/
+www/*
+!www/floorplan
 
 # Node-RED - has its own backup
 node-red/
@@ -53,3 +54,4 @@ go2rtc-1.9.9
 # Dev scripts (keep in cinematic-dashboard repo instead)
 *.ps1
 *.py
+.cache/

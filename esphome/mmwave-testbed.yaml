@@ -1,0 +1,195 @@
+esphome:
+  name: mmwave-testbed
+  friendly_name: mmWave Test Bed
+  comment: LD2410C + LD2450 simultaneous test
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+# Serial logging re-enabled — only 2 UARTs needed now
+logger:
+
+api:
+  encryption:
+    key: !secret api_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  ap:
+    ssid: "mmwave-testbed"
+    password: !secret fallback_password
+
+captive_portal:
+
+# ─────────────────────────────────────────────
+# I2C — BH1750 light sensor
+# ─────────────────────────────────────────────
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  scan: true
+
+# ─────────────────────────────────────────────
+# I2S — INMP441 microphone
+# SCK=D32  WS=D25  SD=D34  L/R=GND
+# ─────────────────────────────────────────────
+i2s_audio:
+  id: i2s_bus
+  i2s_lrclk_pin: GPIO25
+  i2s_bclk_pin: GPIO32
+
+microphone:
+  - platform: i2s_audio
+    id: testbed_mic
+    i2s_audio_id: i2s_bus
+    i2s_din_pin: GPIO34
+    adc_type: external
+    pdm: false
+    channel: left
+    bits_per_sample: 32bit
+    sample_rate: 16000
+
+# ─────────────────────────────────────────────
+# Bluetooth
+# ─────────────────────────────────────────────
+esp32_ble_tracker:
+  scan_parameters:
+    interval: 1100ms
+    window: 1100ms
+    active: true
+
+bluetooth_proxy:
+  active: true
+
+# ─────────────────────────────────────────────
+# UART
+# UART1 (GPIO17 TX / GPIO16 RX) → LD2450
+# UART2 (GPIO27 TX / GPIO26 RX) → LD2410C
+# ─────────────────────────────────────────────
+uart:
+  - id: uart_ld2450
+    tx_pin: GPIO17
+    rx_pin: GPIO16
+    baud_rate: 256000
+    parity: NONE
+    stop_bits: 1
+
+  - id: uart_ld2410c
+    tx_pin: GPIO27
+    rx_pin: GPIO26
+    baud_rate: 256000
+    parity: NONE
+    stop_bits: 1
+
+# ─────────────────────────────────────────────
+# Sensor components
+# ─────────────────────────────────────────────
+ld2410:
+  - id: ld2410c
+    uart_id: uart_ld2410c
+
+ld2450:
+  id: ld2450_radar
+  uart_id: uart_ld2450
+
+# ─────────────────────────────────────────────
+# Binary sensors
+# ─────────────────────────────────────────────
+binary_sensor:
+  # LD2410C — UART presence
+  - platform: ld2410
+    ld2410_id: ld2410c
+    has_target:
+      name: "LD2410C Presence"
+    has_moving_target:
+      name: "LD2410C Moving"
+    has_still_target:
+      name: "LD2410C Still"
+
+  # LD2410C — hardware OUT pin (D33), compare latency vs UART
+  - platform: gpio
+    pin:
+      number: GPIO33
+      mode: INPUT
+    name: "LD2410C OUT"
+    device_class: occupancy
+    filters:
+      - delayed_off: 100ms
+
+  - platform: ld2450
+    ld2450_id: ld2450_radar
+    has_target:
+      name: "LD2450 Presence"
+
+# ─────────────────────────────────────────────
+# Sensors
+# ─────────────────────────────────────────────
+sensor:
+  - platform: sound_level
+    microphone: testbed_mic
+    passive: false
+    measurement_duration: 1000ms
+    rms:
+      name: "Testbed Sound RMS"
+      filters:
+        - sliding_window_moving_average:
+            window_size: 5
+            send_every: 5
+
+  - platform: bh1750
+    name: "Testbed Light"
+    address: 0x23
+    update_interval: 10s
+
+  - platform: ld2410
+    ld2410_id: ld2410c
+    moving_distance:
+      name: "LD2410C Moving Distance"
+    still_distance:
+      name: "LD2410C Still Distance"
+    moving_energy:
+      name: "LD2410C Moving Energy"
+    still_energy:
+      name: "LD2410C Still Energy"
+    detection_distance:
+      name: "LD2410C Detection Distance"
+
+  - platform: ld2450
+    ld2450_id: ld2450_radar
+    target_count:
+      name: "LD2450 Target Count"
+    target_1:
+      x:
+        name: "LD2450 T1 X"
+      y:
+        name: "LD2450 T1 Y"
+      speed:
+        name: "LD2450 T1 Speed"
+      resolution:
+        name: "LD2450 T1 Resolution"
+    target_2:
+      x:
+        name: "LD2450 T2 X"
+      y:
+        name: "LD2450 T2 Y"
+      speed:
+        name: "LD2450 T2 Speed"
+      resolution:
+        name: "LD2450 T2 Resolution"
+    target_3:
+      x:
+        name: "LD2450 T3 X"
+      y:
+        name: "LD2450 T3 Y"
+      speed:
+        name: "LD2450 T3 Speed"
+      resolution:
+        name: "LD2450 T3 Resolution"

@@ -1,0 +1,186 @@
+esphome:
+  name: boys-room
+  friendly_name: Boys Room esp32
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+logger:
+
+api:
+  encryption:
+    key: !secret api_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  ap:
+    ssid: "boys-room"
+    password: !secret fallback_password
+
+captive_portal:
+
+# ─────────────────────────────────────────────
+# UART
+# UART1 (GPIO17 TX / GPIO16 RX) → LD2450
+# UART2 (GPIO27 TX / GPIO26 RX) → LD2410C
+# ─────────────────────────────────────────────
+uart:
+  - id: uart_ld2450
+    tx_pin: GPIO17
+    rx_pin: GPIO16
+    baud_rate: 256000
+    parity: NONE
+    stop_bits: 1
+
+  - id: uart_ld2410c
+    tx_pin: GPIO27
+    rx_pin: GPIO26
+    baud_rate: 256000
+    parity: NONE
+    stop_bits: 1
+
+# ─────────────────────────────────────────────
+# I2C — BH1750 light sensor
+# ─────────────────────────────────────────────
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  scan: true
+
+# ─────────────────────────────────────────────
+# I2S — INMP441 microphone
+# SCK=D32  WS=D25  SD=D34  L/R=GND
+# ─────────────────────────────────────────────
+i2s_audio:
+  i2s_lrclk_pin: GPIO25
+  i2s_bclk_pin: GPIO32
+
+microphone:
+  - platform: i2s_audio
+    id: boys_room_mic
+    i2s_din_pin: GPIO34
+    adc_type: external
+    pdm: false
+
+# ─────────────────────────────────────────────
+# Bluetooth presence tracking
+# Fill in MAC addresses below
+# ─────────────────────────────────────────────
+esp32_ble_tracker:
+  scan_parameters:
+    interval: 1100ms
+    window: 1100ms
+    active: true
+
+bluetooth_proxy:
+  active: true
+
+# ─────────────────────────────────────────────
+# Sensor components
+# ─────────────────────────────────────────────
+ld2410:
+  - id: ld2410c
+    uart_id: uart_ld2410c
+
+ld2450:
+  id: ld2450_radar
+  uart_id: uart_ld2450
+
+# ─────────────────────────────────────────────
+# Binary sensors
+# ─────────────────────────────────────────────
+binary_sensor:
+  - platform: ld2410
+    ld2410_id: ld2410c
+    has_target:
+      name: "Boys Room Presence"
+    has_moving_target:
+      name: "Boys Room Moving"
+    has_still_target:
+      name: "Boys Room Still"
+
+  - platform: gpio
+    pin:
+      number: GPIO33
+      mode: INPUT
+    name: "Boys Room Presence HW"
+    device_class: occupancy
+    filters:
+      - delayed_off: 100ms
+
+  - platform: ld2450
+    ld2450_id: ld2450_radar
+    has_target:
+      name: "Boys Room Multi Presence"
+
+  # Bluetooth — fill in MAC addresses
+  - platform: ble_presence
+    mac_address: "XX:XX:XX:XX:XX:XX"   # Jacob phone/tablet
+    name: "Jacob BT Present"
+    device_class: presence
+
+  - platform: ble_presence
+    mac_address: "XX:XX:XX:XX:XX:XX"   # Joseph phone/tablet
+    name: "Joseph BT Present"
+    device_class: presence
+
+# ─────────────────────────────────────────────
+# Sensors
+# ─────────────────────────────────────────────
+sensor:
+  - platform: bh1750
+    name: "Boys Room Light"
+    address: 0x23
+    update_interval: 10s
+
+  - platform: ld2410
+    ld2410_id: ld2410c
+    moving_distance:
+      name: "Boys Room Moving Distance"
+    still_distance:
+      name: "Boys Room Still Distance"
+    moving_energy:
+      name: "Boys Room Moving Energy"
+    still_energy:
+      name: "Boys Room Still Energy"
+    detection_distance:
+      name: "Boys Room Detection Distance"
+
+  - platform: ld2450
+    ld2450_id: ld2450_radar
+    target_count:
+      name: "Boys Room Target Count"
+    target_1:
+      x:
+        name: "Boys Room T1 X"
+      y:
+        name: "Boys Room T1 Y"
+      speed:
+        name: "Boys Room T1 Speed"
+      resolution:
+        name: "Boys Room T1 Resolution"
+    target_2:
+      x:
+        name: "Boys Room T2 X"
+      y:
+        name: "Boys Room T2 Y"
+      speed:
+        name: "Boys Room T2 Speed"
+      resolution:
+        name: "Boys Room T2 Resolution"
+    target_3:
+      x:
+        name: "Boys Room T3 X"
+      y:
+        name: "Boys Room T3 Y"
+      speed:
+        name: "Boys Room T3 Speed"
+      resolution:
+        name: "Boys Room T3 Resolution"

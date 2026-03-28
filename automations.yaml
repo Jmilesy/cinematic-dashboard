@@ -1631,9 +1631,9 @@
 - id: school_day_manager
   alias: School Day Manager
   description: >
-    Replaces Node-RED logic. At midnight: get today's events from
-    calendar.sandown_school_calendar. If any event summary contains 'School'
-    -> school day ON. Otherwise -> school day OFF + set boys_school text.
+    At midnight: get today's events from calendar.sandown_school_calendar.
+    Weekend, or any event containing 'holiday', 'inset', or 'bank' -> school day OFF.
+    Otherwise (no events or other special events) -> school day ON.
   mode: single
   triggers:
   - trigger: time
@@ -1649,10 +1649,24 @@
   - if:
     - condition: template
       value_template: >
-        {{ todays_events['calendar.sandown_school_calendar']['events'] |
-           selectattr('summary', 'search', 'School', ignorecase=True) |
+        {{ now().weekday() >= 5 or
+           todays_events['calendar.sandown_school_calendar']['events'] |
+           selectattr('summary', 'search', 'holiday|inset|bank', ignorecase=True) |
            list | count > 0 }}
     then:
+    - action: input_boolean.turn_off
+      target:
+        entity_id: input_boolean.school_day
+    - action: input_text.set_value
+      target:
+        entity_id: input_text.boys_school
+      data:
+        value: >
+          {%- set off_event = todays_events['calendar.sandown_school_calendar']['events'] |
+             selectattr('summary', 'search', 'holiday|inset|bank', ignorecase=True) |
+             map(attribute='summary') | first | default('') -%}
+          {% if off_event %}{{ off_event }}{% else %}Enjoy your day off{% endif %}
+    else:
     - action: input_boolean.turn_on
       target:
         entity_id: input_boolean.school_day
@@ -1661,18 +1675,9 @@
         entity_id: input_text.boys_school
       data:
         value: >
-          {{ todays_events['calendar.sandown_school_calendar']['events'] |
-             selectattr('summary', 'search', 'School', ignorecase=True) |
-             map(attribute='summary') | join(', ') }}
-    else:
-    - action: input_boolean.turn_off
-      target:
-        entity_id: input_boolean.school_day
-    - action: input_text.set_value
-      target:
-        entity_id: input_text.boys_school
-      data:
-        value: Enjoy your day off
+          {%- set events = todays_events['calendar.sandown_school_calendar']['events'] |
+             map(attribute='summary') | list -%}
+          {% if events %}{{ events | join(', ') }}{% else %}School day{% endif %}
 - id: valance_morning_sunrise
   alias: Valance Morning Sunrise
   description: >

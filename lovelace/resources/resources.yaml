@@ -1,0 +1,14 @@
+- url: /hacsfiles/kiosk-mode/kiosk-mode.js
+  type: module
+- url: /local/community/ha-floorplan/floorplan.js
+  type: module
+- url: /hacsfiles/button-card/button-card.js
+  type: module
+- url: /hacsfiles/lovelace-card-mod/card-mod.js
+  type: module
+- url: /hacsfiles/lovelace-mushroom/mushroom.js
+  type: module
+- url: /hacsfiles/stack-in-card/stack-in-card.js
+  type: module
+- url: /hacsfiles/mini-graph-card/mini-graph-card-bundle.js
+  type: module

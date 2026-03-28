@@ -33,3 +33,4 @@ views:
   - !include ./dashboards/views/weather.yaml
   - !include ./dashboards/views/f1.yaml
   - !include ./dashboards/views/media.yaml
+  - !include ./dashboards/views/floorplan.yaml

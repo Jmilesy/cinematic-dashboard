@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1336 552">
+  <defs>
+    <style>
+      .room { fill: transparent; }
+      .target { display: none; }
+      .target-active { display: block; }
+      .info-bg { fill: rgba(0,0,0,0.55); rx: 6; }
+      .info-text { font-size: 13px; font-family: Arial, sans-serif; fill: white; }
+      .info-text-sm { font-size: 11px; font-family: Arial, sans-serif; fill: #ccc; }
+      .light-btn { cursor: pointer; }
+      .light-off { fill: rgba(80,80,80,0.8); }
+      .light-on  { fill: rgba(255,200,50,0.9); }
+    </style>
+  </defs>
+
+  <!-- Background PNG -->
+  <image href="/local/floorplan/firstfloor.png" x="0" y="0" width="1336" height="552"/>
+
+  <!-- Room hit areas -->
+  <rect id="room-bathroom" class="room" x="898.2" y="8.3" width="402.8" height="260.5"/>
+  <path id="room-landing" class="room" d="M891.3,97.4h-320.8l-63.9,63.9v109.2h116.6v-86.7h268.1v-86.4h0Z"/>
+  <path id="room-boys"    class="room" d="M513.6,266.7v279.3h384.7V180h-268.1v86.7h-116.6Z"/>
+  <path id="room-bedroom" class="room" d="M513.6,157.5H122.9v84.6h-60l-50.9,50.9v146l44.1,44.1h54.8v62.8h291.8v-233.5h110.9v-155h0Z"/>
+
+  <!-- ═══ BEDROOM info panel ═══ -->
+  <rect x="128" y="462" width="105" height="52" rx="6" class="info-bg"/>
+  <text x="138" y="479" class="info-text-sm">&#127777; Temp</text>
+  <text id="bedroom-temp" x="138" y="496" class="info-text">--°C</text>
+  <text x="138" y="508" class="info-text-sm">&#128167; <tspan id="bedroom-hum">--%</tspan></text>
+
+  <!-- Bedroom light button -->
+  <g id="light-bedroom" class="light-btn">
+    <circle cx="400" cy="340" r="18" class="light-off" stroke="white" stroke-width="1.5"/>
+    <text x="391" y="346" font-size="18" fill="white" pointer-events="none">&#128161;</text>
+  </g>
+
+  <!-- ═══ BOYS ROOM info panel ═══ -->
+  <rect x="522" y="462" width="105" height="52" rx="6" class="info-bg"/>
+  <text x="532" y="479" class="info-text-sm">&#127777; Temp</text>
+  <text id="boysroom-temp" x="532" y="496" class="info-text">--°C</text>
+  <text x="532" y="508" class="info-text-sm">&#128494; mmWave</text>
+
+  <!-- Boys room light button -->
+  <g id="light-boys-btn" class="light-btn">
+    <circle cx="820" cy="420" r="18" class="light-off" stroke="white" stroke-width="1.5"/>
+    <text x="811" y="426" font-size="18" fill="white" pointer-events="none">&#128161;</text>
+  </g>
+
+  <!-- ═══ LANDING info panel ═══ -->
+  <rect x="638" y="215" width="105" height="52" rx="6" class="info-bg"/>
+  <text x="648" y="232" class="info-text-sm">&#127777; Temp</text>
+  <text id="landing-temp" x="648" y="249" class="info-text">--°C</text>
+  <text x="648" y="261" class="info-text-sm">&#128167; <tspan id="landing-hum">--%</tspan></text>
+
+  <!-- Landing light button -->
+  <g id="light-landing-btn" class="light-btn">
+    <circle cx="855" cy="145" r="18" class="light-off" stroke="white" stroke-width="1.5"/>
+    <text x="846" y="151" font-size="18" fill="white" pointer-events="none">&#128161;</text>
+  </g>
+
+  <!-- ═══ BATHROOM info panel ═══ -->
+  <rect x="910" y="210" width="80" height="32" rx="6" class="info-bg"/>
+  <text x="920" y="231" class="info-text-sm">&#128703; Presence</text>
+
+  <!-- LD2450 target dots -->
+  <circle id="target-1" class="target" cx="706" cy="363" r="9" fill="#ff4444" stroke="white" stroke-width="2" opacity="0.9"/>
+  <circle id="target-2" class="target" cx="706" cy="363" r="9" fill="#ff00ff" stroke="white" stroke-width="2" opacity="0.9"/>
+  <circle id="target-3" class="target" cx="706" cy="363" r="9" fill="#ffcc00" stroke="white" stroke-width="2" opacity="0.9"/>
+</svg>

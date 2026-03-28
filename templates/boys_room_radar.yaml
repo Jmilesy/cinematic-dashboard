@@ -1,0 +1,100 @@
+# LD2450 target positions mapped to SVG coordinates
+# ── CALIBRATION VALUES (update after tonight) ──────────────
+# sensor_svg_x: SVG X coordinate of the sensor on its wall
+# sensor_svg_y: SVG Y coordinate of the sensor on its wall
+# scale_x: SVG pixels per mm in X direction
+# scale_y: SVG pixels per mm in Y direction
+#
+# Boys room SVG bounds: x=513-898, y=180-546
+# Sensor is on the wall opposite the bunk bed
+
+- sensor:
+    - name: boys_room_t1_svg_x
+      unit_of_measurement: px
+      state: >
+        {% set x_mm = states('sensor.mmwave_test_bed_ld2450_t1_x') | float(0) %}
+        {% set sensor_svg_x = 646 %}
+        {% set scale_x = 0.079 %}
+        {{ (sensor_svg_x + x_mm * scale_x) | round(1) }}
+
+    - name: boys_room_t1_svg_y
+      unit_of_measurement: px
+      state: >
+        {% set y_mm = states('sensor.mmwave_test_bed_ld2450_t1_y') | float(0) %}
+        {% set sensor_svg_y = 266 %}
+        {% set scale_y = 0.056 %}
+        {{ (sensor_svg_y + y_mm * scale_y) | round(1) }}
+
+    - name: boys_room_t2_svg_x
+      unit_of_measurement: px
+      state: >
+        {% set x_mm = states('sensor.mmwave_test_bed_ld2450_t2_x') | float(0) %}
+        {% set sensor_svg_x = 646 %}
+        {% set scale_x = 0.079 %}
+        {{ (sensor_svg_x + x_mm * scale_x) | round(1) }}
+
+    - name: boys_room_t2_svg_y
+      unit_of_measurement: px
+      state: >
+        {% set y_mm = states('sensor.mmwave_test_bed_ld2450_t2_y') | float(0) %}
+        {% set sensor_svg_y = 266 %}
+        {% set scale_y = 0.056 %}
+        {{ (sensor_svg_y + y_mm * scale_y) | round(1) }}
+
+    - name: boys_room_t3_svg_x
+      unit_of_measurement: px
+      state: >
+        {% set x_mm = states('sensor.mmwave_test_bed_ld2450_t3_x') | float(0) %}
+        {% set sensor_svg_x = 646 %}
+        {% set scale_x = 0.079 %}
+        {{ (sensor_svg_x + x_mm * scale_x) | round(1) }}
+
+    - name: boys_room_t3_svg_y
+      unit_of_measurement: px
+      state: >
+        {% set y_mm = states('sensor.mmwave_test_bed_ld2450_t3_y') | float(0) %}
+        {% set sensor_svg_y = 266 %}
+        {% set scale_y = 0.056 %}
+        {{ (sensor_svg_y + y_mm * scale_y) | round(1) }}
+
+    - name: boys_room_light_fill
+      state: >
+        {% set l = states.light.boys_light %}
+        {% if l.state == 'on' %}
+          {% if l.attributes.rgb_color %}
+            {% set r,g,b = l.attributes.rgb_color %}
+            fill: rgba({{ r }},{{ g }},{{ b }},0.35) !important;
+          {% else %}
+            fill: rgba(255,220,80,0.35) !important;
+          {% endif %}
+        {% else %}
+          fill: transparent !important;
+        {% endif %}
+
+    - name: bedroom_light_fill
+      state: >
+        {% set l = states.light.bedroom_light %}
+        {% if l.state == 'on' %}
+          {% if l.attributes.rgb_color %}
+            {% set r,g,b = l.attributes.rgb_color %}
+            fill: rgba({{ r }},{{ g }},{{ b }},0.35) !important;
+          {% else %}
+            fill: rgba(255,220,80,0.35) !important;
+          {% endif %}
+        {% else %}
+          fill: transparent !important;
+        {% endif %}
+
+    - name: landing_light_fill
+      state: >
+        {% set l = states.light.hall_light %}
+        {% if l.state == 'on' %}
+          {% if l.attributes.rgb_color %}
+            {% set r,g,b = l.attributes.rgb_color %}
+            fill: rgba({{ r }},{{ g }},{{ b }},0.35) !important;
+          {% else %}
+            fill: rgba(255,220,80,0.35) !important;
+          {% endif %}
+        {% else %}
+          fill: transparent !important;
+        {% endif %}

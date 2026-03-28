@@ -1,0 +1,319 @@
+image: /local/floorplan/floorplan.svg?v=21
+stylesheet: /local/floorplan/floorplan.css
+log_level: info
+
+rules:
+
+  - name: Boys room light overlay
+    entities:
+      - entity: light.boys_light
+        element: room-boys
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.style_set
+        service_data:
+          element: room-boys
+          style: "fill: rgba(255,220,80,0.35) !important;"
+      - state: "off"
+        action: call-service
+        service: floorplan.style_set
+        service_data:
+          element: room-boys
+          style: "fill: transparent !important;"
+
+  - name: Boys room presence overlay
+    entities:
+      - entity: binary_sensor.mmwave_test_bed_ld2450_presence
+        element: room-boys
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.style_set
+        service_data:
+          element: room-boys
+          style: "fill: rgba(0,170,255,0.2) !important;"
+      - state: "off"
+        action: call-service
+        service: floorplan.style_set
+        service_data:
+          element: room-boys
+          style: "fill: transparent !important;"
+
+  - name: Bedroom light overlay
+    entities:
+      - entity: light.bedroom_light
+        element: room-bedroom
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.style_set
+        service_data:
+          element: room-bedroom
+          style: "fill: rgba(255,220,80,0.35) !important;"
+      - state: "off"
+        action: call-service
+        service: floorplan.style_set
+        service_data:
+          element: room-bedroom
+          style: "fill: transparent !important;"
+
+  - name: Landing light overlay
+    entities:
+      - entity: light.hall_light
+        element: room-landing
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.style_set
+        service_data:
+          element: room-landing
+          style: "fill: rgba(255,220,80,0.35) !important;"
+      - state: "off"
+        action: call-service
+        service: floorplan.style_set
+        service_data:
+          element: room-landing
+          style: "fill: transparent !important;"
+
+  - name: Bathroom presence overlay
+    entities:
+      - entity: binary_sensor.pir_bathroom
+        element: room-bathroom
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.style_set
+        service_data:
+          element: room-bathroom
+          style: "fill: rgba(0,170,255,0.3) !important;"
+      - state: "off"
+        action: call-service
+        service: floorplan.style_set
+        service_data:
+          element: room-bathroom
+          style: "fill: transparent !important;"
+
+  - name: Boys room light button
+    entities:
+      - entity: light.boys_light
+        element: light-boys-btn
+    tap_action:
+      action: call-service
+      service: light.toggle
+      service_data:
+        entity_id:
+          - light.boys_light
+          - light.boys_light_2
+          - light.boys_led_light
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: light-boys-btn
+          class: "light-btn light-on"
+      - state: "off"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: light-boys-btn
+          class: "light-btn light-off"
+
+  - name: Landing light button
+    entities:
+      - entity: light.hall_light
+        element: light-landing-btn
+    tap_action:
+      action: call-service
+      service: light.toggle
+      service_data:
+        entity_id:
+          - light.hall_light
+          - light.hall_light_2
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: light-landing-btn
+          class: "light-btn light-on"
+      - state: "off"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: light-landing-btn
+          class: "light-btn light-off"
+
+  - name: Bedroom light button
+    entities:
+      - entity: light.bedroom_light
+        element: light-bedroom
+    tap_action:
+      action: call-service
+      service: light.toggle
+      service_data:
+        entity_id: light.bedroom_light
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: light-bedroom
+          class: "light-btn light-on"
+      - state: "off"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: light-bedroom
+          class: "light-btn light-off"
+
+  - name: Bedroom temperature
+    entities:
+      - entity: sensor.bedroom_temperature
+        element: bedroom-temp
+    state_action:
+      action: call-service
+      service: floorplan.attr_set
+      service_data:
+        element: bedroom-temp
+        attribute: innerHTML
+        value: "{{states('sensor.bedroom_temperature') | round(1)}}°C"
+
+  - name: Bedroom humidity
+    entities:
+      - entity: sensor.bedroom_humidity
+        element: bedroom-hum
+    state_action:
+      action: call-service
+      service: floorplan.attr_set
+      service_data:
+        element: bedroom-hum
+        attribute: innerHTML
+        value: "{{states('sensor.bedroom_humidity') | round(0) | int}}%"
+
+  - name: Boys room temperature
+    entities:
+      - entity: sensor.boysroom_temperature
+        element: boysroom-temp
+    state_action:
+      action: call-service
+      service: floorplan.attr_set
+      service_data:
+        element: boysroom-temp
+        attribute: innerHTML
+        value: "{{states('sensor.boysroom_temperature') | round(1)}}°C"
+
+  - name: Landing temperature
+    entities:
+      - entity: sensor.landing_temperature
+        element: landing-temp
+    state_action:
+      action: call-service
+      service: floorplan.attr_set
+      service_data:
+        element: landing-temp
+        attribute: innerHTML
+        value: "{{states('sensor.landing_temperature') | round(1)}}°C"
+
+  - name: Landing humidity
+    entities:
+      - entity: sensor.landing_humidity
+        element: landing-hum
+    state_action:
+      action: call-service
+      service: floorplan.attr_set
+      service_data:
+        element: landing-hum
+        attribute: innerHTML
+        value: "{{states('sensor.landing_humidity') | round(0) | int}}%"
+
+  - name: Target 1 visibility
+    entities:
+      - entity: binary_sensor.mmwave_test_bed_ld2450_presence
+        element: target-1
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: target-1
+          class: target-active
+      - state: "off"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: target-1
+          class: target
+
+  - name: Target 1 X
+    entities:
+      - entity: sensor.boys_room_t1_svg_x
+        element: target-1
+    state_action:
+      action: call-service
+      service: floorplan.attr_set
+      service_data:
+        element: target-1
+        attribute: cx
+        value: "{{states('sensor.boys_room_t1_svg_x')}}"
+
+  - name: Target 1 Y
+    entities:
+      - entity: sensor.boys_room_t1_svg_y
+        element: target-1
+    state_action:
+      action: call-service
+      service: floorplan.attr_set
+      service_data:
+        element: target-1
+        attribute: cy
+        value: "{{states('sensor.boys_room_t1_svg_y')}}"
+
+  - name: Target 2 X
+    entities:
+      - entity: sensor.boys_room_t2_svg_x
+        element: target-2
+    state_action:
+      action: call-service
+      service: floorplan.attr_set
+      service_data:
+        element: target-2
+        attribute: cx
+        value: "{{states('sensor.boys_room_t2_svg_x')}}"
+
+  - name: Target 2 Y
+    entities:
+      - entity: sensor.boys_room_t2_svg_y
+        element: target-2
+    state_action:
+      action: call-service
+      service: floorplan.attr_set
+      service_data:
+        element: target-2
+        attribute: cy
+        value: "{{states('sensor.boys_room_t2_svg_y')}}"
+
+  - name: Target 3 X
+    entities:
+      - entity: sensor.boys_room_t3_svg_x
+        element: target-3
+    state_action:
+      action: call-service
+      service: floorplan.attr_set
+      service_data:
+        element: target-3
+        attribute: cx
+        value: "{{states('sensor.boys_room_t3_svg_x')}}"
+
+  - name: Target 3 Y
+    entities:
+      - entity: sensor.boys_room_t3_svg_y
+        element: target-3
+    state_action:
+      action: call-service
+      service: floorplan.attr_set
+      service_data:
+        element: target-3
+        attribute: cy
+        value: "{{states('sensor.boys_room_t3_svg_y')}}"
