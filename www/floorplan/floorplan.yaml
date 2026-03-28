@@ -1,5 +1,5 @@
 image: /local/floorplan/floorplan.svg?v=21
-stylesheet: /local/floorplan/floorplan.css
+stylesheet: /local/floorplan/floorplan.css?v=2
 log_level: info
 
 rules:
