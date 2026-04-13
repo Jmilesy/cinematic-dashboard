@@ -1,61 +1,76 @@
 # LD2450 target positions mapped to SVG coordinates
-# ── CALIBRATION VALUES (update after tonight) ──────────────
-# sensor_svg_x: SVG X coordinate of the sensor on its wall
-# sensor_svg_y: SVG Y coordinate of the sensor on its wall
-# scale_x: SVG pixels per mm in X direction
-# scale_y: SVG pixels per mm in Y direction
-#
+# ── CALIBRATION VALUES ──────────────────────────────────────
+# sensor_svg_x: 646  sensor_svg_y: 266
+# scale_x: 0.079     scale_y: 0.056
 # Boys room SVG bounds: x=513-898, y=180-546
-# Sensor is on the wall opposite the bunk bed
+#
+# ── BUNK ASSIGNMENT ─────────────────────────────────────────
+# Target numbers (T1/T2/T3) are not stable — sensor reassigns
+# them frame-to-frame. Instead we classify by X position:
+#   Jacob  (top bunk, right side): X > +500mm  → dot #ff4444
+#   Joseph (bot bunk, left side):  X < -500mm  → dot #ff00ff
+# Source: 7-night 03:00-05:00 history. Jacob avg ~+2700mm,
+# Joseph avg ~-1400mm. No overlap observed.
+# When not detected, cx is set to -100 (off-screen left).
 
 - sensor:
-    - name: boys_room_t1_svg_x
+    - name: boys_room_jacob_svg_x
       unit_of_measurement: px
       state: >
-        {% set x_mm = states('sensor.mmwave_test_bed_ld2450_t1_x') | float(0) %}
         {% set sensor_svg_x = 646 %}
         {% set scale_x = 0.079 %}
-        {{ (sensor_svg_x + x_mm * scale_x) | round(1) }}
+        {% set ns = namespace(x=none) %}
+        {% for t in [1, 2, 3] %}
+          {% set x = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_x') | float(none) %}
+          {% if x is not none and x > 500 and ns.x is none %}
+            {% set ns.x = x %}
+          {% endif %}
+        {% endfor %}
+        {{ (sensor_svg_x + ns.x * scale_x) | round(1) if ns.x is not none else -100 }}
 
-    - name: boys_room_t1_svg_y
+    - name: boys_room_jacob_svg_y
       unit_of_measurement: px
       state: >
-        {% set y_mm = states('sensor.mmwave_test_bed_ld2450_t1_y') | float(0) %}
         {% set sensor_svg_y = 266 %}
         {% set scale_y = 0.056 %}
-        {{ (sensor_svg_y + y_mm * scale_y) | round(1) }}
+        {% set ns = namespace(y=none) %}
+        {% for t in [1, 2, 3] %}
+          {% set x = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_x') | float(none) %}
+          {% set y = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_y') | float(none) %}
+          {% if x is not none and x > 500 and y is not none and ns.y is none %}
+            {% set ns.y = y %}
+          {% endif %}
+        {% endfor %}
+        {{ (sensor_svg_y + ns.y * scale_y) | round(1) if ns.y is not none else 363 }}
 
-    - name: boys_room_t2_svg_x
+    - name: boys_room_joseph_svg_x
       unit_of_measurement: px
       state: >
-        {% set x_mm = states('sensor.mmwave_test_bed_ld2450_t2_x') | float(0) %}
         {% set sensor_svg_x = 646 %}
         {% set scale_x = 0.079 %}
-        {{ (sensor_svg_x + x_mm * scale_x) | round(1) }}
+        {% set ns = namespace(x=none) %}
+        {% for t in [1, 2, 3] %}
+          {% set x = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_x') | float(none) %}
+          {% if x is not none and x < -500 and ns.x is none %}
+            {% set ns.x = x %}
+          {% endif %}
+        {% endfor %}
+        {{ (sensor_svg_x + ns.x * scale_x) | round(1) if ns.x is not none else -100 }}
 
-    - name: boys_room_t2_svg_y
+    - name: boys_room_joseph_svg_y
       unit_of_measurement: px
       state: >
-        {% set y_mm = states('sensor.mmwave_test_bed_ld2450_t2_y') | float(0) %}
         {% set sensor_svg_y = 266 %}
         {% set scale_y = 0.056 %}
-        {{ (sensor_svg_y + y_mm * scale_y) | round(1) }}
-
-    - name: boys_room_t3_svg_x
-      unit_of_measurement: px
-      state: >
-        {% set x_mm = states('sensor.mmwave_test_bed_ld2450_t3_x') | float(0) %}
-        {% set sensor_svg_x = 646 %}
-        {% set scale_x = 0.079 %}
-        {{ (sensor_svg_x + x_mm * scale_x) | round(1) }}
-
-    - name: boys_room_t3_svg_y
-      unit_of_measurement: px
-      state: >
-        {% set y_mm = states('sensor.mmwave_test_bed_ld2450_t3_y') | float(0) %}
-        {% set sensor_svg_y = 266 %}
-        {% set scale_y = 0.056 %}
-        {{ (sensor_svg_y + y_mm * scale_y) | round(1) }}
+        {% set ns = namespace(y=none) %}
+        {% for t in [1, 2, 3] %}
+          {% set x = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_x') | float(none) %}
+          {% set y = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_y') | float(none) %}
+          {% if x is not none and x < -500 and y is not none and ns.y is none %}
+            {% set ns.y = y %}
+          {% endif %}
+        {% endfor %}
+        {{ (sensor_svg_y + ns.y * scale_y) | round(1) if ns.y is not none else 363 }}
 
     - name: boys_room_light_fill
       state: >

@@ -228,7 +228,7 @@ rules:
         attribute: innerHTML
         value: "{{states('sensor.landing_humidity') | round(0) | int}}%"
 
-  - name: Target 1 visibility
+  - name: Presence visibility
     entities:
       - entity: binary_sensor.mmwave_test_bed_ld2450_presence
         element: target-1
@@ -246,9 +246,27 @@ rules:
           element: target-1
           class: target
 
-  - name: Target 1 X
+  - name: Presence visibility target-2
     entities:
-      - entity: sensor.boys_room_t1_svg_x
+      - entity: binary_sensor.mmwave_test_bed_ld2450_presence
+        element: target-2
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: target-2
+          class: target-active
+      - state: "off"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: target-2
+          class: target
+
+  - name: Jacob X
+    entities:
+      - entity: sensor.boys_room_jacob_svg_x
         element: target-1
     state_action:
       action: call-service
@@ -256,11 +274,11 @@ rules:
       service_data:
         element: target-1
         attribute: cx
-        value: "{{states('sensor.boys_room_t1_svg_x')}}"
+        value: "{{states('sensor.boys_room_jacob_svg_x')}}"
 
-  - name: Target 1 Y
+  - name: Jacob Y
     entities:
-      - entity: sensor.boys_room_t1_svg_y
+      - entity: sensor.boys_room_jacob_svg_y
         element: target-1
     state_action:
       action: call-service
@@ -268,11 +286,11 @@ rules:
       service_data:
         element: target-1
         attribute: cy
-        value: "{{states('sensor.boys_room_t1_svg_y')}}"
+        value: "{{states('sensor.boys_room_jacob_svg_y')}}"
 
-  - name: Target 2 X
+  - name: Joseph X
     entities:
-      - entity: sensor.boys_room_t2_svg_x
+      - entity: sensor.boys_room_joseph_svg_x
         element: target-2
     state_action:
       action: call-service
@@ -280,11 +298,11 @@ rules:
       service_data:
         element: target-2
         attribute: cx
-        value: "{{states('sensor.boys_room_t2_svg_x')}}"
+        value: "{{states('sensor.boys_room_joseph_svg_x')}}"
 
-  - name: Target 2 Y
+  - name: Joseph Y
     entities:
-      - entity: sensor.boys_room_t2_svg_y
+      - entity: sensor.boys_room_joseph_svg_y
         element: target-2
     state_action:
       action: call-service
@@ -292,28 +310,5 @@ rules:
       service_data:
         element: target-2
         attribute: cy
-        value: "{{states('sensor.boys_room_t2_svg_y')}}"
+        value: "{{states('sensor.boys_room_joseph_svg_y')}}"
 
-  - name: Target 3 X
-    entities:
-      - entity: sensor.boys_room_t3_svg_x
-        element: target-3
-    state_action:
-      action: call-service
-      service: floorplan.attr_set
-      service_data:
-        element: target-3
-        attribute: cx
-        value: "{{states('sensor.boys_room_t3_svg_x')}}"
-
-  - name: Target 3 Y
-    entities:
-      - entity: sensor.boys_room_t3_svg_y
-        element: target-3
-    state_action:
-      action: call-service
-      service: floorplan.attr_set
-      service_data:
-        element: target-3
-        attribute: cy
-        value: "{{states('sensor.boys_room_t3_svg_y')}}"
