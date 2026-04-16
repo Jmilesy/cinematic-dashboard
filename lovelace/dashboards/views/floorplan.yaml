@@ -4,7 +4,7 @@ panel: true
 icon: mdi:floor-plan
 cards:
   - type: custom:floorplan-card
-    config: /local/floorplan/floorplan.yaml
+    config: /local/floorplan/floorplan.yaml?v=3
     card_mod:
       style: |
         :host {
