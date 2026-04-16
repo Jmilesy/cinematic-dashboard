@@ -228,73 +228,25 @@ rules:
         attribute: innerHTML
         value: "{{states('sensor.landing_humidity') | round(0) | int}}%"
 
-  - name: Presence visibility
+  - name: Jacob dot
     entities:
-      - entity: binary_sensor.mmwave_test_bed_ld2450_presence
+      - entity: sensor.boys_room_jacob_dot_style
         element: target-1
     state_action:
       action: call-service
       service: floorplan.style_set
       service_data:
         element: target-1
-        style: "{% if state == 'on' %}display: block !important;{% else %}display: none !important;{% endif %}"
+        style: "{{ state }}"
 
-  - name: Presence visibility target-2
+  - name: Joseph dot
     entities:
-      - entity: binary_sensor.mmwave_test_bed_ld2450_presence
+      - entity: sensor.boys_room_joseph_dot_style
         element: target-2
     state_action:
       action: call-service
       service: floorplan.style_set
       service_data:
         element: target-2
-        style: "{% if state == 'on' %}display: block !important;{% else %}display: none !important;{% endif %}"
-
-  - name: Jacob X
-    entities:
-      - entity: sensor.boys_room_jacob_svg_x
-        element: target-1
-    state_action:
-      action: call-service
-      service: floorplan.attr_set
-      service_data:
-        element: target-1
-        attribute: cx
-        value: "{{ state }}"
-
-  - name: Jacob Y
-    entities:
-      - entity: sensor.boys_room_jacob_svg_y
-        element: target-1
-    state_action:
-      action: call-service
-      service: floorplan.attr_set
-      service_data:
-        element: target-1
-        attribute: cy
-        value: "{{ state }}"
-
-  - name: Joseph X
-    entities:
-      - entity: sensor.boys_room_joseph_svg_x
-        element: target-2
-    state_action:
-      action: call-service
-      service: floorplan.attr_set
-      service_data:
-        element: target-2
-        attribute: cx
-        value: "{{ state }}"
-
-  - name: Joseph Y
-    entities:
-      - entity: sensor.boys_room_joseph_svg_y
-        element: target-2
-    state_action:
-      action: call-service
-      service: floorplan.attr_set
-      service_data:
-        element: target-2
-        attribute: cy
-        value: "{{ state }}"
+        style: "{{ state }}"
 

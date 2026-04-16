@@ -113,3 +113,41 @@
         {% else %}
           fill: transparent !important;
         {% endif %}
+
+    - name: boys_room_jacob_dot_style
+      unit_of_measurement: css
+      state: >
+        {% set sensor_svg_x = 646 %}
+        {% set sensor_svg_y = 266 %}
+        {% set scale_x = 0.079 %}
+        {% set scale_y = 0.056 %}
+        {% set presence = states('binary_sensor.mmwave_test_bed_ld2450_presence') %}
+        {% set ns = namespace(x=none, y=none) %}
+        {% for t in [1, 2, 3] %}
+          {% set tx = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_x') | float(none) %}
+          {% set ty = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_y') | float(none) %}
+          {% if tx is not none and ty is not none and tx > 500 and ns.x is none %}
+            {% set ns.x = tx %}
+            {% set ns.y = ty %}
+          {% endif %}
+        {% endfor %}
+        {{ 'cx: ' ~ (sensor_svg_x + ns.x * scale_x) | round(1) ~ 'px; cy: ' ~ (sensor_svg_y + ns.y * scale_y) | round(1) ~ 'px; display: block !important;' if ns.x is not none and presence == 'on' else 'display: none !important;' }}
+
+    - name: boys_room_joseph_dot_style
+      unit_of_measurement: css
+      state: >
+        {% set sensor_svg_x = 646 %}
+        {% set sensor_svg_y = 266 %}
+        {% set scale_x = 0.079 %}
+        {% set scale_y = 0.056 %}
+        {% set presence = states('binary_sensor.mmwave_test_bed_ld2450_presence') %}
+        {% set ns = namespace(x=none, y=none) %}
+        {% for t in [1, 2, 3] %}
+          {% set tx = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_x') | float(none) %}
+          {% set ty = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_y') | float(none) %}
+          {% if tx is not none and ty is not none and tx < -500 and ns.x is none %}
+            {% set ns.x = tx %}
+            {% set ns.y = ty %}
+          {% endif %}
+        {% endfor %}
+        {{ 'cx: ' ~ (sensor_svg_x + ns.x * scale_x) | round(1) ~ 'px; cy: ' ~ (sensor_svg_y + ns.y * scale_y) | round(1) ~ 'px; display: block !important;' if ns.x is not none and presence == 'on' else 'display: none !important;' }}
