@@ -115,7 +115,6 @@
         {% endif %}
 
     - name: boys_room_jacob_dot_style
-      unit_of_measurement: css
       state: >
         {% set sensor_svg_x = 646 %}
         {% set sensor_svg_y = 266 %}
@@ -134,7 +133,6 @@
         {{ 'cx: ' ~ (sensor_svg_x + ns.x * scale_x) | round(1) ~ 'px; cy: ' ~ (sensor_svg_y + ns.y * scale_y) | round(1) ~ 'px; display: block !important;' if ns.x is not none and presence == 'on' else 'display: none !important;' }}
 
     - name: boys_room_joseph_dot_style
-      unit_of_measurement: css
       state: >
         {% set sensor_svg_x = 646 %}
         {% set sensor_svg_y = 266 %}
