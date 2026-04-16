@@ -235,16 +235,16 @@ rules:
     state_action:
       - state: "on"
         action: call-service
-        service: floorplan.class_set
+        service: floorplan.style_set
         service_data:
           element: target-1
-          class: target-active
+          style: "display: block !important;"
       - state: "off"
         action: call-service
-        service: floorplan.class_set
+        service: floorplan.style_set
         service_data:
           element: target-1
-          class: target
+          style: "display: none !important;"
 
   - name: Presence visibility target-2
     entities:
@@ -253,16 +253,16 @@ rules:
     state_action:
       - state: "on"
         action: call-service
-        service: floorplan.class_set
+        service: floorplan.style_set
         service_data:
           element: target-2
-          class: target-active
+          style: "display: block !important;"
       - state: "off"
         action: call-service
-        service: floorplan.class_set
+        service: floorplan.style_set
         service_data:
           element: target-2
-          class: target
+          style: "display: none !important;"
 
   - name: Jacob X
     entities:
@@ -274,7 +274,7 @@ rules:
       service_data:
         element: target-1
         attribute: cx
-        value: "{{states('sensor.boys_room_jacob_svg_x')}}"
+        value: "{{ state }}"
 
   - name: Jacob Y
     entities:
@@ -286,7 +286,7 @@ rules:
       service_data:
         element: target-1
         attribute: cy
-        value: "{{states('sensor.boys_room_jacob_svg_y')}}"
+        value: "{{ state }}"
 
   - name: Joseph X
     entities:
@@ -298,7 +298,7 @@ rules:
       service_data:
         element: target-2
         attribute: cx
-        value: "{{states('sensor.boys_room_joseph_svg_x')}}"
+        value: "{{ state }}"
 
   - name: Joseph Y
     entities:
@@ -310,5 +310,5 @@ rules:
       service_data:
         element: target-2
         attribute: cy
-        value: "{{states('sensor.boys_room_joseph_svg_y')}}"
+        value: "{{ state }}"
 
