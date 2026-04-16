@@ -1,6 +1,6 @@
 image: /local/floorplan/floorplan.svg?v=21
-stylesheet: /local/floorplan/floorplan.css?v=3
-log_level: info
+stylesheet: /local/floorplan/floorplan.css?v=4
+log_level: warn
 
 rules:
 

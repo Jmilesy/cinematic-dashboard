@@ -1,35 +1,55 @@
-/* Fix SVG sizing — prevent tall letterboxing */
-/* flex-grow: 0 stops the container stretching to fill the panel height */
-:host {
-  display: block !important;
-  height: auto !important;
-}
+/* ── ha-floorplan layout fix — v4 ────────────────────────────
+   Root cause: ha-floorplan adoptedStyleSheet sets
+     #floorplan { flex: 1 1 0%; min-height: 0 }
+   flex-basis: 0% collapses height to 0. Previous fix set
+   flex-grow: 0 which made it worse.
+   Fix:
+     - #floorplan-container: aspect-ratio controls height
+     - #floorplan: flex-grow:1 fills container (log hidden)
+     - #log: hidden (log_level:warn in floorplan.yaml)
+     - svg: 100% width + height fills #floorplan
+   ──────────────────────────────────────────────────────────── */
 
-#floorplan-container,
-#floorplan {
-  flex-grow: 0 !important;
-  flex-shrink: 0 !important;
+#floorplan-container {
+  flex: 0 0 auto !important;
   width: 100% !important;
-  height: auto !important;
   aspect-ratio: 1336 / 552 !important;
-  max-height: none !important;
   overflow: hidden !important;
 }
 
-svg {
+#floorplan {
+  flex: 1 1 0% !important;
+  min-height: 0 !important;
+  width: 100% !important;
+}
+
+#log {
+  display: none !important;
+}
+
+#floorplan svg {
   width: 100% !important;
   height: 100% !important;
   display: block !important;
 }
 
 /* Base room styles */
-#room-boys,
-#room-bedroom,
-#room-landing,
-#room-bathroom {
+.room {
+  fill: transparent;
   cursor: pointer;
   transition: fill 0.5s ease;
 }
+
+.target { display: none; }
+.target-active { display: block; }
+
+/* Info overlays */
+.info-bg { fill: rgba(0,0,0,0.55); }
+.info-text { font-size: 13px; font-family: Arial, sans-serif; fill: white; }
+.info-text-sm { font-size: 11px; font-family: Arial, sans-serif; fill: #ccc; }
+.light-btn { cursor: pointer; }
+.light-off { fill: rgba(80,80,80,0.8); }
+.light-on  { fill: rgba(255,200,50,0.9); }
 
 /* Presence pulse animation */
 @keyframes presence-pulse {
