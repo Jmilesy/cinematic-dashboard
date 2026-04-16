@@ -63,8 +63,8 @@
   <rect x="910" y="210" width="80" height="32" rx="6" class="info-bg"/>
   <text x="920" y="231" class="info-text-sm">&#128703; Presence</text>
 
-  <!-- LD2450 target dots -->
-  <circle id="target-1" class="target" cx="706" cy="363" r="9" fill="#ff4444" stroke="white" stroke-width="2" opacity="0.9"/>
-  <circle id="target-2" class="target" cx="706" cy="363" r="9" fill="#ff00ff" stroke="white" stroke-width="2" opacity="0.9"/>
-  <circle id="target-3" class="target" cx="706" cy="363" r="9" fill="#ffcc00" stroke="white" stroke-width="2" opacity="0.9"/>
+  <!-- LD2450 target dots — default cx=-100 keeps them off-screen until ha-floorplan positions them -->
+  <circle id="target-1" cx="-100" cy="363" r="9" fill="#ff4444" stroke="white" stroke-width="2" opacity="0.9"/>
+  <circle id="target-2" cx="-100" cy="363" r="9" fill="#ff00ff" stroke="white" stroke-width="2" opacity="0.9"/>
+  <circle id="target-3" cx="-100" cy="363" r="9" fill="#ffcc00" stroke="white" stroke-width="2" opacity="0.9"/>
 </svg>

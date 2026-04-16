@@ -130,7 +130,7 @@
             {% set ns.y = ty %}
           {% endif %}
         {% endfor %}
-        {{ 'cx: ' ~ (sensor_svg_x + ns.x * scale_x) | round(1) ~ 'px; cy: ' ~ (sensor_svg_y + ns.y * scale_y) | round(1) ~ 'px; display: block !important;' if ns.x is not none and presence == 'on' else 'display: none !important;' }}
+        {{ 'cx: ' ~ (sensor_svg_x + ns.x * scale_x) | round(1) ~ 'px; cy: ' ~ (sensor_svg_y + ns.y * scale_y) | round(1) ~ 'px;' if ns.x is not none and presence == 'on' else 'cx: -100px;' }}
 
     - name: boys_room_joseph_dot_style
       state: >
@@ -148,4 +148,4 @@
             {% set ns.y = ty %}
           {% endif %}
         {% endfor %}
-        {{ 'cx: ' ~ (sensor_svg_x + ns.x * scale_x) | round(1) ~ 'px; cy: ' ~ (sensor_svg_y + ns.y * scale_y) | round(1) ~ 'px; display: block !important;' if ns.x is not none and presence == 'on' else 'display: none !important;' }}
+        {{ 'cx: ' ~ (sensor_svg_x + ns.x * scale_x) | round(1) ~ 'px; cy: ' ~ (sensor_svg_y + ns.y * scale_y) | round(1) ~ 'px;' if ns.x is not none and presence == 'on' else 'cx: -100px;' }}

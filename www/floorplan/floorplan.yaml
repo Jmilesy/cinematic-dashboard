@@ -1,4 +1,4 @@
-image: /local/floorplan/floorplan.svg?v=21
+image: /local/floorplan/floorplan.svg?v=22
 stylesheet: /local/floorplan/floorplan.css?v=4
 log_level: warn
 
