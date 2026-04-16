@@ -233,36 +233,22 @@ rules:
       - entity: binary_sensor.mmwave_test_bed_ld2450_presence
         element: target-1
     state_action:
-      - state: "on"
-        action: call-service
-        service: floorplan.style_set
-        service_data:
-          element: target-1
-          style: "display: block !important;"
-      - state: "off"
-        action: call-service
-        service: floorplan.style_set
-        service_data:
-          element: target-1
-          style: "display: none !important;"
+      action: call-service
+      service: floorplan.style_set
+      service_data:
+        element: target-1
+        style: "{% if state == 'on' %}display: block !important;{% else %}display: none !important;{% endif %}"
 
   - name: Presence visibility target-2
     entities:
       - entity: binary_sensor.mmwave_test_bed_ld2450_presence
         element: target-2
     state_action:
-      - state: "on"
-        action: call-service
-        service: floorplan.style_set
-        service_data:
-          element: target-2
-          style: "display: block !important;"
-      - state: "off"
-        action: call-service
-        service: floorplan.style_set
-        service_data:
-          element: target-2
-          style: "display: none !important;"
+      action: call-service
+      service: floorplan.style_set
+      service_data:
+        element: target-2
+        style: "{% if state == 'on' %}display: block !important;{% else %}display: none !important;{% endif %}"
 
   - name: Jacob X
     entities:
