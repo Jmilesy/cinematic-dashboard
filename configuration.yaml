@@ -122,6 +122,16 @@ input_boolean:
     name: Natalie Makeup Light
     icon: mdi:mirror
 
+input_select:
+  rotary_mode:
+    name: Rotary Mode
+    options:
+      - School
+      - Bedtime
+      - Lights
+      - Alerts
+    initial: School
+
 wake_on_lan:
 
 http:
