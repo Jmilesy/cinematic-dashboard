@@ -48,6 +48,11 @@ text_sensor:
           format: "The school reminders show as %s "
           args: [ 'id(school).state.c_str()' ]
 
+  - platform: homeassistant
+    id: rotary_mode
+    entity_id: input_select.rotary_mode
+    internal: true
+
 
 
 i2c:
@@ -59,21 +64,65 @@ display:
     dimensions: 20x4
     address: 0x27
     lambda: |-
-      std::string str = id(school).state;
-      std::vector<std::string> v;
-      char * token;
-      char seps[] = ",";
-      token = strtok (&str[0],seps);
-      while (token != NULL)
-      {
-        v.push_back(token);
-        token = strtok (NULL, seps);
+      auto print_line = [&](int row, std::string text) {
+        if (text.length() > 20) {
+          text = text.substr(0, 20);
+        }
+        it.printf(0, row, "%-20s", text.c_str());
+      };
+
+      std::string mode = id(rotary_mode).state;
+
+      if (mode == "Bedtime") {
+        print_line(0, "BEDTIME");
+        print_line(1, "Press = Toggle");
+        print_line(2, "Long = Off");
+        print_line(3, "Boys bedtime mode");
+        return;
       }
-      int n=0;
-      for ( std::string s : v ) {
-          
-          it.printf(0, n,"%s", s.c_str());
-          n++;
+
+      if (mode == "Lights") {
+        print_line(0, "LIGHTS");
+        print_line(1, "Press = Toggle");
+        print_line(2, "Long = All Off");
+        print_line(3, "Boys light");
+        return;
+      }
+
+      if (mode == "Alerts") {
+        print_line(0, "ALERTS");
+        print_line(1, "Press = Details");
+        print_line(2, "Long = Clear");
+        print_line(3, "House alerts");
+        return;
+      }
+
+      print_line(0, "SCHOOL");
+
+      std::string text = id(school).state;
+      if (text.empty()) {
+        text = "Nothing planned";
+      }
+
+      int row = 1;
+      size_t start = 0;
+      while (row < 4 && start < text.length()) {
+        size_t end = text.find(',', start);
+        std::string line = text.substr(start, end == std::string::npos ? std::string::npos : end - start);
+        while (!line.empty() && line.front() == ' ') {
+          line.erase(0, 1);
+        }
+        print_line(row, line);
+        row++;
+        if (end == std::string::npos) {
+          break;
+        }
+        start = end + 1;
+      }
+
+      while (row < 4) {
+        print_line(row, "");
+        row++;
       }
 
 switch:
