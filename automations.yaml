@@ -113,9 +113,7 @@
     data:
       message: 'Good morning everyone!  The time is {{ now().strftime(''%I:%M %p'')
         }}. It''s {{ states(''sensor.bedroom_temperature'') | round(0) }} degrees
-        inside. Have a great day!
-
-        '
+        inside. Have a great day! '
       data:
         type: announce
 - alias: Dinner Time Announcement
@@ -155,9 +153,9 @@
   actions:
   - action: notify.alexa_media
     data:
-      message: "<speak>\n  <emphasis level=\"strong\">Attention! The home alarm has
-        been triggered!</emphasis>\n  <break time=\"500ms\"/>\n  Check all doors and
-        windows immediately!\n</speak>\n"
+      message: "<speak>\n  <emphasis level=\"strong\">Attention! The home alarm has\
+        \ been triggered!</emphasis>\n  <break time=\"500ms\"/>\n  Check all doors\
+        \ and windows immediately!\n</speak>\n"
       data:
         type: announce
         method: all
@@ -169,7 +167,7 @@
       - media_player.diningroom_dot
   - action: notify.mobile_app_jon_phone
     data:
-      title: "\U0001F6A8 Alarm Triggered!"
+      title: 🚨 Alarm Triggered!
       message: Home alarm has been triggered at {{ now().strftime('%I:%M %p') }}
       data:
         priority: high
@@ -190,9 +188,7 @@
   - action: notify.alexa_media_lounge_plus
     data:
       message: 'Reminder: The {{ trigger.to_state.attributes.friendly_name }}  has
-        been open for 10 minutes.  Please close it to save energy.
-
-        '
+        been open for 10 minutes.  Please close it to save energy. '
       data:
         type: announce
   id: 3cac9d3385dd49cc90319bbb4d47ef76
@@ -220,7 +216,7 @@
         type: announce
   - action: notify.mobile_app_jon_phone
     data:
-      title: "\U0001F5D1️ Bin Day Tomorrow"
+      title: 🗑️ Bin Day Tomorrow
       message: Don't forget to put the bins out!
   mode: single
 - id: aad83719661b40969efbb9725fd1be4a
@@ -242,9 +238,9 @@
   actions:
   - action: notify.alexa_media_bedroom_dot
     data:
-      message: "Welcome home {{ trigger.to_state.attributes.friendly_name }}! {% if
-        now().hour < 12 %}\n  Good morning.\n{% elif now().hour < 18 %}\n  Good afternoon.\n{%
-        else %}\n  Good evening.\n{% endif %}\n"
+      message: "Welcome home {{ trigger.to_state.attributes.friendly_name }}! {% if\
+        \ now().hour < 12 %}\n  Good morning.\n{% elif now().hour < 18 %}\n  Good\
+        \ afternoon.\n{% else %}\n  Good evening.\n{% endif %}\n"
   - action: light.turn_on
     target:
       entity_id: light.hall_light
@@ -277,9 +273,7 @@
   - action: notify.alexa_media_everywhere
     data:
       message: 'Boys! Football practice reminder. Make sure you have your: Kit, Boots,
-        Water bottle, And shin pads ready!
-
-        '
+        Water bottle, And shin pads ready! '
       data:
         type: announce
   - action: switch.turn_on
@@ -366,9 +360,7 @@
     - fri
   - condition: template
     value_template: '{{ states.media_player.bedroom_speaker_2.last_changed < today_at("10:00")
-      }}
-
-      '
+      }} '
   actions:
   - action: media_player.volume_set
     metadata: {}
@@ -393,15 +385,18 @@
     - wed
     - thu
     - fri
-  conditions: []
+  conditions:
+  - condition: state
+    entity_id: input_boolean.school_day
+    state: 'on'
   actions:
   - action: weather.get_forecasts
     metadata: {}
     target:
-      entity_id: "{% if has_value('weather.met_office_deal') %}\n  weather.met_office_deal\n{%
-        elif has_value('weather.home_weather') %}\n  weather.home_weather\n{% elif
-        has_value('weather.forecast_home') %}\n  weather.forecast_home\n{% else %}\n
-        \ weather.pirateweather\n{% endif %}\n"
+      entity_id: "{% if has_value('weather.met_office_deal') %}\n  weather.met_office_deal\n\
+        {% elif has_value('weather.home_weather') %}\n  weather.home_weather\n{% elif\
+        \ has_value('weather.forecast_home') %}\n  weather.forecast_home\n{% else\
+        \ %}\n  weather.pirateweather\n{% endif %}\n"
     data:
       type: daily
     response_variable: daily_forecast
@@ -412,69 +407,45 @@
         Weather updates will be spoken out loud and should be funny and creative because
         two children 11 years old and 14 years old will be listening. Please use whole
         numbers and try to make it educational! This should be less than 30 seconds
-        in length. it is important that the school update comes first
-
-        {% if states(''sensor.school_event_today'') %} School Update: {{ states(''sensor.school_event_today'')
-        }} {% endif %}
-
-        Current Conditions: Current time is {{ now().strftime(''%I:%M %p'') }}.
-
-        Temperature is {% if has_value(''sensor.met_office_deal_temperature'') %}{{
-        states(''sensor.met_office_deal_temperature'') | round(0) }}°C{% elif has_value(''weather.home_weather'')
-        %}{{ state_attr(''weather.home_weather'', ''temperature'') | round(0) }}°C{%
-        elif has_value(''weather.forecast_home'') %}{{ state_attr(''weather.forecast_home'',
-        ''temperature'') | round(0) }}°C{% else %}{{ states(''sensor.pirateweather_temperature'')
-        | round(0) }}°C{% endif %}.
-
-        Feels like {% if has_value(''sensor.pirateweather_apparent_temperature'')
+        in length. it is important that the school update comes first {% if states(''sensor.school_event_today'')
+        %} School Update: {{ states(''sensor.school_event_today'') }} {% endif %}
+        Current Conditions: Current time is {{ now().strftime(''%I:%M %p'') }}. Temperature
+        is {% if has_value(''sensor.met_office_deal_temperature'') %}{{ states(''sensor.met_office_deal_temperature'')
+        | round(0) }}°C{% elif has_value(''weather.home_weather'') %}{{ state_attr(''weather.home_weather'',
+        ''temperature'') | round(0) }}°C{% elif has_value(''weather.forecast_home'')
+        %}{{ state_attr(''weather.forecast_home'', ''temperature'') | round(0) }}°C{%
+        else %}{{ states(''sensor.pirateweather_temperature'') | round(0) }}°C{% endif
+        %}. Feels like {% if has_value(''sensor.pirateweather_apparent_temperature'')
         %}{{ states(''sensor.pirateweather_apparent_temperature'') | round(0) }}°C{%
         elif has_value(''sensor.met_office_deal_feels_like_temperature'') %}{{ states(''sensor.met_office_deal_feels_like_temperature'')
         | round(0) }}°C{% elif has_value(''weather.forecast_home'') %}{{ state_attr(''weather.forecast_home'',
-        ''dew_point'') | round(0) }}°C{% else %}the same{% endif %}.
-
-        Humidity is {% if has_value(''weather.pirateweather'') %}{{ state_attr(''weather.pirateweather'',
+        ''dew_point'') | round(0) }}°C{% else %}the same{% endif %}. Humidity is {%
+        if has_value(''weather.pirateweather'') %}{{ state_attr(''weather.pirateweather'',
         ''humidity'') | round(0) }}%{% elif has_value(''weather.met_office_deal'')
         %}{{ state_attr(''weather.met_office_deal'', ''humidity'') | round(0) }}%{%
         elif has_value(''weather.home_weather'') %}{{ state_attr(''weather.home_weather'',
         ''humidity'') | round(0) }}%{% elif has_value(''weather.forecast_home'') %}{{
         state_attr(''weather.forecast_home'', ''humidity'') | round(0) }}%{% endif
-        %}.
-
-        {% if has_value(''sensor.pirateweather_uv_index'') %}UV Index is {{ states(''sensor.pirateweather_uv_index'')
+        %}. {% if has_value(''sensor.pirateweather_uv_index'') %}UV Index is {{ states(''sensor.pirateweather_uv_index'')
         | round(0) }}.{% elif has_value(''weather.forecast_home'') %}UV Index is {{
         state_attr(''weather.forecast_home'', ''uv_index'') | round(1) }}.{% endif
-        %}
-
-        Current conditions: {% if has_value(''weather.met_office_deal'') %}{{ states(''weather.met_office_deal'')
+        %} Current conditions: {% if has_value(''weather.met_office_deal'') %}{{ states(''weather.met_office_deal'')
         }}{% elif has_value(''weather.home_weather'') %}{{ states(''weather.home_weather'')
         }}{% elif has_value(''weather.forecast_home'') %}{{ states(''weather.forecast_home'')
-        }}{% else %}{{ states(''weather.pirateweather'') }}{% endif %}.
-
-        Today''s Forecast: {% if has_value(''sensor.pirateweather_hourly_summary'')
-        %}Forecasted Conditions for Today {{ states(''sensor.pirateweather_hourly_summary'')
-        }}{% endif %}
-
+        }}{% else %}{{ states(''weather.pirateweather'') }}{% endif %}. Today''s Forecast:
+        {% if has_value(''sensor.pirateweather_hourly_summary'') %}Forecasted Conditions
+        for Today {{ states(''sensor.pirateweather_hourly_summary'') }}{% endif %}
         {% set forecast_entity = ''weather.met_office_deal'' if has_value(''weather.met_office_deal'')
         else ''weather.home_weather'' if has_value(''weather.home_weather'') else
         ''weather.forecast_home'' if has_value(''weather.forecast_home'') else ''weather.pirateweather''
-        %}
-
-        Temperature for Today {{ daily_forecast[forecast_entity].forecast[0].temperature
-        }}
-
-        Forecasted Low Temperature for Today {{ daily_forecast[forecast_entity].forecast[0].templow
-        }}
-
-        Forecasted Precipitation Probability {{ daily_forecast[forecast_entity].forecast[0].precipitation_probability
-        }}
-
-        {% set pollen_level = state_attr(''weather.silam_pollen_home_forecast'', ''next_condition'')
-        %}{% set pollen_culprit = state_attr(''weather.silam_pollen_home_forecast'',
+        %} Temperature for Today {{ daily_forecast[forecast_entity].forecast[0].temperature
+        }} Forecasted Low Temperature for Today {{ daily_forecast[forecast_entity].forecast[0].templow
+        }} Forecasted Precipitation Probability {{ daily_forecast[forecast_entity].forecast[0].precipitation_probability
+        }} {% set pollen_level = state_attr(''weather.silam_pollen_home_forecast'',
+        ''next_condition'') %}{% set pollen_culprit = state_attr(''weather.silam_pollen_home_forecast'',
         ''responsible_elevated'') %}{% if pollen_level in [''medium'', ''high'', ''very_high'']
-        %}Pollen Alert: {{ pollen_level }} levels today, mainly {{ pollen_culprit }}.{%
-        endif %}
-
-        '
+        %}Pollen Alert: {{ pollen_level }} levels today, mainly {{ pollen_culprit
+        }}.{% endif %} '
       agent_id: conversation.kids_weather
     response_variable: agent
   - action: notify.alexa_media
@@ -521,7 +492,9 @@
       - input_boolean.jacob_pe_tomorrow
   - action: calendar.get_events
     target:
-      entity_id: calendar.boys_school
+      entity_id:
+      - calendar.boys_school
+      - calendar.jacob_timetable
     data:
       start_date_time: '{{ (now().date() + timedelta(days=1)).strftime(''%Y-%m-%d'')
         }} 00:00:00'
@@ -530,8 +503,9 @@
     response_variable: school_events
   - if:
     - condition: template
-      value_template: "{{ school_events['calendar.boys_school']['events'] |\n   selectattr('summary',
-        'search', 'PE', ignorecase=True) |\n   list | count > 0 }}\n"
+      value_template: "{{ (school_events['calendar.boys_school']['events'] +\n   school_events['calendar.jacob_timetable']['events'])\
+        \ |\n   selectattr('summary', 'search', 'PE', ignorecase=True) |\n   list\
+        \ | count > 0 }}\n"
     then:
     - action: input_boolean.turn_on
       target:
@@ -539,31 +513,14 @@
   - action: conversation.process
     data:
       agent_id: conversation.evening_prep
-      text: 'Write a short evening school prep announcement for both boys.
-
-        School is tomorrow. They need bags packed, homework done.
-
-        Jacob needs a drink bottle in the fridge.
-
-        {% if is_state(''input_boolean.jacob_pe_tomorrow'', ''on'') %}
-
-        Jacob also has PE tomorrow and needs his PE kit ready.
-
-        {% endif %}
-
-        {% if states(''sensor.school_event_tomorrow'') not in [''unknown'', ''unavailable'',
-        ''''] %}
-
-        There is a school event tomorrow: {{ states(''sensor.school_event_tomorrow'')
-        }}.
-
-        {% endif %}
-
-        Style: chaotic dad humour, dry sarcasm, short punchy sentences.
-
-        No emojis. No baby talk. Address both boys directly.
-
-        '
+      text: 'Write a short evening school prep announcement for both boys. School
+        is tomorrow. They need bags packed, homework done. Jacob needs a drink bottle
+        in the fridge. {% if is_state(''input_boolean.jacob_pe_tomorrow'', ''on'')
+        %} Jacob also has PE tomorrow and needs his PE kit ready. {% endif %} {% if
+        states(''sensor.school_event_tomorrow'') not in [''unknown'', ''unavailable'',
+        ''''] %} There is a school event tomorrow: {{ states(''sensor.school_event_tomorrow'')
+        }}. {% endif %} Style: chaotic dad humour, dry sarcasm, short punchy sentences.
+        No emojis. No baby talk. Address both boys directly. '
     response_variable: agent_response
   - action: notify.alexa_media
     data:
@@ -653,11 +610,8 @@
     - action: notify.jacob_notify
       data:
         title: Still waiting...
-        message: 'Jacob. The drink bottle. Still no answer.
-
-          Fridge. Bottle. How many. Simple question.
-
-          '
+        message: 'Jacob. The drink bottle. Still no answer. Fridge. Bottle. How many.
+          Simple question. '
         data:
           actions:
           - action: JACOB_DRINK_ONE
@@ -679,11 +633,8 @@
     - action: notify.jacob_notify
       data:
         title: PE kit. Again.
-        message: 'Jacob. PE tomorrow. Your kit. Still no confirmation.
-
-          Is it ready or not. Yes or no. That''s it.
-
-          '
+        message: 'Jacob. PE tomorrow. Your kit. Still no confirmation. Is it ready
+          or not. Yes or no. That''s it. '
         data:
           actions:
           - action: JACOB_PE_DONE
@@ -784,7 +735,8 @@
       - input_boolean.jacob_pe_tomorrow
 - id: '1772643456996'
   alias: Fridge Door
-  description: Flash light, wigwag bins/recycling and buzz when fridge opens. Announce if open for 30s.
+  description: Flash light, wigwag bins/recycling and buzz when fridge opens. Announce
+    if open for 30s.
   triggers:
   - type: opened
     device_id: 8a1d964ca02d98160fcc83f805e93259
@@ -793,11 +745,9 @@
     trigger: device
   conditions: []
   actions:
-  # Set alert active for acknowledge button
   - action: input_boolean.turn_on
     target:
       entity_id: input_boolean.alert_active
-  # Short buzz on mon_buzzer (0.5 seconds)
   - action: switch.turn_on
     target:
       entity_id: switch.mon_buzzer
@@ -806,51 +756,48 @@
   - action: switch.turn_off
     target:
       entity_id: switch.mon_buzzer
-  # Wigwag bins/recycling and flash boys_info while door is open (up to 30 seconds)
   - alias: Wigwag and flash while door is open
     repeat:
       while:
-        - condition: state
-          entity_id: 9bdf92f12f090b5cb937ec8615d3e22b
-          state: "on"
-        - condition: template
-          value_template: "{{ repeat.index <= 15 }}"
+      - condition: state
+        entity_id: 9bdf92f12f090b5cb937ec8615d3e22b
+        state: 'on'
+      - condition: template
+        value_template: '{{ repeat.index <= 15 }}'
       sequence:
-        - action: light.turn_on
-          target:
-            entity_id: light.boys_info
-        - action: switch.turn_on
-          target:
-            entity_id: switch.bins
-        - action: switch.turn_off
-          target:
-            entity_id: switch.recycling
-        - delay:
-            seconds: 1
-        - action: light.turn_off
-          target:
-            entity_id: light.boys_info
-        - action: switch.turn_off
-          target:
-            entity_id: switch.bins
-        - action: switch.turn_on
-          target:
-            entity_id: switch.recycling
-        - delay:
-            seconds: 1
-  # Stop wigwag — turn everything off
+      - action: light.turn_on
+        target:
+          entity_id: light.boys_info
+      - action: switch.turn_on
+        target:
+          entity_id: switch.bins
+      - action: switch.turn_off
+        target:
+          entity_id: switch.recycling
+      - delay:
+          seconds: 1
+      - action: light.turn_off
+        target:
+          entity_id: light.boys_info
+      - action: switch.turn_off
+        target:
+          entity_id: switch.bins
+      - action: switch.turn_on
+        target:
+          entity_id: switch.recycling
+      - delay:
+          seconds: 1
   - action: switch.turn_off
     target:
       entity_id:
-        - switch.bins
-        - switch.recycling
+      - switch.bins
+      - switch.recycling
   - action: light.turn_off
     target:
       entity_id: light.boys_info
-  # If the door is still open after 30 seconds, announce
   - condition: state
     entity_id: 9bdf92f12f090b5cb937ec8615d3e22b
-    state: "on"
+    state: 'on'
   - action: notify.alexa_media_kitchen_dot
     metadata: {}
     data:
@@ -864,7 +811,8 @@
     trigger: state
   conditions:
   - condition: template
-    value_template: "{{ trigger.from_state.state not in ['unavailable', 'unknown'] }}"
+    value_template: '{{ trigger.from_state.state not in [''unavailable'', ''unknown'']
+      }}'
   actions:
   - choose:
     - conditions:
@@ -985,10 +933,6 @@
       flash_time: 1
       track_status_sensor: sensor.f1_track_status
       session_status_sensor: sensor.f1_session_status
-
-# ============================================================
-# COMPUTERS - Migrated from Node-RED
-# ============================================================
 - id: jon_pc_wake
   alias: Jon PC - Wake on LAN
   description: Wake Jon's PC when start_jon_pc sensor turns on
@@ -1002,7 +946,6 @@
   - action: wake_on_lan.send_magic_packet
     data:
       mac: 18-C0-4D-AF-4D-19
-
 - id: jon_pc_status_leds
   alias: Jon PC - Status LEDs on House Monitor
   description: Red = PC on, Green = PC off
@@ -1029,7 +972,6 @@
       - action: switch.turn_on
         target:
           entity_id: switch.jonpc_green
-
 - id: games_pc_wake
   alias: Games PC - Wake on LAN
   description: Wake Games PC when gamepc sensor turns on
@@ -1043,7 +985,6 @@
   - action: wake_on_lan.send_magic_packet
     data:
       mac: 70:8b:cd:a8:3e:d6
-
 - id: games_pc_status_leds
   alias: Games PC - Status LEDs on House Monitor
   description: Red = PC on, Green = PC off
@@ -1070,10 +1011,6 @@
       - action: switch.turn_on
         target:
           entity_id: switch.gamepc_green
-
-# ============================================================
-# HOUSE MONITOR - Boys door LEDs + Acknowledge button
-# ============================================================
 - id: boys_door_status_leds
   alias: Boys Door - Status LEDs on House Monitor
   description: Red = door open, Green = door closed
@@ -1100,7 +1037,6 @@
       - action: switch.turn_on
         target:
           entity_id: switch.boys_door_green
-
 - id: acknowledge_button
   alias: House Monitor - Acknowledge Button
   description: Dismisses active alerts - stops buzzer, flash LEDs, clears alert flag
@@ -1120,18 +1056,14 @@
   - action: switch.turn_off
     target:
       entity_id:
-        - switch.mon_buzzer
-        - switch.bins_flash
-        - switch.recycling_flash
-        - switch.bins
-        - switch.recycling
+      - switch.mon_buzzer
+      - switch.bins_flash
+      - switch.recycling_flash
+      - switch.bins
+      - switch.recycling
   - action: light.turn_off
     target:
       entity_id: light.boys_info
-
-# ============================================================
-# KITCHEN LIGHT - Migrated from Node-RED (temporary - mmwave coming)
-# ============================================================
 - id: kitchen_light_motion
   alias: Kitchen Light - Motion Auto On/Off
   description: Turns kitchen lights on when motion detected, off after 2 mins no motion
@@ -1139,47 +1071,40 @@
   triggers:
   - trigger: state
     entity_id:
-      - binary_sensor.kitchen_pir_sensor
-      - binary_sensor.kitchen_mw_sensor
-      - binary_sensor.kitchen_motion
+    - binary_sensor.kitchen_pir_sensor
+    - binary_sensor.kitchen_mw_sensor
+    - binary_sensor.kitchen_motion
     to: 'on'
   conditions: []
   actions:
   - action: light.turn_on
     target:
       entity_id:
-        - light.kitchen_light
-        - light.kitchen_light_2
+      - light.kitchen_light
+      - light.kitchen_light_2
   - action: switch.turn_on
     target:
       entity_id: switch.counter_light
   - wait_for_trigger:
     - trigger: state
       entity_id:
-        - binary_sensor.kitchen_pir_sensor
-        - binary_sensor.kitchen_mw_sensor
-        - binary_sensor.kitchen_motion
+      - binary_sensor.kitchen_pir_sensor
+      - binary_sensor.kitchen_mw_sensor
+      - binary_sensor.kitchen_motion
       to: 'on'
     timeout:
       minutes: 2
     continue_on_timeout: true
   - condition: template
-    value_template: >
-      {{ is_state('binary_sensor.kitchen_pir_sensor', 'off') and
-         is_state('binary_sensor.kitchen_mw_sensor', 'off') and
-         is_state('binary_sensor.kitchen_motion', 'off') }}
+    value_template: '{{ is_state(''binary_sensor.kitchen_pir_sensor'', ''off'') }} '
   - action: light.turn_off
     target:
       entity_id:
-        - light.kitchen_light
-        - light.kitchen_light_2
+      - light.kitchen_light
+      - light.kitchen_light_2
   - action: switch.turn_off
     target:
       entity_id: switch.counter_light
-
-# ============================================================
-# BOYS BEDTIME - Migrated from Node-RED
-# ============================================================
 - id: boys_bedtime
   alias: Boys Bedtime
   description: Sets bedtime lighting when boys_bedtime_switch turns on
@@ -1207,13 +1132,16 @@
       effect: Rainbow Effect With Custom Values
   - action: light.turn_on
     target:
-      entity_id:
-        - light.boys_light
-        - light.joseph
+      entity_id: light.boys_light
     data:
       color_name: red
       brightness: 35
-
+  - action: light.turn_on
+    target:
+      entity_id: light.joseph
+    data:
+      color_name: white
+      brightness: 35
 - id: boys_bedtime_off
   alias: Boys Bedtime Off
   description: Turns off boys lights when boys_bedtime_switch turns off
@@ -1227,56 +1155,62 @@
   - action: input_boolean.turn_off
     target:
       entity_id:
-        - input_boolean.boys_bedtime
-        - input_boolean.wakeup_boys
+      - input_boolean.boys_bedtime
+      - input_boolean.wakeup_boys
   - action: light.turn_off
     target:
       entity_id:
-        - light.boys_light
-        - light.joseph
-        - light.boys_led_light
-
+      - light.boys_light
+      - light.joseph
+      - light.boys_led_light
 - id: boys_bedtime_reset
   alias: Boys Bedtime - Daily Reset
-  description: Clears bedtime flag at 6:30 AM daily
+  description: Clears bedtime when boys room has been empty for 20 minutes
   mode: single
   triggers:
-  - trigger: time
-    at: '06:30:00'
-  conditions: []
+  - trigger: state
+    entity_id: sensor.mmwave_test_bed_ld2450_target_count
+    to: '0.0'
+    for:
+      minutes: 20
+  conditions:
+  - condition: state
+    entity_id: input_boolean.boys_bedtime
+    state: 'on'
   actions:
   - action: input_boolean.turn_off
     target:
-      entity_id: input_boolean.boys_bedtime
-
-# ============================================================
-# BOYS MORNING SUNRISE - Migrated from Node-RED
-# ============================================================
+      entity_id:
+      - input_boolean.boys_bedtime
+      - input_boolean.wakeup_boys
+  - action: light.turn_off
+    target:
+      entity_id:
+      - light.boys_light
+      - light.joseph
+      - light.boys_led_light
 - id: boys_morning_sunrise
   alias: Boys Morning - Sunrise Light
-  description: Gradual red to white transition 15 mins before Boy's Dot alarm on school days
+  description: Gradual red to white transition 15 mins before Boy's Dot alarm on school
+    days
   mode: single
   triggers:
   - trigger: time_pattern
     minutes: /1
   conditions:
   - condition: template
-    value_template: >
-      {% set alarm = states('sensor.boy_s_new_dot_next_alarm') %}
-      {% if alarm not in ['unknown', 'unavailable'] %}
-        {% set alarm_dt = alarm | as_datetime | as_local %}
-        {% set sunrise_dt = alarm_dt - timedelta(minutes=15) %}
-        {{ now().strftime('%H:%M') == sunrise_dt.strftime('%H:%M') }}
-      {% else %}
-        false
-      {% endif %}
+    value_template: "{% set alarm = states('sensor.boy_s_new_dot_next_alarm') %} {%\
+      \ if alarm not in ['unknown', 'unavailable'] %}\n  {% set alarm_dt = alarm |\
+      \ as_datetime | as_local %}\n  {% set sunrise_dt = alarm_dt - timedelta(minutes=15)\
+      \ %}\n  {{ now().strftime('%H:%M') == sunrise_dt.strftime('%H:%M') }}\n{% else\
+      \ %}\n  false\n{% endif %}\n"
   - condition: time
     weekday:
-      - mon
-      - tue
-      - wed
-      - thu
-      - fri
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
   - condition: state
     entity_id: input_boolean.school_day
     state: 'on'
@@ -1290,36 +1224,27 @@
       - action: light.turn_on
         target:
           entity_id:
-            - light.boys_light
-            - light.joseph
+          - light.boys_light
+          - light.joseph
         data:
           transition: 5
-          rgb_color: >
-            {% set progress = repeat.index / 60 %}
-            {% if progress < 0.5 %}
-              {% set t = progress * 2 %}
-              {{ [255, (200 * t) | int, 0] }}
-            {% else %}
-              {% set t = (progress - 0.5) * 2 %}
-              {{ [255, (200 + 55 * t) | int, (100 * t) | int] }}
-            {% endif %}
-          brightness: >
-            {{ (2.55 + (252.45 * (repeat.index / 60))) | int }}
+          rgb_color: "{% set progress = repeat.index / 60 %} {% if progress < 0.5\
+            \ %}\n  {% set t = progress * 2 %}\n  {{ [255, (200 * t) | int, 0] }}\n\
+            {% else %}\n  {% set t = (progress - 0.5) * 2 %}\n  {{ [255, (200 + 55\
+            \ * t) | int, (100 * t) | int] }}\n{% endif %}\n"
+          brightness: '{{ (2.55 + (252.45 * (repeat.index / 60))) | int }} '
       - delay:
           seconds: 5
-
-# ============================================================
-# PIRs - Hall/Landing motion lighting - Migrated from Node-RED
-# ============================================================
 - id: pir_hall_motion_on
   alias: PIR - Hall Motion Detected
-  description: Turns on hall light and landing switch on motion. Blue at bedtime, white during day.
-  mode: restart
+  description: Turns on hall light and landing switch on motion. Blue at bedtime,
+    white during day.
   triggers:
   - trigger: state
-    entity_id:
-      - binary_sensor.pir_bathroom
-      - binary_sensor.pir_frontdoor
+    entity_id: binary_sensor.hall_multi_sensor
+    to: 'on'
+  - trigger: state
+    entity_id: binary_sensor.hall_pir
     to: 'on'
   conditions: []
   actions:
@@ -1336,38 +1261,40 @@
           color_name: blue
           brightness_pct: 75
     default:
-      - action: light.turn_on
-        target:
-          entity_id: light.hall_light
-        data:
-          brightness_pct: 100
-          color_temp_kelvin: 6535
+    - action: light.turn_on
+      target:
+        entity_id: light.hall_light
+      data:
+        brightness_pct: 100
+        color_temp_kelvin: 6535
   - action: switch.turn_on
+    data: {}
     target:
-      entity_id: switch.landing
+      entity_id: switch.hall_wall
   - wait_for_trigger:
     - trigger: state
-      entity_id:
-        - binary_sensor.pir_bathroom
-        - binary_sensor.pir_frontdoor
-      to: 'on'
+      entity_id: binary_sensor.hall_multi_sensor
+      to: 'off'
+    - trigger: state
+      entity_id: binary_sensor.hall_pir
+      to: 'off'
     timeout:
-      seconds: "{{ 30 if is_state('input_boolean.boys_bedtime', 'on') else 10 }}"
+      minutes: 15
     continue_on_timeout: true
+  - delay:
+      seconds: '{{ 30 if is_state(''input_boolean.boys_bedtime'', ''on'') else 45
+        }}'
   - condition: template
-    value_template: >
-      {{ is_state('binary_sensor.pir_bathroom', 'off') and
-         is_state('binary_sensor.pir_frontdoor', 'off') }}
+    value_template: '{{ is_state(''binary_sensor.hall_multi_sensor'', ''off'') and
+      is_state(''binary_sensor.hall_pir'', ''off'') }}'
   - action: light.turn_off
     target:
       entity_id: light.hall_light
   - action: switch.turn_off
+    data: {}
     target:
-      entity_id: switch.landing
-
-# ============================================================
-# SWITCHES - Migrated from Node-RED
-# ============================================================
+      entity_id: switch.hall_wall
+  mode: restart
 - id: boys_white_light_switch
   alias: Boys White Light Switch
   description: Turns boys light on/off in white mode from dashboard toggle
@@ -1390,10 +1317,9 @@
           color_mode: white
           brightness: 255
     default:
-      - action: light.turn_off
-        target:
-          entity_id: light.boys_light
-
+    - action: light.turn_off
+      target:
+        entity_id: light.boys_light
 - id: makeup_light_switch
   alias: Makeup Light Switch
   description: Controls makeup light from Natalie's dashboard toggle
@@ -1413,246 +1339,223 @@
         target:
           entity_id: switch.makeup_light
     default:
-      - action: switch.turn_off
-        target:
-          entity_id: switch.makeup_light
-
-# ============================================================
-# Alarm Panel MQTT Bridge
-# ============================================================
-
+    - action: switch.turn_off
+      target:
+        entity_id: switch.makeup_light
 - id: alarm_panel_heartbeat
   alias: Alarm Panel Heartbeat
   description: Send heartbeat to Mega every minute
   triggers:
-    - trigger: time_pattern
-      minutes: /1
+  - trigger: time_pattern
+    minutes: /1
   actions:
-    - action: mqtt.publish
-      data:
-        topic: alarm/hbeat
-        payload: "{{ now().timestamp() | int * 1000 }}"
-
+  - action: mqtt.publish
+    data:
+      topic: alarm/hbeat
+      payload: '{{ now().timestamp() | int * 1000 }}'
 - id: alarm_panel_state_sync
   alias: Alarm Panel State Sync
   description: Push Alarmo state to Mega whenever it changes
   triggers:
-    - trigger: state
-      entity_id: alarm_control_panel.alarmo
+  - trigger: state
+    entity_id: alarm_control_panel.alarmo
   actions:
-    - action: mqtt.publish
-      data:
-        topic: alarm/state
-        payload: "{{ trigger.to_state.state }}"
-
+  - action: mqtt.publish
+    data:
+      topic: alarm/state
+      payload: '{{ trigger.to_state.state }}'
 - id: alarm_panel_state_on_reconnect
   alias: Alarm Panel State on Reconnect
   description: Re-send current state when Mega reconnects (heartbeat reply received)
   triggers:
-    - trigger: mqtt
-      topic: alarm/hbeatret
+  - trigger: mqtt
+    topic: alarm/hbeatret
   actions:
-    - action: mqtt.publish
-      data:
-        topic: alarm/state
-        payload: "{{ states('alarm_control_panel.alarmo') }}"
-
+  - action: mqtt.publish
+    data:
+      topic: alarm/state
+      payload: '{{ states(''alarm_control_panel.alarmo'') }}'
 - id: alarm_panel_pin_handler
   alias: Alarm Panel PIN Handler
   description: Receive PIN from Mega, arm/disarm Alarmo, respond right/wrong
   triggers:
-    - trigger: mqtt
-      topic: alarm/pin
+  - trigger: mqtt
+    topic: alarm/pin
   actions:
-    - choose:
-        - conditions:
-            - condition: state
-              entity_id: alarm_control_panel.alarmo
-              state: disarmed
-          sequence:
-            - action: alarm_control_panel.alarm_arm_away
-              target:
-                entity_id: alarm_control_panel.alarmo
-              data:
-                code: "{{ trigger.payload }}"
-      default:
-        - action: alarm_control_panel.alarm_disarm
-          target:
-            entity_id: alarm_control_panel.alarmo
-          data:
-            code: "{{ trigger.payload }}"
-    - wait_for_trigger:
-        - trigger: state
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: alarm_control_panel.alarmo
+        state: disarmed
+      sequence:
+      - action: alarm_control_panel.alarm_arm_away
+        target:
           entity_id: alarm_control_panel.alarmo
-      timeout:
-        seconds: 3
-      continue_on_timeout: true
-    - choose:
-        - conditions: "{{ wait.completed }}"
-          sequence:
-            - action: mqtt.publish
-              data:
-                topic: alarm/pinin
-                payload: right
-      default:
-        - action: mqtt.publish
-          data:
-            topic: alarm/pinin
-            payload: wrong
-
+        data:
+          code: '{{ trigger.payload }}'
+    default:
+    - action: alarm_control_panel.alarm_disarm
+      target:
+        entity_id: alarm_control_panel.alarmo
+      data:
+        code: '{{ trigger.payload }}'
+  - wait_for_trigger:
+    - trigger: state
+      entity_id: alarm_control_panel.alarmo
+    timeout:
+      seconds: 3
+    continue_on_timeout: true
+  - choose:
+    - conditions: '{{ wait.completed }}'
+      sequence:
+      - action: mqtt.publish
+        data:
+          topic: alarm/pinin
+          payload: right
+    default:
+    - action: mqtt.publish
+      data:
+        topic: alarm/pinin
+        payload: wrong
 - id: alarm_panel_rfid_success
   alias: Alarm Panel RFID Success
   description: Known card scanned — toggle arm/disarm in Alarmo
   triggers:
-    - trigger: mqtt
-      topic: alarm/rfid_success
+  - trigger: mqtt
+    topic: alarm/rfid_success
   actions:
-    - choose:
-        - conditions:
-            - condition: state
-              entity_id: alarm_control_panel.alarmo
-              state: disarmed
-          sequence:
-            - action: alarm_control_panel.alarm_arm_away
-              target:
-                entity_id: alarm_control_panel.alarmo
-              data: {}
-      default:
-        - action: alarm_control_panel.alarm_disarm
-          target:
-            entity_id: alarm_control_panel.alarmo
-          data: {}
-
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: alarm_control_panel.alarmo
+        state: disarmed
+      sequence:
+      - action: alarm_control_panel.alarm_arm_away
+        target:
+          entity_id: alarm_control_panel.alarmo
+        data: {}
+    default:
+    - action: alarm_control_panel.alarm_disarm
+      target:
+        entity_id: alarm_control_panel.alarmo
+      data: {}
 - id: alarm_panel_rfid_fail
   alias: Alarm Panel RFID Fail
   description: Unknown card scanned — notify
   triggers:
-    - trigger: mqtt
-      topic: alarm/rfid_fail
+  - trigger: mqtt
+    topic: alarm/rfid_fail
   actions:
-    - action: notify.mobile_app_jon_phone
-      data:
-        title: "Alarm Panel — Unknown Card"
-        message: "Unknown RFID card scanned: {{ trigger.payload }}"
-
+  - action: notify.mobile_app_jon_phone
+    data:
+      title: Alarm Panel — Unknown Card
+      message: 'Unknown RFID card scanned: {{ trigger.payload }}'
 - id: alarm_panel_sound_on_trigger
   alias: Alarm Panel Sound on Trigger
   description: Activate siren/strobe on Mega when alarm is triggered
   triggers:
-    - trigger: state
-      entity_id: alarm_control_panel.alarmo
-      to: triggered
+  - trigger: state
+    entity_id: alarm_control_panel.alarmo
+    to: triggered
   actions:
-    - action: mqtt.publish
-      data:
-        topic: alarm/sound
-        payload: "on"
-
+  - action: mqtt.publish
+    data:
+      topic: alarm/sound
+      payload: 'on'
 - id: alarm_panel_sound_off
   alias: Alarm Panel Sound Off
   description: Stop siren/strobe on Mega when alarm is disarmed
   triggers:
-    - trigger: state
-      entity_id: alarm_control_panel.alarmo
-      to: disarmed
+  - trigger: state
+    entity_id: alarm_control_panel.alarmo
+    to: disarmed
   actions:
-    - action: mqtt.publish
-      data:
-        topic: alarm/sound
-        payload: "off"
-
+  - action: mqtt.publish
+    data:
+      topic: alarm/sound
+      payload: 'off'
 - id: alarm_panel_entry_buzzer
   alias: Alarm Panel Entry Buzzer
   description: Sound buzzer on Mega during entry delay
   triggers:
-    - trigger: state
-      entity_id: alarm_control_panel.alarmo
-      to: pending
+  - trigger: state
+    entity_id: alarm_control_panel.alarmo
+    to: pending
   actions:
-    - action: mqtt.publish
-      data:
-        topic: alarm/buzzer
-        payload: "on"
-
+  - action: mqtt.publish
+    data:
+      topic: alarm/buzzer
+      payload: 'on'
 - id: alarm_panel_buzzer_off
   alias: Alarm Panel Buzzer Off
   description: Stop buzzer when alarm leaves entry delay
   triggers:
-    - trigger: state
-      entity_id: alarm_control_panel.alarmo
-      from: pending
+  - trigger: state
+    entity_id: alarm_control_panel.alarmo
+    from: pending
   actions:
-    - action: mqtt.publish
-      data:
-        topic: alarm/buzzer
-        payload: "off"
-
+  - action: mqtt.publish
+    data:
+      topic: alarm/buzzer
+      payload: 'off'
 - id: alarm_panel_poverride_ack
   alias: Alarm Panel Parent Override Ack
   description: Turn on boys room light when Mega acknowledges parent override
   triggers:
-    - trigger: mqtt
-      topic: alarm/poverride_ack
+  - trigger: mqtt
+    topic: alarm/poverride_ack
   actions:
-    - action: light.turn_on
-      target:
-        entity_id: light.boys_led_light
-      data:
-        brightness_pct: 100
-
-# ============================================================
-# Mimics
-# ============================================================
-
+  - action: light.turn_on
+    target:
+      entity_id: light.boys_led_light
+    data:
+      brightness_pct: 100
 - id: mimics_boys_light
   alias: Mimics - Boys Light to FastLED
   description: Mirror boys light colour to fastled_ws2812b at reduced brightness
   triggers:
-    - trigger: state
-      entity_id: light.boys_light
+  - trigger: state
+    entity_id: light.boys_light
   actions:
-    - choose:
-        - conditions:
-            - condition: state
-              entity_id: light.boys_light
-              state: 'on'
-          sequence:
-            - action: light.turn_on
-              target:
-                entity_id: light.fastled_ws2812b_light
-              data:
-                rgb_color: "{{ state_attr('light.boys_light', 'rgb_color') }}"
-                brightness: 35
-                effect: None
-      default:
-        - action: light.turn_off
-          target:
-            entity_id: light.fastled_ws2812b_light
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: light.boys_light
+        state: 'on'
+      sequence:
+      - action: light.turn_on
+        target:
+          entity_id: light.fastled_ws2812b_light
+        data:
+          rgb_color: '{{ state_attr(''light.boys_light'', ''rgb_color'') }}'
+          brightness: 35
+          effect: None
+    default:
+    - action: light.turn_off
+      target:
+        entity_id: light.fastled_ws2812b_light
 - id: school_day_manager
   alias: School Day Manager
-  description: >
-    At midnight: get today's events from calendar.sandown_school_calendar.
-    Weekend, or any event containing 'holiday', 'inset', or 'bank' -> school day OFF.
-    Otherwise (no events or other special events) -> school day ON.
+  description: 'At midnight: get today''s events from calendar.sandown_school_calendar.
+    Weekend, or any event containing ''holiday'', ''inset'', or ''bank'' -> school
+    day OFF. Otherwise (no events or other special events) -> school day ON. '
   mode: single
   triggers:
   - trigger: time
-    at: '00:01:00'
+    at: 00:01:00
   actions:
   - action: calendar.get_events
     target:
       entity_id: calendar.sandown_school_calendar
     data:
-      start_date_time: "{{ now().strftime('%Y-%m-%d') }} 00:00:00"
-      end_date_time: "{{ now().strftime('%Y-%m-%d') }} 23:59:59"
+      start_date_time: '{{ now().strftime(''%Y-%m-%d'') }} 00:00:00'
+      end_date_time: '{{ now().strftime(''%Y-%m-%d'') }} 23:59:59'
     response_variable: todays_events
   - if:
     - condition: template
-      value_template: >
-        {{ now().weekday() >= 5 or
-           todays_events['calendar.sandown_school_calendar']['events'] |
-           selectattr('summary', 'search', 'holiday|inset|bank', ignorecase=True) |
-           list | count > 0 }}
+      value_template: "{{ now().weekday() >= 5 or\n   todays_events['calendar.sandown_school_calendar']['events']\
+        \ |\n   selectattr('summary', 'search', 'holiday|inset|bank', ignorecase=True)\
+        \ |\n   list | count > 0 }}\n"
     then:
     - action: input_boolean.turn_off
       target:
@@ -1661,11 +1564,10 @@
       target:
         entity_id: input_text.boys_school
       data:
-        value: >
-          {%- set off_event = todays_events['calendar.sandown_school_calendar']['events'] |
-             selectattr('summary', 'search', 'holiday|inset|bank', ignorecase=True) |
-             map(attribute='summary') | first | default('') -%}
-          {% if off_event %}{{ off_event }}{% else %}Enjoy your day off{% endif %}
+        value: "{%- set off_event = todays_events['calendar.sandown_school_calendar']['events']\
+          \ |\n   selectattr('summary', 'search', 'holiday|inset|bank', ignorecase=True)\
+          \ |\n   map(attribute='summary') | first | default('') -%}\n{% if off_event\
+          \ %}{{ off_event }}{% else %}Enjoy your day off{% endif %}\n"
     else:
     - action: input_boolean.turn_on
       target:
@@ -1674,19 +1576,17 @@
       target:
         entity_id: input_text.boys_school
       data:
-        value: >
-          {%- set events = todays_events['calendar.sandown_school_calendar']['events'] |
-             map(attribute='summary') | list -%}
-          {% if events %}{{ events | join(', ') }}{% else %}School day{% endif %}
+        value: "{%- set events = todays_events['calendar.sandown_school_calendar']['events']\
+          \ |\n   map(attribute='summary') | list -%}\n{% if events %}{{ events |\
+          \ join(', ') }}{% else %}School day{% endif %}\n"
 - id: valance_morning_sunrise
   alias: Valance Morning Sunrise
-  description: >
-    Triggers WLED nightlight sunrise on valance at 06:15 Mon-Fri.
-    10 minute fade from off to full brightness. No school_day gate (Natalie's wake-up).
+  description: 'Triggers WLED nightlight sunrise on valance at 06:15 Mon-Fri. 10 minute
+    fade from off to full brightness. No school_day gate (Natalie''s wake-up). '
   mode: single
   triggers:
   - trigger: time
-    at: '06:15:00'
+    at: 06:15:00
   conditions:
   - condition: time
     weekday:

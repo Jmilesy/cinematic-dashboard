@@ -42,6 +42,7 @@ homeassistant:
       trusted_users:
         192.168.1.43: a663b3fdb7874445be8a4dfefaee08d9
 
+
 # ============================================================
 # Waste Collection Schedule – Source Configuration
 # ============================================================
@@ -75,27 +76,26 @@ sensor:
     leadtime: 60
     add_days_to: true
 
-
 notify:
   - platform: group
     name: jon_notify
     services:
       - service: mobile_app_jon_phone
-      
+
   - platform: group
     name: jacob_notify
     services:
       - service: mobile_app_jacob_phone
-      
+
   - platform: group
     name: joseph_notify
     services:
       - service: mobile_app_joseph
-      
+
   - platform: group
     name: natalie_notify
     services:
-      - service: mobile_app_sm_a566b 
+      - service: mobile_app_sm_a566b
 
 mqtt:
   sensor:
@@ -112,8 +112,7 @@ recorder:
   exclude:
     entities:
       # Add any entities that change too frequently here
-      - sensor.jacob_phone_active_notification_count  # This one was causing large attributes
-    
+      - sensor.jacob_phone_active_notification_count # This one was causing large attributes
 
 input_boolean:
   alert_active:
@@ -125,6 +124,10 @@ input_boolean:
 
 wake_on_lan:
 
+http:
+  ssl_certificate: /ssl/fullchain.pem
+  ssl_key: /ssl/privkey.pem
+
 rest_command:
   shutdown_jon_pc:
     url: "http://192.168.1.107:8000/?action=System.Shutdown"
@@ -135,7 +138,6 @@ rest_command:
   valance_sunrise:
     url: "http://10.0.0.50/win&A=0&NL=10&NT=255&NF=3"
     method: GET
-
 #python_script:
 
 #media_player:
@@ -145,3 +147,4 @@ rest_command:
 #    #port: PORT #optional
 #    username: !secret admin
 #    password: !secret gen_pw
+

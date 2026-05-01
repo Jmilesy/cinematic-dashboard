@@ -55,3 +55,4 @@ go2rtc-1.9.9
 *.ps1
 *.py
 .cache/
+.aider*

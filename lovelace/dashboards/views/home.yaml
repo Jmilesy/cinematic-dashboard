@@ -275,7 +275,7 @@ cards:
         icon: mdi:silverware-fork-knife
         label: |
           [[[
-          const temp = states['sensor.kitchen_temperature'].state;
+          const temp = states['sensor.kitchen_kitchen_temperature'].state;
           const tempNum = parseFloat(temp);
           return temp !== 'unknown' && temp !== 'unavailable' && !isNaN(tempNum) ? tempNum.toFixed(1) + '°C' : 'N/A';
           ]]]
@@ -292,7 +292,7 @@ cards:
         icon: mdi:home-floor-1
         label: |
           [[[
-          const temp = states['sensor.landing_temperature'].state;
+          const temp = states['sensor.hall_multi_sensor_temperature'].state;
           const tempNum = parseFloat(temp);
           return temp !== 'unknown' && temp !== 'unavailable' && !isNaN(tempNum) ? tempNum.toFixed(1) + '°C' : 'N/A';
           ]]]

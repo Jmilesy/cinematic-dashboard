@@ -1,0 +1,157 @@
+esphome:
+  name: base-controller
+  friendly_name: Base Controller
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+# ===== LOGGING =====
+logger:
+
+# ===== HOME ASSISTANT API =====
+api:
+
+# ===== OTA =====
+ota:
+  - platform: esphome
+
+# ===== WIFI =====
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  ap:
+    ssid: "ESP32-Fallback"
+    password: "fallback123"
+
+# ===== WEB SERVER =====
+web_server:
+  port: 80
+
+# ===== I2C =====
+i2c:
+  sda: 21
+  scl: 22
+  scan: true
+
+# ===== GLOBALS =====
+globals:
+  - id: menu_index
+    type: int
+    initial_value: '0'
+
+  - id: last_action
+    type: std::string
+    initial_value: '"Ready"'
+
+  - id: show_status
+    type: bool
+    initial_value: 'false'
+
+# ===== FONT =====
+font:
+  - file: "gfonts://Roboto"
+    id: font_small
+    size: 12
+
+# ===== ROTARY ENCODER =====
+sensor:
+  - platform: rotary_encoder
+    id: encoder
+    pin_a: 25
+    pin_b: 26
+    resolution: 1
+    filters:
+      - debounce: 5ms
+    on_value:
+      then:
+        - lambda: |-
+            static int last = 0;
+            int current = (int)x;
+
+            if (current > last) {
+              id(menu_index)++;
+            } else if (current < last) {
+              id(menu_index)--;
+            }
+
+            last = current;
+
+            if (id(menu_index) < 0) id(menu_index) = 2;
+            if (id(menu_index) > 2) id(menu_index) = 0;
+
+# ===== BUTTON =====
+binary_sensor:
+  - platform: gpio
+    id: encoder_button
+    pin:
+      number: 27
+      mode: INPUT_PULLUP
+      inverted: true
+    on_press:
+      - lambda: |-
+          id(show_status) = true;
+
+          if (id(menu_index) == 0) {
+            id(last_action) = "Lights toggled";
+            id(action_lights).execute();
+          } else if (id(menu_index) == 1) {
+            id(last_action) = "Heating set";
+            id(action_heating).execute();
+          } else if (id(menu_index) == 2) {
+            id(last_action) = "Alarm armed";
+            id(action_alarm).execute();
+          }
+
+      - delay: 2s
+
+      - lambda: |-
+          id(show_status) = false;
+
+# ===== DISPLAY =====
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 128x64"
+    address: 0x3C
+    lambda: |-
+      if (id(show_status)) {
+        it.printf(0, 20, id(font_small), "%s", id(last_action).c_str());
+      } else {
+        it.printf(0, 0, id(font_small), "Menu:");
+
+        const char* items[] = {"Lights", "Heating", "Alarm"};
+
+        for (int i = 0; i < 3; i++) {
+          if (i == id(menu_index)) {
+            it.printf(0, 16 + (i * 16), id(font_small), "> %s", items[i]);
+          } else {
+            it.printf(0, 16 + (i * 16), id(font_small), "  %s", items[i]);
+          }
+        }
+      }
+
+# ===== ACTIONS =====
+script:
+  - id: action_lights
+    then:
+      - homeassistant.service:
+          service: light.toggle
+          data:
+            entity_id: "light.living_room"
+
+  - id: action_heating
+    then:
+      - homeassistant.service:
+          service: climate.set_temperature
+          data:
+            entity_id: "climate.house"
+            temperature: "21"
+
+  - id: action_alarm
+    then:
+      - homeassistant.service:
+          service: alarm_control_panel.alarm_arm_away
+          data:
+            entity_id: "alarm_control_panel.home_alarm"

@@ -1,0 +1,91 @@
+esphome:
+  name: encoder-test
+
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+
+logger:
+
+api:
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  ap:
+    ssid: "C3-Test Fallback"
+    password: "12345678"
+
+globals:
+  - id: button_press_time
+    type: uint32_t
+    restore_value: no
+    initial_value: '0'
+
+  - id: press_type
+    type: int
+    restore_value: no
+    initial_value: '0'
+
+sensor:
+  - platform: rotary_encoder
+    id: encoder
+    pin_a:
+      number: GPIO4
+      mode: INPUT_PULLUP
+    pin_b:
+      number: GPIO5
+      mode: INPUT_PULLUP
+    resolution: 1
+    filters:
+      - debounce: 5ms
+    on_clockwise:
+      - homeassistant.event:
+          event: esphome.encoder_event
+          data:
+            action: right
+    on_anticlockwise:
+      - homeassistant.event:
+          event: esphome.encoder_event
+          data:
+            action: left
+binary_sensor:
+  - platform: gpio
+    id: encoder_button
+    pin:
+      number: GPIO6
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+
+    filters:
+      - delayed_on: 20ms
+      - delayed_off: 20ms
+
+    on_press:
+      - lambda: |-
+          id(button_press_time) = millis();
+
+    on_release:
+      - if:
+          condition:
+            lambda: 'return (millis() - id(button_press_time)) < 400;'
+          then:
+            - logger.log: "PRESS"
+            - homeassistant.event:
+                event: esphome.encoder_event
+                data:
+                  action: "press"
+          else:
+            - logger.log: "LONG PRESS"
+            - homeassistant.event:
+                event: esphome.encoder_event
+                data:
+                  action: "long_press"

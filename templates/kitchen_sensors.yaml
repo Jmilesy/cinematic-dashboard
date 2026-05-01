@@ -1,0 +1,10 @@
+- binary_sensor:
+    - name: kitchen_motion_safe
+      device_class: motion
+      state: >
+        {% if is_state('binary_sensor.kitchen_motion', 'on') %}
+          {% set secs = (now() - states.binary_sensor.kitchen_motion.last_changed).total_seconds() %}
+          {{ secs < 300 }}
+        {% else %}
+          false
+        {% endif %}

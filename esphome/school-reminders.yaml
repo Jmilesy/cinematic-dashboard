@@ -144,10 +144,33 @@ binary_sensor:
     id: switch_day
     name: "Switch_day"
     filters:
-      - delayed_off: 500ms
+    - delayed_on: 50ms
+    - delayed_off: 50ms
     pin:
       number: GPIO33
-      inverted: true
+      inverted: True
       mode:
         pullup: true
         input: true
+sensor:
+  - platform: rotary_encoder
+    id: rotary
+    pin_a: GPIO34
+    pin_b: GPIO35
+    resolution: 1
+    filters:
+      - debounce: 5ms
+    internal: true
+    on_value:
+      then:
+        - lambda: |-
+            static int last = 0;
+            int current = (int)x;
+
+            if (current > last) {
+              ESP_LOGD("encoder", "RIGHT");
+            } else if (current < last) {
+              ESP_LOGD("encoder", "LEFT");
+            }
+
+            last = current;

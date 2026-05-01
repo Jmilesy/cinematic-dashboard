@@ -128,6 +128,16 @@ binary_sensor:
     ld2450_id: ld2450_radar
     has_target:
       name: "LD2450 Presence"
+  # BLE presence — iBeacon UUID from HA companion app
+  - platform: ble_presence
+    ibeacon_uuid: "c11b71d5-3772-4b30-8f24-684f33dadd3f"
+    name: "Jacob BT Present"
+    device_class: presence
+
+  - platform: ble_presence
+    ibeacon_uuid: "a5acc421-706a-4331-9889-3c408ec046dd"
+    name: "Joseph BT Present"
+    device_class: presence
 
 # ─────────────────────────────────────────────
 # Sensors

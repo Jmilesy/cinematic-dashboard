@@ -48,7 +48,7 @@ cards:
     square: false
     cards:
       - type: custom:button-card
-        entity: sensor.kitchen_temperature
+        entity: sensor.kitchen_kitchen_temperature
         name: TEMP
         template: room_stat
         variables:

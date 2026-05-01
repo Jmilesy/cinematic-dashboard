@@ -26,32 +26,32 @@ cards:
     square: false
     cards:
       - type: custom:button-card
-        entity: sensor.landing_temperature
+        entity: sensor.hall_multi_sensor_temperature
         name: TEMP
         template: room_stat
         variables:
-          accent: "255,150,0"
+          accent: 255,150,0
 
       - type: custom:button-card
-        entity: sensor.landing_humidity
+        entity: sensor.hall_multi_sensor_humidity
         name: HUMIDITY
         template: room_stat
         variables:
-          accent: "100,200,255"
+          accent: 100,200,255
 
       - type: custom:button-card
-        entity: sensor.landing_brightness
+        entity: sensor.hall_multi_sensor_illuminance
         name: LIGHT
         template: room_stat
         variables:
-          accent: "255,255,80"
+          accent: 255,255,80
 
   # ── LIGHTING ──────────────────────────────────────────────────────────────
   - type: custom:button-card
     template: room_section_title
     variables:
-      title: "💡 LIGHTING"
-      accent: "255,200,0"
+      title: 💡 LIGHTING
+      accent: 255,200,0
 
   - type: custom:layout-card
     layout_type: grid
@@ -95,11 +95,72 @@ cards:
             }
 
       - type: custom:mushroom-light-card
-        entity: switch.landing
-        name: Landing
-        icon: mdi:stairs
+        entity: switch.hall_wall
+        name: Hall Wall
+        icon: mdi:light-switch
         tap_action:
           action: toggle
+        card_mod:
+          style: |
+            ha-card {
+              background: rgba(255,255,255,0.05) !important;
+              border-radius: 20px;
+              border: 1px solid rgba(255,255,255,0.1);
+              box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+              backdrop-filter: blur(12px);
+            }
+
+  # ── SENSORS ───────────────────────────────────────────────────────────────
+  - type: custom:button-card
+    template: room_section_title
+    variables:
+      title: 🚶 SENSORS
+      accent: 100,200,255
+
+  - type: custom:layout-card
+    layout_type: grid
+    layout:
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr))
+      grid-gap: 8px
+    cards:
+      - type: custom:mushroom-entity-card
+        entity: binary_sensor.hall_multi_sensor
+        name: Multi Sensor
+        icon: mdi:motion-sensor
+        tap_action:
+          action: more-info
+        card_mod:
+          style: |
+            ha-card {
+              background: rgba(255,255,255,0.05) !important;
+              border-radius: 20px;
+              border: 1px solid rgba(255,255,255,0.1);
+              box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+              backdrop-filter: blur(12px);
+            }
+
+      - type: custom:mushroom-entity-card
+        entity: binary_sensor.hall_pir
+        name: Hall PIR
+        icon: mdi:motion-sensor
+        tap_action:
+          action: more-info
+        card_mod:
+          style: |
+            ha-card {
+              background: rgba(255,255,255,0.05) !important;
+              border-radius: 20px;
+              border: 1px solid rgba(255,255,255,0.1);
+              box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+              backdrop-filter: blur(12px);
+            }
+
+      - type: custom:mushroom-entity-card
+        entity: binary_sensor.front_door_2
+        name: Front Door
+        icon: mdi:door
+        tap_action:
+          action: more-info
         card_mod:
           style: |
             ha-card {

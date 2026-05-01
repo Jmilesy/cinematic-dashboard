@@ -78,7 +78,7 @@ rules:
 
   - name: Bathroom presence overlay
     entities:
-      - entity: binary_sensor.pir_bathroom
+      - entity: binary_sensor.hall_multi_sensor
         element: room-bathroom
     state_action:
       - state: "on"
@@ -206,7 +206,7 @@ rules:
 
   - name: Landing temperature
     entities:
-      - entity: sensor.landing_temperature
+      - entity: sensor.hall_multi_sensor_temperature
         element: landing-temp
     state_action:
       action: call-service
@@ -214,11 +214,11 @@ rules:
       service_data:
         element: landing-temp
         attribute: innerHTML
-        value: "{{states('sensor.landing_temperature') | round(1)}}°C"
+        value: "{{states('sensor.hall_multi_sensor_temperature') | round(1)}}°C"
 
   - name: Landing humidity
     entities:
-      - entity: sensor.landing_humidity
+      - entity: sensor.hall_multi_sensor_humidity
         element: landing-hum
     state_action:
       action: call-service
@@ -226,27 +226,4 @@ rules:
       service_data:
         element: landing-hum
         attribute: innerHTML
-        value: "{{states('sensor.landing_humidity') | round(0) | int}}%"
-
-  - name: Jacob dot
-    entities:
-      - entity: sensor.boys_room_jacob_dot_style
-        element: target-1
-    state_action:
-      action: call-service
-      service: floorplan.style_set
-      service_data:
-        element: target-1
-        style: "{{ state }}"
-
-  - name: Joseph dot
-    entities:
-      - entity: sensor.boys_room_joseph_dot_style
-        element: target-2
-    state_action:
-      action: call-service
-      service: floorplan.style_set
-      service_data:
-        element: target-2
-        style: "{{ state }}"
-
+        value: "{{states('sensor.hall_multi_sensor_humidity') | round(0) | int}}%"
