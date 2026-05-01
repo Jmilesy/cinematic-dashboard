@@ -1597,3 +1597,44 @@
     - fri
   actions:
   - action: rest_command.valance_sunrise
+- id: rotary_encoder_controller
+  alias: Rotary Encoder Controller
+  description: Handles ESPHome rotary encoder left, right, press, and long_press events.
+  mode: queued
+  max: 5
+  triggers:
+  - trigger: event
+    event_type: esphome.encoder_event
+  conditions:
+  - condition: template
+    value_template: "{{ trigger.event.data.action in ['left', 'right', 'press', 'long_press'] }}"
+  actions:
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: "{{ trigger.event.data.action == 'left' }}"
+      sequence:
+      - action: input_select.select_previous
+        target:
+          entity_id: input_select.rotary_mode
+        data:
+          cycle: true
+    - conditions:
+      - condition: template
+        value_template: "{{ trigger.event.data.action == 'right' }}"
+      sequence:
+      - action: input_select.select_next
+        target:
+          entity_id: input_select.rotary_mode
+        data:
+          cycle: true
+    - conditions:
+      - condition: template
+        value_template: "{{ trigger.event.data.action == 'press' }}"
+      sequence:
+      - action: script.rotary_mode_action
+    - conditions:
+      - condition: template
+        value_template: "{{ trigger.event.data.action == 'long_press' }}"
+      sequence:
+      - action: script.rotary_mode_reset

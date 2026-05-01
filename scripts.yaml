@@ -1,1 +1,98 @@
 
+rotary_mode_action:
+  alias: Rotary Mode Action
+  description: Run the current rotary controller mode action.
+  mode: single
+  sequence:
+    - choose:
+        - conditions:
+            - condition: state
+              entity_id: input_select.rotary_mode
+              state: School
+          sequence:
+            - action: notify.alexa_media_lounge_plus
+              data:
+                message: "School update: {{ states('input_text.boys_school') }}"
+                data:
+                  type: announce
+                  method: speak
+
+        - conditions:
+            - condition: state
+              entity_id: input_select.rotary_mode
+              state: Bedtime
+          sequence:
+            - action: input_boolean.turn_on
+              target:
+                entity_id: input_boolean.boys_bedtime_switch
+
+        - conditions:
+            - condition: state
+              entity_id: input_select.rotary_mode
+              state: Lights
+          sequence:
+            - action: light.toggle
+              target:
+                entity_id: light.boys_light
+
+        - conditions:
+            - condition: state
+              entity_id: input_select.rotary_mode
+              state: Alerts
+          sequence:
+            - action: script.rotary_mode_reset
+
+rotary_mode_reset:
+  alias: Rotary Mode Reset
+  description: Run the reset action for the current rotary controller mode.
+  mode: single
+  sequence:
+    - choose:
+        - conditions:
+            - condition: state
+              entity_id: input_select.rotary_mode
+              state: School
+          sequence:
+            - action: input_select.select_option
+              target:
+                entity_id: input_select.rotary_mode
+              data:
+                option: School
+
+        - conditions:
+            - condition: state
+              entity_id: input_select.rotary_mode
+              state: Bedtime
+          sequence:
+            - action: input_boolean.turn_off
+              target:
+                entity_id: input_boolean.boys_bedtime_switch
+
+        - conditions:
+            - condition: state
+              entity_id: input_select.rotary_mode
+              state: Lights
+          sequence:
+            - action: homeassistant.turn_off
+              target:
+                entity_id: group.all_lights
+
+        - conditions:
+            - condition: state
+              entity_id: input_select.rotary_mode
+              state: Alerts
+          sequence:
+            - action: input_boolean.turn_off
+              target:
+                entity_id: input_boolean.alert_active
+            - action: switch.turn_off
+              target:
+                entity_id:
+                  - switch.mon_buzzer
+                  - switch.bins_flash
+                  - switch.recycling_flash
+                  - switch.bins
+                  - switch.recycling
+            - action: light.turn_off
+              target:
+                entity_id: light.boys_info
