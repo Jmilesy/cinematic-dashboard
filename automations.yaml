@@ -1599,7 +1599,7 @@
   - action: rest_command.valance_sunrise
 - id: rotary_encoder_controller
   alias: Rotary Encoder Controller
-  description: Handles ESPHome rotary encoder left, right, press, and long_press events.
+  description: Handles ESPHome rotary encoder UI navigation events.
   mode: queued
   max: 5
   triggers:
@@ -1614,27 +1614,65 @@
       - condition: template
         value_template: "{{ trigger.event.data.action == 'left' }}"
       sequence:
-      - action: input_select.select_previous
-        target:
-          entity_id: input_select.rotary_mode
-        data:
-          cycle: true
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: input_select.rotary_ui_state
+            state: menu
+          sequence:
+          - action: script.rotary_ui_menu_previous
+        default:
+        - condition: template
+          value_template: "{{ not is_state('input_select.rotary_ui_state', 'front') }}"
+        - action: script.rotary_ui_touch
     - conditions:
       - condition: template
         value_template: "{{ trigger.event.data.action == 'right' }}"
       sequence:
-      - action: input_select.select_next
-        target:
-          entity_id: input_select.rotary_mode
-        data:
-          cycle: true
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: input_select.rotary_ui_state
+            state: menu
+          sequence:
+          - action: script.rotary_ui_menu_next
+        default:
+        - condition: template
+          value_template: "{{ not is_state('input_select.rotary_ui_state', 'front') }}"
+        - action: script.rotary_ui_touch
     - conditions:
       - condition: template
         value_template: "{{ trigger.event.data.action == 'press' }}"
       sequence:
-      - action: script.rotary_mode_action
+      - choose:
+        - conditions:
+          - condition: state
+            entity_id: input_select.rotary_ui_state
+            state: front
+          sequence:
+          - action: script.rotary_ui_open_menu
+        - conditions:
+          - condition: state
+            entity_id: input_select.rotary_ui_state
+            state: menu
+          sequence:
+          - action: script.rotary_ui_open_selected_page
+        default:
+        - action: script.rotary_ui_page_press
     - conditions:
       - condition: template
         value_template: "{{ trigger.event.data.action == 'long_press' }}"
       sequence:
-      - action: script.rotary_mode_reset
+      - action: script.rotary_ui_return_front
+- id: rotary_ui_timeout_return_front
+  alias: Rotary UI Timeout Return Front
+  description: Returns the rotary controller UI to the front screen after inactivity.
+  mode: single
+  triggers:
+  - trigger: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.rotary_ui_timeout
+  conditions: []
+  actions:
+  - action: script.rotary_ui_return_front

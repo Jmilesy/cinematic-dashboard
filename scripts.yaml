@@ -1,86 +1,112 @@
+rotary_ui_touch:
+  alias: Rotary UI Touch
+  description: Restart the rotary controller UI timeout.
+  mode: restart
+  sequence:
+    - action: timer.start
+      target:
+        entity_id: timer.rotary_ui_timeout
+      data:
+        duration: "00:00:15"
 
-rotary_mode_action:
-  alias: Rotary Mode Action
-  description: Run the current rotary controller mode action.
-  mode: single
+rotary_ui_return_front:
+  alias: Rotary UI Return Front
+  description: Return the rotary controller UI to the default front screen.
+  mode: restart
+  sequence:
+    - action: input_select.select_option
+      target:
+        entity_id: input_select.rotary_ui_state
+      data:
+        option: front
+    - action: input_number.set_value
+      target:
+        entity_id: input_number.rotary_menu_index
+      data:
+        value: 0
+    - action: timer.cancel
+      target:
+        entity_id: timer.rotary_ui_timeout
+
+rotary_ui_open_menu:
+  alias: Rotary UI Open Menu
+  description: Open the rotary controller top-level menu.
+  mode: restart
+  sequence:
+    - action: input_select.select_option
+      target:
+        entity_id: input_select.rotary_ui_state
+      data:
+        option: menu
+    - action: input_number.set_value
+      target:
+        entity_id: input_number.rotary_menu_index
+      data:
+        value: 0
+    - action: script.rotary_ui_touch
+
+rotary_ui_menu_previous:
+  alias: Rotary UI Menu Previous
+  description: Move the rotary controller menu cursor up.
+  mode: restart
+  sequence:
+    - action: input_number.set_value
+      target:
+        entity_id: input_number.rotary_menu_index
+      data:
+        value: >
+          {% set index = states('input_number.rotary_menu_index') | int(0) %}
+          {{ 3 if index <= 0 else index - 1 }}
+    - action: script.rotary_ui_touch
+
+rotary_ui_menu_next:
+  alias: Rotary UI Menu Next
+  description: Move the rotary controller menu cursor down.
+  mode: restart
+  sequence:
+    - action: input_number.set_value
+      target:
+        entity_id: input_number.rotary_menu_index
+      data:
+        value: >
+          {% set index = states('input_number.rotary_menu_index') | int(0) %}
+          {{ 0 if index >= 3 else index + 1 }}
+    - action: script.rotary_ui_touch
+
+rotary_ui_open_selected_page:
+  alias: Rotary UI Open Selected Page
+  description: Open the selected rotary controller page.
+  mode: restart
+  sequence:
+    - action: input_select.select_option
+      target:
+        entity_id: input_select.rotary_ui_state
+      data:
+        option: >
+          {% set pages = ['page_school', 'page_bedtime', 'page_alerts', 'page_alarm'] %}
+          {% set index = states('input_number.rotary_menu_index') | int(0) %}
+          {{ pages[index] if index in range(0, pages | count) else 'page_school' }}
+    - action: script.rotary_ui_touch
+
+rotary_ui_page_press:
+  alias: Rotary UI Page Press
+  description: Run the simple press action for the current rotary controller page.
+  mode: restart
   sequence:
     - choose:
         - conditions:
             - condition: state
-              entity_id: input_select.rotary_mode
-              state: School
+              entity_id: input_select.rotary_ui_state
+              state: page_bedtime
           sequence:
-            - action: notify.alexa_media_lounge_plus
-              data:
-                message: "School update: {{ states('input_text.boys_school') }}"
-                data:
-                  type: announce
-                  method: speak
-
-        - conditions:
-            - condition: state
-              entity_id: input_select.rotary_mode
-              state: Bedtime
-          sequence:
-            - action: input_boolean.turn_on
+            - action: input_boolean.toggle
               target:
                 entity_id: input_boolean.boys_bedtime_switch
 
         - conditions:
             - condition: state
-              entity_id: input_select.rotary_mode
-              state: Lights
-          sequence:
-            - action: light.toggle
-              target:
-                entity_id: light.boys_light
-
-        - conditions:
-            - condition: state
-              entity_id: input_select.rotary_mode
-              state: Alerts
-          sequence:
-            - action: script.rotary_mode_reset
-
-rotary_mode_reset:
-  alias: Rotary Mode Reset
-  description: Run the reset action for the current rotary controller mode.
-  mode: single
-  sequence:
-    - choose:
-        - conditions:
-            - condition: state
-              entity_id: input_select.rotary_mode
-              state: School
-          sequence:
-            - action: input_select.select_option
-              target:
-                entity_id: input_select.rotary_mode
-              data:
-                option: School
-
-        - conditions:
-            - condition: state
-              entity_id: input_select.rotary_mode
-              state: Bedtime
-          sequence:
-            - action: input_boolean.turn_off
-              target:
-                entity_id: input_boolean.boys_bedtime_switch
-
-        - conditions:
-            - condition: state
-              entity_id: input_select.rotary_mode
-              state: Lights
-          sequence:
-            - action: homeassistant.turn_off
-              target:
-                entity_id: group.all_lights
-
-        - conditions:
-            - condition: state
-              entity_id: input_select.rotary_mode
-              state: Alerts
+              entity_id: input_select.rotary_ui_state
+              state: page_alerts
           sequence:
             - action: input_boolean.turn_off
               target:
@@ -96,3 +122,5 @@ rotary_mode_reset:
             - action: light.turn_off
               target:
                 entity_id: light.boys_info
+
+    - action: script.rotary_ui_touch

@@ -49,10 +49,29 @@ text_sensor:
           args: [ 'id(school).state.c_str()' ]
 
   - platform: homeassistant
-    id: rotary_mode
-    entity_id: input_select.rotary_mode
+    id: rotary_ui_state
+    entity_id: input_select.rotary_ui_state
     internal: true
 
+  - platform: homeassistant
+    id: bedtime_status
+    entity_id: input_boolean.boys_bedtime_switch
+    internal: true
+
+  - platform: homeassistant
+    id: alert_status
+    entity_id: input_boolean.alert_active
+    internal: true
+
+  - platform: homeassistant
+    id: alarm_status
+    entity_id: alarm_control_panel.alarmo
+    internal: true
+
+
+time:
+  - platform: homeassistant
+    id: ha_time
 
 
 i2c:
@@ -71,59 +90,101 @@ display:
         it.printf(0, row, "%-20s", text.c_str());
       };
 
-      std::string mode = id(rotary_mode).state;
+      auto state_label = [](std::string state) -> std::string {
+        if (state == "on") {
+          return "ON";
+        }
+        if (state == "off") {
+          return "OFF";
+        }
+        if (state.empty()) {
+          return "unknown";
+        }
+        return state;
+      };
 
-      if (mode == "Bedtime") {
+      auto print_school_lines = [&](int first_row) {
+        std::string text = id(school).state;
+        if (text.empty()) {
+          text = "Nothing planned";
+        }
+
+        int row = first_row;
+        size_t start = 0;
+        while (row < 4 && start < text.length()) {
+          size_t end = text.find(',', start);
+          std::string line = text.substr(start, end == std::string::npos ? std::string::npos : end - start);
+          while (!line.empty() && line.front() == ' ') {
+            line.erase(0, 1);
+          }
+          print_line(row, line);
+          row++;
+          if (end == std::string::npos) {
+            break;
+          }
+          start = end + 1;
+        }
+
+        while (row < 4) {
+          print_line(row, "");
+          row++;
+        }
+      };
+
+      std::string ui_state = id(rotary_ui_state).state;
+
+      if (ui_state == "menu") {
+        int selected = (int) id(rotary_menu_index).state;
+        if (selected < 0 || selected > 3) {
+          selected = 0;
+        }
+        print_line(0, "MENU");
+        print_line(1, std::string(selected == 0 ? ">" : " ") + "School  " + std::string(selected == 1 ? ">" : " ") + "Bedtime");
+        print_line(2, std::string(selected == 2 ? ">" : " ") + "Alerts  " + std::string(selected == 3 ? ">" : " ") + "Alarm");
+        print_line(3, "Press = Open");
+        return;
+      }
+
+      if (ui_state == "page_school") {
+        print_line(0, "SCHOOL DETAILS");
+        print_school_lines(1);
+        return;
+      }
+
+      if (ui_state == "page_bedtime") {
         print_line(0, "BEDTIME");
-        print_line(1, "Press = Toggle");
-        print_line(2, "Long = Off");
-        print_line(3, "Boys bedtime mode");
+        print_line(1, "Status: " + state_label(id(bedtime_status).state));
+        print_line(2, "Press = Toggle");
+        print_line(3, "Long = Front");
         return;
       }
 
-      if (mode == "Lights") {
-        print_line(0, "LIGHTS");
-        print_line(1, "Press = Toggle");
-        print_line(2, "Long = All Off");
-        print_line(3, "Boys light");
-        return;
-      }
-
-      if (mode == "Alerts") {
+      if (ui_state == "page_alerts") {
         print_line(0, "ALERTS");
-        print_line(1, "Press = Details");
-        print_line(2, "Long = Clear");
-        print_line(3, "House alerts");
+        print_line(1, "Status: " + state_label(id(alert_status).state));
+        print_line(2, "Press = Clear");
+        print_line(3, "Long = Front");
         return;
       }
 
-      print_line(0, "SCHOOL");
-
-      std::string text = id(school).state;
-      if (text.empty()) {
-        text = "Nothing planned";
+      if (ui_state == "page_alarm") {
+        print_line(0, "ALARM");
+        print_line(1, "Status:");
+        print_line(2, state_label(id(alarm_status).state));
+        print_line(3, "Read only");
+        return;
       }
 
-      int row = 1;
-      size_t start = 0;
-      while (row < 4 && start < text.length()) {
-        size_t end = text.find(',', start);
-        std::string line = text.substr(start, end == std::string::npos ? std::string::npos : end - start);
-        while (!line.empty() && line.front() == ' ') {
-          line.erase(0, 1);
-        }
-        print_line(row, line);
-        row++;
-        if (end == std::string::npos) {
-          break;
-        }
-        start = end + 1;
+      auto now = id(ha_time).now();
+      if (now.is_valid()) {
+        char date_line[21];
+        now.strftime(date_line, sizeof(date_line), "%a %d/%m %H:%M");
+        print_line(0, date_line);
+      } else {
+        print_line(0, "FRONT");
       }
 
-      while (row < 4) {
-        print_line(row, "");
-        row++;
-      }
+      print_school_lines(1);
 
 switch:
   - platform: gpio
@@ -202,6 +263,11 @@ binary_sensor:
         pullup: true
         input: true
 sensor:
+  - platform: homeassistant
+    id: rotary_menu_index
+    entity_id: input_number.rotary_menu_index
+    internal: true
+
   - platform: rotary_encoder
     id: rotary
     pin_a: GPIO34
