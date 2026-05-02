@@ -1579,6 +1579,40 @@
         value: "{%- set events = todays_events['calendar.sandown_school_calendar']['events']\
           \ |\n   map(attribute='summary') | list -%}\n{% if events %}{{ events |\
           \ join(', ') }}{% else %}School day{% endif %}\n"
+- id: jacob_timetable_rotary_text
+  alias: Jacob Timetable Rotary Text
+  description: Updates plain text helpers for the rotary controller LCD.
+  mode: single
+  triggers:
+  - trigger: time
+    at: 00:05:00
+  - trigger: homeassistant
+    event: start
+  actions:
+  - action: calendar.get_events
+    target:
+      entity_id: calendar.jacob_timetable
+    data:
+      start_date_time: '{{ now().strftime(''%Y-%m-%d'') }} 00:00:00'
+      end_date_time: '{{ now().strftime(''%Y-%m-%d'') }} 23:59:59'
+    response_variable: jacob_today
+  - action: calendar.get_events
+    target:
+      entity_id: calendar.jacob_timetable
+    data:
+      start_date_time: '{{ (now() + timedelta(days=1)).strftime(''%Y-%m-%d'') }} 00:00:00'
+      end_date_time: '{{ (now() + timedelta(days=1)).strftime(''%Y-%m-%d'') }} 23:59:59'
+    response_variable: jacob_tomorrow
+  - action: input_text.set_value
+    target:
+      entity_id: input_text.jacob_timetable_today
+    data:
+      value: "{%- set events = jacob_today['calendar.jacob_timetable']['events'] | map(attribute='summary') | list -%}\n{%- if events -%}{{ events | join(', ') | truncate(255, true, '') }}{%- else -%}No lessons today{%- endif -%}"
+  - action: input_text.set_value
+    target:
+      entity_id: input_text.jacob_timetable_tomorrow
+    data:
+      value: "{%- set events = jacob_tomorrow['calendar.jacob_timetable']['events'] | map(attribute='summary') | list -%}\n{%- if events -%}{{ events | join(', ') | truncate(255, true, '') }}{%- else -%}No lessons tomorrow{%- endif -%}"
 - id: valance_morning_sunrise
   alias: Valance Morning Sunrise
   description: 'Triggers WLED nightlight sunrise on valance at 06:15 Mon-Fri. 10 minute

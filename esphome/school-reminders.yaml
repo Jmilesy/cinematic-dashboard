@@ -74,6 +74,16 @@ text_sensor:
     internal: true
 
   - platform: homeassistant
+    id: jacob_today
+    entity_id: input_text.jacob_timetable_today
+    internal: true
+
+  - platform: homeassistant
+    id: jacob_tomorrow
+    entity_id: input_text.jacob_timetable_tomorrow
+    internal: true
+
+  - platform: homeassistant
     id: bedtime_status
     entity_id: input_boolean.boys_bedtime_switch
     internal: true
@@ -175,7 +185,8 @@ display:
       };
 
       auto print_jacob_lines = [&](int first_row) {
-        print_split_lines(first_row, "Timetable not wired, Need HA text helper, calendar.jacob_timetable", (int) id(rotary_menu_index).state);
+        std::string text = id(rotary_day).state == "Tomorrow" ? id(jacob_tomorrow).state : id(jacob_today).state;
+        print_split_lines(first_row, text, (int) id(rotary_menu_index).state);
       };
 
       std::string ui_state = id(rotary_ui_state).state;
