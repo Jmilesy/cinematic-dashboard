@@ -123,30 +123,29 @@ input_boolean:
     icon: mdi:mirror
 
 input_select:
-  rotary_mode:
-    name: Rotary Mode
-    options:
-      - School
-      - Bedtime
-      - Lights
-      - Alerts
-    initial: School
   rotary_ui_state:
     name: Rotary UI State
     options:
       - front
       - menu
       - page_school
+      - page_jacob
       - page_bedtime
       - page_alerts
       - page_alarm
     initial: front
+  rotary_day:
+    name: Rotary Day
+    options:
+      - Today
+      - Tomorrow
+    initial: Today
 
 input_number:
   rotary_menu_index:
     name: Rotary Menu Index
     min: 0
-    max: 3
+    max: 9
     step: 1
     mode: box
     initial: 0

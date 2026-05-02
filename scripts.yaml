@@ -56,7 +56,7 @@ rotary_ui_menu_previous:
       data:
         value: >
           {% set index = states('input_number.rotary_menu_index') | int(0) %}
-          {{ 3 if index <= 0 else index - 1 }}
+          {{ 4 if index <= 0 else index - 1 }}
     - action: script.rotary_ui_touch
 
 rotary_ui_menu_next:
@@ -70,22 +70,79 @@ rotary_ui_menu_next:
       data:
         value: >
           {% set index = states('input_number.rotary_menu_index') | int(0) %}
-          {{ 0 if index >= 3 else index + 1 }}
+          {{ 0 if index >= 4 else index + 1 }}
+    - action: script.rotary_ui_touch
+
+rotary_ui_page_previous:
+  alias: Rotary UI Page Previous
+  description: Move the rotary controller page cursor backwards.
+  mode: restart
+  sequence:
+    - action: input_number.set_value
+      target:
+        entity_id: input_number.rotary_menu_index
+      data:
+        value: >
+          {% set index = states('input_number.rotary_menu_index') | int(0) %}
+          {{ 9 if index <= 0 else index - 1 }}
+    - action: script.rotary_ui_touch
+
+rotary_ui_page_next:
+  alias: Rotary UI Page Next
+  description: Move the rotary controller page cursor forwards.
+  mode: restart
+  sequence:
+    - action: input_number.set_value
+      target:
+        entity_id: input_number.rotary_menu_index
+      data:
+        value: >
+          {% set index = states('input_number.rotary_menu_index') | int(0) %}
+          {{ 0 if index >= 9 else index + 1 }}
     - action: script.rotary_ui_touch
 
 rotary_ui_open_selected_page:
   alias: Rotary UI Open Selected Page
   description: Open the selected rotary controller page.
   mode: restart
+  variables:
+    pages:
+      - page_school
+      - page_jacob
+      - page_bedtime
+      - page_alerts
+      - page_alarm
+    selected_index: "{{ states('input_number.rotary_menu_index') | int(0) }}"
+    selected_page: "{{ pages[selected_index] if selected_index in range(0, pages | count) else 'page_school' }}"
   sequence:
     - action: input_select.select_option
       target:
         entity_id: input_select.rotary_ui_state
       data:
+        option: "{{ selected_page }}"
+    - action: input_number.set_value
+      target:
+        entity_id: input_number.rotary_menu_index
+      data:
+        value: 0
+    - action: script.rotary_ui_touch
+
+rotary_ui_toggle_day:
+  alias: Rotary UI Toggle Day
+  description: Toggle the rotary controller day between Today and Tomorrow.
+  mode: restart
+  sequence:
+    - action: input_select.select_option
+      target:
+        entity_id: input_select.rotary_day
+      data:
         option: >
-          {% set pages = ['page_school', 'page_bedtime', 'page_alerts', 'page_alarm'] %}
-          {% set index = states('input_number.rotary_menu_index') | int(0) %}
-          {{ pages[index] if index in range(0, pages | count) else 'page_school' }}
+          {{ 'Tomorrow' if is_state('input_select.rotary_day', 'Today') else 'Today' }}
+    - action: input_number.set_value
+      target:
+        entity_id: input_number.rotary_menu_index
+      data:
+        value: 0
     - action: script.rotary_ui_touch
 
 rotary_ui_page_press:
@@ -95,6 +152,12 @@ rotary_ui_page_press:
   sequence:
     - choose:
         - conditions:
+            - condition: template
+              value_template: "{{ states('input_select.rotary_ui_state') in ['page_school', 'page_jacob'] }}"
+          sequence:
+            - action: script.rotary_ui_toggle_day
+
+        - conditions:
             - condition: state
               entity_id: input_select.rotary_ui_state
               state: page_bedtime
@@ -102,6 +165,7 @@ rotary_ui_page_press:
             - action: input_boolean.toggle
               target:
                 entity_id: input_boolean.boys_bedtime_switch
+            - action: script.rotary_ui_touch
 
         - conditions:
             - condition: state
@@ -122,5 +186,7 @@ rotary_ui_page_press:
             - action: light.turn_off
               target:
                 entity_id: light.boys_info
+            - action: script.rotary_ui_touch
 
-    - action: script.rotary_ui_touch
+      default:
+        - action: script.rotary_ui_touch

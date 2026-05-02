@@ -54,6 +54,26 @@ text_sensor:
     internal: true
 
   - platform: homeassistant
+    id: rotary_day
+    entity_id: input_select.rotary_day
+    internal: true
+    on_value:
+      then:
+        - lambda: |-
+            if (x == "Tomorrow") {
+              id(today).turn_off();
+              id(tomorrow).turn_on();
+            } else {
+              id(today).turn_on();
+              id(tomorrow).turn_off();
+            }
+
+  - platform: homeassistant
+    id: school_tomorrow
+    entity_id: sensor.school_event_tomorrow
+    internal: true
+
+  - platform: homeassistant
     id: bedtime_status
     entity_id: input_boolean.boys_bedtime_switch
     internal: true
@@ -103,51 +123,84 @@ display:
         return state;
       };
 
-      auto print_school_lines = [&](int first_row) {
-        std::string text = id(school).state;
-        if (text.empty()) {
+      auto upper_day = [&]() -> std::string {
+        return id(rotary_day).state == "Tomorrow" ? "TOMORROW" : "TODAY";
+      };
+
+      auto print_split_lines = [&](int first_row, std::string text, int offset) {
+        if (text.empty() || text == "unknown" || text == "unavailable") {
           text = "Nothing planned";
         }
 
-        int row = first_row;
+        std::vector<std::string> lines;
         size_t start = 0;
-        while (row < 4 && start < text.length()) {
+        while (start < text.length()) {
           size_t end = text.find(',', start);
           std::string line = text.substr(start, end == std::string::npos ? std::string::npos : end - start);
           while (!line.empty() && line.front() == ' ') {
             line.erase(0, 1);
           }
-          print_line(row, line);
-          row++;
+          if (!line.empty()) {
+            lines.push_back(line);
+          }
           if (end == std::string::npos) {
             break;
           }
           start = end + 1;
         }
 
+        if (lines.empty()) {
+          lines.push_back("Nothing planned");
+        }
+
+        int row = first_row;
+        int index = offset;
+        if (index < 0 || index >= (int) lines.size()) {
+          index = 0;
+        }
+        while (row < 4 && index < (int) lines.size()) {
+          print_line(row, lines[index]);
+          row++;
+          index++;
+        }
         while (row < 4) {
           print_line(row, "");
           row++;
         }
       };
 
+      auto print_school_lines = [&](int first_row) {
+        std::string text = id(rotary_day).state == "Tomorrow" ? id(school_tomorrow).state : id(school).state;
+        print_split_lines(first_row, text, (int) id(rotary_menu_index).state);
+      };
+
+      auto print_jacob_lines = [&](int first_row) {
+        print_split_lines(first_row, "Timetable not wired, Need HA text helper, calendar.jacob_timetable", (int) id(rotary_menu_index).state);
+      };
+
       std::string ui_state = id(rotary_ui_state).state;
 
       if (ui_state == "menu") {
         int selected = (int) id(rotary_menu_index).state;
-        if (selected < 0 || selected > 3) {
+        if (selected < 0 || selected > 4) {
           selected = 0;
         }
         print_line(0, "MENU");
-        print_line(1, std::string(selected == 0 ? ">" : " ") + "School  " + std::string(selected == 1 ? ">" : " ") + "Bedtime");
-        print_line(2, std::string(selected == 2 ? ">" : " ") + "Alerts  " + std::string(selected == 3 ? ">" : " ") + "Alarm");
-        print_line(3, "Press = Open");
+        print_line(1, std::string(selected == 0 ? ">" : " ") + "School " + std::string(selected == 1 ? ">" : " ") + "Jacob");
+        print_line(2, std::string(selected == 2 ? ">" : " ") + "Bedtime " + std::string(selected == 3 ? ">" : " ") + "Alerts");
+        print_line(3, std::string(selected == 4 ? ">" : " ") + "Alarm");
         return;
       }
 
       if (ui_state == "page_school") {
-        print_line(0, "SCHOOL DETAILS");
+        print_line(0, "SCHOOL: " + upper_day());
         print_school_lines(1);
+        return;
+      }
+
+      if (ui_state == "page_jacob") {
+        print_line(0, "JACOB: " + upper_day());
+        print_jacob_lines(1);
         return;
       }
 
@@ -184,7 +237,7 @@ display:
         print_line(0, "FRONT");
       }
 
-      print_school_lines(1);
+      print_split_lines(1, id(school).state, 0);
 
 switch:
   - platform: gpio

@@ -1621,6 +1621,11 @@
             state: menu
           sequence:
           - action: script.rotary_ui_menu_previous
+        - conditions:
+          - condition: template
+            value_template: "{{ states('input_select.rotary_ui_state') in ['page_school', 'page_jacob'] }}"
+          sequence:
+          - action: script.rotary_ui_page_previous
         default:
         - condition: template
           value_template: "{{ not is_state('input_select.rotary_ui_state', 'front') }}"
@@ -1636,6 +1641,11 @@
             state: menu
           sequence:
           - action: script.rotary_ui_menu_next
+        - conditions:
+          - condition: template
+            value_template: "{{ states('input_select.rotary_ui_state') in ['page_school', 'page_jacob'] }}"
+          sequence:
+          - action: script.rotary_ui_page_next
         default:
         - condition: template
           value_template: "{{ not is_state('input_select.rotary_ui_state', 'front') }}"
