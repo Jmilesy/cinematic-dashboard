@@ -22,11 +22,6 @@
               "type": "custom:mushroom-chips-card",
               "chips": [
                 {
-                  "type": "alarm-control-panel",
-                  "entity": "alarm_control_panel.home_alarm",
-                  "name": "Alarm"
-                },
-                {
                   "type": "weather",
                   "entity": "weather.pirateweather",
                   "show_conditions": true,
@@ -1940,26 +1935,8 @@
                 },
                 {
                   "type": "media-control",
-                  "entity": "media_player.plex_plex_for_android_tv_aftmm",
-                  "theme": "Google Dark Theme"
-                },
-                {
-                  "type": "media-control",
                   "entity": "media_player.boy_s_new_dot",
                   "theme": "3ative_blue"
-                }
-              ]
-            },
-            {
-              "type": "grid",
-              "cards": [
-                {
-                  "type": "heading",
-                  "heading": "New section"
-                },
-                {
-                  "type": "media-control",
-                  "entity": "media_player.fpp"
                 }
               ]
             }
@@ -2009,7 +1986,7 @@
                       "textcolour": "#FFF"
                     },
                     {
-                      "entity": "device_tracker.sm_g990b2",
+                      "entity": "device_tracker.jacob_phone",
                       "name": "Jacob",
                       "colour": "#F00",
                       "textcolour": "#FFF"

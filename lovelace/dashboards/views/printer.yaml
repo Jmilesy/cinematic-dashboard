@@ -86,6 +86,10 @@ cards:
   - type: grid
     columns: 3
     square: false
+    visibility:
+      - condition: state
+        entity: switch.smart_switch_2303160492260254060548e1e9bdf565_outlet_3
+        state: "on"
     cards:
       - type: custom:button-card
         entity: sensor.octoprint_actual_tool0_temp
@@ -111,12 +115,20 @@ cards:
   # ── LIVE VIEW ─────────────────────────────────────────────────────────────
   - type: custom:button-card
     template: room_section_title
+    visibility:
+      - condition: state
+        entity: switch.smart_switch_2303160492260254060548e1e9bdf565_outlet_3
+        state: "on"
     variables:
       title: "📷 LIVE VIEW"
       accent: "0,188,212"
 
   - type: picture-entity
     entity: camera.octoprint_camera
+    visibility:
+      - condition: state
+        entity: switch.smart_switch_2303160492260254060548e1e9bdf565_outlet_3
+        state: "on"
     show_name: false
     show_state: false
     camera_view: live
@@ -135,6 +147,10 @@ cards:
   # ── PRINT PROGRESS ────────────────────────────────────────────────────────
   - type: custom:button-card
     entity: sensor.octoprint_job_percentage
+    visibility:
+      - condition: state
+        entity: switch.smart_switch_2303160492260254060548e1e9bdf565_outlet_3
+        state: "on"
     name: PRINT PROGRESS
     show_state: true
     state_display: "[[[ return (parseFloat(entity.state) || 0).toFixed(1) + '%'; ]]]"
@@ -165,12 +181,20 @@ cards:
   # ── PRINT JOB ─────────────────────────────────────────────────────────────
   - type: custom:button-card
     template: room_section_title
+    visibility:
+      - condition: state
+        entity: switch.smart_switch_2303160492260254060548e1e9bdf565_outlet_3
+        state: "on"
     variables:
       title: "🖨️ PRINT JOB"
       accent: "0,188,212"
 
   - type: custom:layout-card
     layout_type: grid
+    visibility:
+      - condition: state
+        entity: switch.smart_switch_2303160492260254060548e1e9bdf565_outlet_3
+        state: "on"
     layout:
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr))
       grid-gap: 8px
@@ -220,12 +244,20 @@ cards:
   # ── TEMPERATURES ──────────────────────────────────────────────────────────
   - type: custom:button-card
     template: room_section_title
+    visibility:
+      - condition: state
+        entity: switch.smart_switch_2303160492260254060548e1e9bdf565_outlet_3
+        state: "on"
     variables:
       title: "🌡️ TEMPERATURES"
       accent: "255,100,0"
 
   - type: custom:layout-card
     layout_type: grid
+    visibility:
+      - condition: state
+        entity: switch.smart_switch_2303160492260254060548e1e9bdf565_outlet_3
+        state: "on"
     layout:
       grid-template-columns: 1fr 1fr
       grid-gap: 8px
@@ -266,6 +298,10 @@ cards:
 
   - type: custom:layout-card
     layout_type: grid
+    visibility:
+      - condition: state
+        entity: switch.smart_switch_2303160492260254060548e1e9bdf565_outlet_3
+        state: "on"
     layout:
       grid-template-columns: 1fr 1fr
       grid-gap: 8px
@@ -301,12 +337,20 @@ cards:
   # ── CONTROLS ──────────────────────────────────────────────────────────────
   - type: custom:button-card
     template: room_section_title
+    visibility:
+      - condition: state
+        entity: switch.smart_switch_2303160492260254060548e1e9bdf565_outlet_3
+        state: "on"
     variables:
       title: "🎮 PRINT CONTROLS"
       accent: "100,200,255"
 
   - type: custom:layout-card
     layout_type: grid
+    visibility:
+      - condition: state
+        entity: switch.smart_switch_2303160492260254060548e1e9bdf565_outlet_3
+        state: "on"
     layout:
       grid-template-columns: repeat(3, 1fr)
       grid-gap: 8px
