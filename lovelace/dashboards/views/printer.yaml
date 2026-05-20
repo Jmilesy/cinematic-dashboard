@@ -140,10 +140,6 @@ cards:
           border: 1px solid rgba(0,188,212,0.3);
           box-shadow: 0 0 30px rgba(0,188,212,0.2), 0 8px 32px rgba(0,0,0,0.5);
         }
-        hui-image {
-          transform: rotate(180deg);
-        }
-
   # ── PRINT PROGRESS ────────────────────────────────────────────────────────
   - type: custom:button-card
     entity: sensor.octoprint_job_percentage
