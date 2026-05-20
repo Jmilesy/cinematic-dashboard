@@ -185,6 +185,92 @@ cards:
               backdrop-filter: blur(12px);
             }
 
+  # ── BED RADAR DIAGNOSTICS ────────────────────────────────────────────────
+  - type: custom:button-card
+    template: room_section_title
+    variables:
+      title: "BED RADAR"
+      accent: "80,220,180"
+
+  - type: custom:mushroom-template-card
+    primary: "{{ states('sensor.boys_room_bed_radar_state') | replace('_', ' ') | title }}"
+    secondary: >-
+      LD2450 {{ states('sensor.mmwave_test_bed_ld2450_target_count') }} targets ·
+      T1 {{ states('sensor.mmwave_test_bed_ld2450_t1_x') }},
+      {{ states('sensor.mmwave_test_bed_ld2450_t1_y') }} ·
+      speed {{ states('sensor.mmwave_test_bed_ld2450_t1_speed') }} ·
+      LD2410C {{ states('binary_sensor.mmwave_test_bed_ld2410c_moving') }}/{{ states('binary_sensor.mmwave_test_bed_ld2410c_still') }}
+    icon: mdi:bunk-bed
+    icon_color: >-
+      {% set s = states('sensor.boys_room_bed_radar_state') %}
+      {% if s == 'empty' %} grey
+      {% elif s == 'active_or_messing' %} orange
+      {% elif s in ['both_top_possible', 'both_separate_possible'] %} purple
+      {% elif s in ['jacob_top_likely', 'joseph_bottom_likely'] %} teal
+      {% else %} amber
+      {% endif %}
+    multiline_secondary: true
+    tap_action:
+      action: more-info
+      entity: sensor.boys_room_bed_radar_state
+    card_mod:
+      style: |
+        ha-card {
+          background: rgba(255,255,255,0.05) !important;
+          border-radius: 20px;
+          border: 1px solid rgba(255,255,255,0.1);
+          box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+          backdrop-filter: blur(12px);
+        }
+
+  - type: custom:layout-card
+    layout_type: grid
+    layout:
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr))
+      grid-gap: 8px
+    cards:
+      - type: custom:mushroom-entity-card
+        entity: binary_sensor.mmwave_test_bed_ld2450_presence
+        name: LD2450 Presence
+        icon: mdi:radar
+        card_mod:
+          style: |
+            ha-card {
+              background: rgba(255,255,255,0.05) !important;
+              border-radius: 20px;
+              border: 1px solid rgba(255,255,255,0.1);
+              box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+              backdrop-filter: blur(12px);
+            }
+
+      - type: custom:mushroom-entity-card
+        entity: binary_sensor.mmwave_test_bed_ld2410c_moving
+        name: LD2410C Moving
+        icon: mdi:motion-sensor
+        card_mod:
+          style: |
+            ha-card {
+              background: rgba(255,255,255,0.05) !important;
+              border-radius: 20px;
+              border: 1px solid rgba(255,255,255,0.1);
+              box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+              backdrop-filter: blur(12px);
+            }
+
+      - type: custom:mushroom-entity-card
+        entity: binary_sensor.mmwave_test_bed_ld2410c_still
+        name: LD2410C Still
+        icon: mdi:human-male
+        card_mod:
+          style: |
+            ha-card {
+              background: rgba(255,255,255,0.05) !important;
+              border-radius: 20px;
+              border: 1px solid rgba(255,255,255,0.1);
+              box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+              backdrop-filter: blur(12px);
+            }
+
   # ── ENERGY ────────────────────────────────────────────────────────────────
   - type: custom:button-card
     template: room_section_title
