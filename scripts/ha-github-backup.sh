@@ -8,6 +8,10 @@ STAMP="$(date '+%Y-%m-%d %H:%M:%S %z')"
 
 cd "$REPO"
 
+if command -v ha >/dev/null 2>&1; then
+  ha core check >/tmp/ha-github-backup-core-check.log 2>&1
+fi
+
 # Keep selected Home Assistant UI-storage dashboards backed up without tracking
 # the whole .storage directory, which may contain runtime metadata.
 mkdir -p lovelace/storage-backups
