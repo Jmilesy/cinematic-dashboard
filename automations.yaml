@@ -167,7 +167,7 @@
       - media_player.diningroom_dot
   - action: notify.mobile_app_jon_phone
     data:
-      title: 🚨 Alarm Triggered!
+      title: "\U0001F6A8 Alarm Triggered!"
       message: Home alarm has been triggered at {{ now().strftime('%I:%M %p') }}
       data:
         priority: high
@@ -216,7 +216,7 @@
         type: announce
   - action: notify.mobile_app_jon_phone
     data:
-      title: 🗑️ Bin Day Tomorrow
+      title: "\U0001F5D1\uFE0F Bin Day Tomorrow"
       message: Don't forget to put the bins out!
   mode: single
 - id: aad83719661b40969efbb9725fd1be4a
@@ -403,49 +403,49 @@
   - action: conversation.process
     metadata: {}
     data:
-      text: 'You are an advanced smart home with a built in personal weather station.
-        Weather updates will be spoken out loud and should be funny and creative because
-        two children 11 years old and 14 years old will be listening. Please use whole
-        numbers and try to make it educational! This should be less than 30 seconds
-        in length. it is important that the school update comes first {% if states(''sensor.school_event_today'')
-        %} School Update: {{ states(''sensor.school_event_today'') }} {% endif %}
-        Current Conditions: Current time is {{ now().strftime(''%I:%M %p'') }}. Temperature
-        is {% if has_value(''sensor.met_office_deal_temperature'') %}{{ states(''sensor.met_office_deal_temperature'')
-        | round(0) }}°C{% elif has_value(''weather.home_weather'') %}{{ state_attr(''weather.home_weather'',
-        ''temperature'') | round(0) }}°C{% elif has_value(''weather.forecast_home'')
-        %}{{ state_attr(''weather.forecast_home'', ''temperature'') | round(0) }}°C{%
-        else %}{{ states(''sensor.pirateweather_temperature'') | round(0) }}°C{% endif
-        %}. Feels like {% if has_value(''sensor.pirateweather_apparent_temperature'')
-        %}{{ states(''sensor.pirateweather_apparent_temperature'') | round(0) }}°C{%
-        elif has_value(''sensor.met_office_deal_feels_like_temperature'') %}{{ states(''sensor.met_office_deal_feels_like_temperature'')
-        | round(0) }}°C{% elif has_value(''weather.forecast_home'') %}{{ state_attr(''weather.forecast_home'',
-        ''dew_point'') | round(0) }}°C{% else %}the same{% endif %}. Humidity is {%
-        if has_value(''weather.pirateweather'') %}{{ state_attr(''weather.pirateweather'',
-        ''humidity'') | round(0) }}%{% elif has_value(''weather.met_office_deal'')
-        %}{{ state_attr(''weather.met_office_deal'', ''humidity'') | round(0) }}%{%
-        elif has_value(''weather.home_weather'') %}{{ state_attr(''weather.home_weather'',
-        ''humidity'') | round(0) }}%{% elif has_value(''weather.forecast_home'') %}{{
-        state_attr(''weather.forecast_home'', ''humidity'') | round(0) }}%{% endif
-        %}. {% if has_value(''sensor.pirateweather_uv_index'') %}UV Index is {{ states(''sensor.pirateweather_uv_index'')
-        | round(0) }}.{% elif has_value(''weather.forecast_home'') %}UV Index is {{
-        state_attr(''weather.forecast_home'', ''uv_index'') | round(1) }}.{% endif
-        %} Current conditions: {% if has_value(''weather.met_office_deal'') %}{{ states(''weather.met_office_deal'')
-        }}{% elif has_value(''weather.home_weather'') %}{{ states(''weather.home_weather'')
-        }}{% elif has_value(''weather.forecast_home'') %}{{ states(''weather.forecast_home'')
-        }}{% else %}{{ states(''weather.pirateweather'') }}{% endif %}. Today''s Forecast:
-        {% if has_value(''sensor.pirateweather_hourly_summary'') %}Forecasted Conditions
-        for Today {{ states(''sensor.pirateweather_hourly_summary'') }}{% endif %}
-        {% set forecast_entity = ''weather.met_office_deal'' if has_value(''weather.met_office_deal'')
-        else ''weather.home_weather'' if has_value(''weather.home_weather'') else
-        ''weather.forecast_home'' if has_value(''weather.forecast_home'') else ''weather.pirateweather''
-        %} Temperature for Today {{ daily_forecast[forecast_entity].forecast[0].temperature
-        }} Forecasted Low Temperature for Today {{ daily_forecast[forecast_entity].forecast[0].templow
-        }} Forecasted Precipitation Probability {{ daily_forecast[forecast_entity].forecast[0].precipitation_probability
-        }} {% set pollen_level = state_attr(''weather.silam_pollen_home_forecast'',
-        ''next_condition'') %}{% set pollen_culprit = state_attr(''weather.silam_pollen_home_forecast'',
-        ''responsible_elevated'') %}{% if pollen_level in [''medium'', ''high'', ''very_high'']
-        %}Pollen Alert: {{ pollen_level }} levels today, mainly {{ pollen_culprit
-        }}.{% endif %} '
+      text: "You are an advanced smart home with a built in personal weather station.\
+        \ Weather updates will be spoken out loud and should be funny and creative\
+        \ because two children 11 years old and 14 years old will be listening. Please\
+        \ use whole numbers and try to make it educational! This should be less than\
+        \ 30 seconds in length. it is important that the school update comes first\
+        \ {% if states('sensor.school_event_today') %} School Update: {{ states('sensor.school_event_today')\
+        \ }} {% endif %} Current Conditions: Current time is {{ now().strftime('%I:%M\
+        \ %p') }}. Temperature is {% if has_value('sensor.met_office_deal_temperature')\
+        \ %}{{ states('sensor.met_office_deal_temperature') | round(0) }}\xB0C{% elif\
+        \ has_value('weather.home_weather') %}{{ state_attr('weather.home_weather',\
+        \ 'temperature') | round(0) }}\xB0C{% elif has_value('weather.forecast_home')\
+        \ %}{{ state_attr('weather.forecast_home', 'temperature') | round(0) }}\xB0\
+        C{% else %}{{ states('sensor.pirateweather_temperature') | round(0) }}\xB0\
+        C{% endif %}. Feels like {% if has_value('sensor.pirateweather_apparent_temperature')\
+        \ %}{{ states('sensor.pirateweather_apparent_temperature') | round(0) }}\xB0\
+        C{% elif has_value('weather.forecast_home') %}{{ state_attr('weather.forecast_home',\
+        \ 'dew_point') | round(0) }}\xB0C{% else %}the same{% endif %}. Humidity is\
+        \ {% if has_value('weather.pirateweather') %}{{ state_attr('weather.pirateweather',\
+        \ 'humidity') | round(0) }}%{% elif has_value('weather.met_office_deal') %}{{\
+        \ state_attr('weather.met_office_deal', 'humidity') | round(0) }}%{% elif\
+        \ has_value('weather.home_weather') %}{{ state_attr('weather.home_weather',\
+        \ 'humidity') | round(0) }}%{% elif has_value('weather.forecast_home') %}{{\
+        \ state_attr('weather.forecast_home', 'humidity') | round(0) }}%{% endif %}.\
+        \ {% if has_value('sensor.pirateweather_uv_index') %}UV Index is {{ states('sensor.pirateweather_uv_index')\
+        \ | round(0) }}.{% elif has_value('weather.forecast_home') %}UV Index is {{\
+        \ state_attr('weather.forecast_home', 'uv_index') | round(1) }}.{% endif %}\
+        \ Current conditions: {% if has_value('weather.met_office_deal') %}{{ states('weather.met_office_deal')\
+        \ }}{% elif has_value('weather.home_weather') %}{{ states('weather.home_weather')\
+        \ }}{% elif has_value('weather.forecast_home') %}{{ states('weather.forecast_home')\
+        \ }}{% else %}{{ states('weather.pirateweather') }}{% endif %}. Today's Forecast:\
+        \ {% if has_value('sensor.pirateweather_hourly_summary') %}Forecasted Conditions\
+        \ for Today {{ states('sensor.pirateweather_hourly_summary') }}{% endif %}\
+        \ {% set forecast_entity = 'weather.met_office_deal' if has_value('weather.met_office_deal')\
+        \ else 'weather.home_weather' if has_value('weather.home_weather') else 'weather.forecast_home'\
+        \ if has_value('weather.forecast_home') else 'weather.pirateweather' %} Temperature\
+        \ for Today {{ daily_forecast[forecast_entity].forecast[0].temperature }}\
+        \ Forecasted Low Temperature for Today {{ daily_forecast[forecast_entity].forecast[0].templow\
+        \ }} Forecasted Precipitation Probability {{ daily_forecast[forecast_entity].forecast[0].precipitation_probability\
+        \ }} {% set pollen_level = state_attr('weather.silam_pollen_home_forecast',\
+        \ 'next_condition') %}{% set pollen_culprit = state_attr('weather.silam_pollen_home_forecast',\
+        \ 'responsible_elevated') %}{% if pollen_level in ['medium', 'high', 'very_high']\
+        \ %}Pollen Alert: {{ pollen_level }} levels today, mainly {{ pollen_culprit\
+        \ }}.{% endif %} "
       agent_id: conversation.kids_weather
     response_variable: agent
   - action: notify.alexa_media
@@ -480,10 +480,23 @@
     - tue
     - wed
     - thu
-  - condition: state
-    entity_id: input_boolean.school_day
-    state: 'on'
   actions:
+  - action: calendar.get_events
+    target:
+      entity_id: calendar.sandown_school_calendar
+    data:
+      start_date_time: '{{ (now().date() + timedelta(days=1)).strftime(''%Y-%m-%d'')
+        }} 00:00:00'
+      end_date_time: '{{ (now().date() + timedelta(days=1)).strftime(''%Y-%m-%d'')
+        }} 23:59:59'
+    response_variable: tomorrow_school_events
+  - if:
+    - condition: template
+      value_template: '{{ (now().date() + timedelta(days=1)).weekday() >= 5 or    tomorrow_school_events[''calendar.sandown_school_calendar''][''events'']         |
+        selectattr(''summary'', ''search'', ''holiday|inset|bank holiday'', ignorecase=True)         |
+        list | count > 0 }} '
+    then:
+    - stop: Tomorrow is not a school day
   - action: input_boolean.turn_off
     target:
       entity_id:
@@ -740,7 +753,7 @@
   triggers:
   - type: opened
     device_id: 8a1d964ca02d98160fcc83f805e93259
-    entity_id: 9bdf92f12f090b5cb937ec8615d3e22b
+    entity_id: binary_sensor.fridge_door
     domain: binary_sensor
     trigger: device
   conditions: []
@@ -760,7 +773,7 @@
     repeat:
       while:
       - condition: state
-        entity_id: 9bdf92f12f090b5cb937ec8615d3e22b
+        entity_id: binary_sensor.fridge_door
         state: 'on'
       - condition: template
         value_template: '{{ repeat.index <= 15 }}'
@@ -796,7 +809,7 @@
     target:
       entity_id: light.boys_info
   - condition: state
-    entity_id: 9bdf92f12f090b5cb937ec8615d3e22b
+    entity_id: binary_sensor.fridge_door
     state: 'on'
   - action: notify.alexa_media_kitchen_dot
     metadata: {}
@@ -811,8 +824,9 @@
     trigger: state
   conditions:
   - condition: template
-    value_template: '{{ trigger.from_state.state not in [''unavailable'', ''unknown'']
-      }}'
+    value_template: '{{ trigger.from_state is not none and trigger.to_state is not
+      none and trigger.from_state.state not in [''unavailable'', ''unknown''] and
+      trigger.to_state.state not in [''unavailable'', ''unknown''] }}'
   actions:
   - choose:
     - conditions:
@@ -820,6 +834,11 @@
         entity_id: sensor.wash_cycle_status
         state: Stopped
       sequence:
+      - delay:
+          minutes: 3
+      - condition: state
+        entity_id: sensor.wash_cycle_status
+        state: Stopped
       - target:
           entity_id: light.washing
         data:
@@ -921,25 +940,29 @@
       - target:
           entity_id: light.washing
         action: light.turn_off
-  mode: single
+  mode: restart
 - id: '1773558836583'
   alias: F1 Track Status Light
   description: ''
   use_blueprint:
-    path: EvertJob/f1.yaml
+    path: Nicxe/f1_track_status.yaml
     input:
-      light_entity: light.medicine
-      transition_time: 0.5
-      flash_time: 1
-      track_status_sensor: sensor.f1_track_status
-      session_status_sensor: sensor.f1_session_status
+      session_status_entity: sensor.f1_session_status
+      track_status_entity: sensor.f1_track_status
+      light_target: light.medicine
+      transition_s: 0.5
+      flash_interval_s: 1
+      yellow_red_mode: steady
+      sc_vsc_mode: flash_continuous
 - id: jon_pc_wake
   alias: Jon PC - Wake on LAN
   description: Wake Jon's PC when start_jon_pc sensor turns on
   mode: single
   triggers:
   - trigger: state
-    entity_id: binary_sensor.start_jon_pc
+    entity_id: input_button.start_jon_pc
+  - trigger: state
+    entity_id: binary_sensor.jonpc
     to: 'on'
   conditions: []
   actions:
@@ -1072,7 +1095,6 @@
   - trigger: state
     entity_id:
     - binary_sensor.kitchen_pir_sensor
-    - binary_sensor.kitchen_mw_sensor
     - binary_sensor.kitchen_motion
     to: 'on'
   conditions: []
@@ -1085,18 +1107,13 @@
   - action: switch.turn_on
     target:
       entity_id: switch.counter_light
-  - wait_for_trigger:
-    - trigger: state
-      entity_id:
-      - binary_sensor.kitchen_pir_sensor
-      - binary_sensor.kitchen_mw_sensor
-      - binary_sensor.kitchen_motion
-      to: 'on'
-    timeout:
+  - wait_template: '{{ is_state(''binary_sensor.kitchen_pir_sensor'', ''off'') and
+      is_state(''binary_sensor.kitchen_motion'', ''off'') }}'
+  - delay:
       minutes: 2
-    continue_on_timeout: true
   - condition: template
-    value_template: '{{ is_state(''binary_sensor.kitchen_pir_sensor'', ''off'') }} '
+    value_template: '{{ is_state(''binary_sensor.kitchen_pir_sensor'', ''off'') and
+      is_state(''binary_sensor.kitchen_motion'', ''off'') }}'
   - action: light.turn_off
     target:
       entity_id:
@@ -1419,7 +1436,7 @@
         payload: wrong
 - id: alarm_panel_rfid_success
   alias: Alarm Panel RFID Success
-  description: Known card scanned — toggle arm/disarm in Alarmo
+  description: "Known card scanned \u2014 toggle arm/disarm in Alarmo"
   triggers:
   - trigger: mqtt
     topic: alarm/rfid_success
@@ -1441,14 +1458,14 @@
       data: {}
 - id: alarm_panel_rfid_fail
   alias: Alarm Panel RFID Fail
-  description: Unknown card scanned — notify
+  description: "Unknown card scanned \u2014 notify"
   triggers:
   - trigger: mqtt
     topic: alarm/rfid_fail
   actions:
   - action: notify.mobile_app_jon_phone
     data:
-      title: Alarm Panel — Unknown Card
+      title: "Alarm Panel \u2014 Unknown Card"
       message: 'Unknown RFID card scanned: {{ trigger.payload }}'
 - id: alarm_panel_sound_on_trigger
   alias: Alarm Panel Sound on Trigger
@@ -1554,7 +1571,7 @@
   - if:
     - condition: template
       value_template: "{{ now().weekday() >= 5 or\n   todays_events['calendar.sandown_school_calendar']['events']\
-        \ |\n   selectattr('summary', 'search', 'holiday|inset|bank', ignorecase=True)\
+        \ |\n   selectattr('summary', 'search', 'holiday|inset|bank holiday', ignorecase=True)\
         \ |\n   list | count > 0 }}\n"
     then:
     - action: input_boolean.turn_off
@@ -1565,7 +1582,7 @@
         entity_id: input_text.boys_school
       data:
         value: "{%- set off_event = todays_events['calendar.sandown_school_calendar']['events']\
-          \ |\n   selectattr('summary', 'search', 'holiday|inset|bank', ignorecase=True)\
+          \ |\n   selectattr('summary', 'search', 'holiday|inset|bank holiday', ignorecase=True)\
           \ |\n   map(attribute='summary') | first | default('') -%}\n{% if off_event\
           \ %}{{ off_event }}{% else %}Enjoy your day off{% endif %}\n"
     else:
@@ -1607,12 +1624,20 @@
     target:
       entity_id: input_text.jacob_timetable_today
     data:
-      value: "{%- set events = jacob_today['calendar.jacob_timetable']['events'] | map(attribute='summary') | list -%}\n{%- if events -%}{{ events | join(', ') | truncate(255, true, '') }}{%- else -%}No lessons today{%- endif -%}"
+      value: '{%- set events = jacob_today[''calendar.jacob_timetable''][''events'']
+        | map(attribute=''summary'') | list -%}
+
+        {%- if events -%}{{ events | join('', '') | truncate(255, true, '''') }}{%-
+        else -%}No lessons today{%- endif -%}'
   - action: input_text.set_value
     target:
       entity_id: input_text.jacob_timetable_tomorrow
     data:
-      value: "{%- set events = jacob_tomorrow['calendar.jacob_timetable']['events'] | map(attribute='summary') | list -%}\n{%- if events -%}{{ events | join(', ') | truncate(255, true, '') }}{%- else -%}No lessons tomorrow{%- endif -%}"
+      value: '{%- set events = jacob_tomorrow[''calendar.jacob_timetable''][''events'']
+        | map(attribute=''summary'') | list -%}
+
+        {%- if events -%}{{ events | join('', '') | truncate(255, true, '''') }}{%-
+        else -%}No lessons tomorrow{%- endif -%}'
 - id: valance_morning_sunrise
   alias: Valance Morning Sunrise
   description: 'Triggers WLED nightlight sunrise on valance at 06:15 Mon-Fri. 10 minute
@@ -1641,12 +1666,13 @@
     event_type: esphome.encoder_event
   conditions:
   - condition: template
-    value_template: "{{ trigger.event.data.action in ['left', 'right', 'press', 'long_press'] }}"
+    value_template: '{{ trigger.event.data.action in [''left'', ''right'', ''press'',
+      ''long_press''] }}'
   actions:
   - choose:
     - conditions:
       - condition: template
-        value_template: "{{ trigger.event.data.action == 'left' }}"
+        value_template: '{{ trigger.event.data.action == ''left'' }}'
       sequence:
       - choose:
         - conditions:
@@ -1657,16 +1683,18 @@
           - action: script.rotary_ui_menu_previous
         - conditions:
           - condition: template
-            value_template: "{{ states('input_select.rotary_ui_state') in ['page_school', 'page_jacob'] }}"
+            value_template: '{{ states(''input_select.rotary_ui_state'') in [''page_school'',
+              ''page_jacob''] }}'
           sequence:
           - action: script.rotary_ui_page_previous
         default:
         - condition: template
-          value_template: "{{ not is_state('input_select.rotary_ui_state', 'front') }}"
+          value_template: '{{ not is_state(''input_select.rotary_ui_state'', ''front'')
+            }}'
         - action: script.rotary_ui_touch
     - conditions:
       - condition: template
-        value_template: "{{ trigger.event.data.action == 'right' }}"
+        value_template: '{{ trigger.event.data.action == ''right'' }}'
       sequence:
       - choose:
         - conditions:
@@ -1677,16 +1705,18 @@
           - action: script.rotary_ui_menu_next
         - conditions:
           - condition: template
-            value_template: "{{ states('input_select.rotary_ui_state') in ['page_school', 'page_jacob'] }}"
+            value_template: '{{ states(''input_select.rotary_ui_state'') in [''page_school'',
+              ''page_jacob''] }}'
           sequence:
           - action: script.rotary_ui_page_next
         default:
         - condition: template
-          value_template: "{{ not is_state('input_select.rotary_ui_state', 'front') }}"
+          value_template: '{{ not is_state(''input_select.rotary_ui_state'', ''front'')
+            }}'
         - action: script.rotary_ui_touch
     - conditions:
       - condition: template
-        value_template: "{{ trigger.event.data.action == 'press' }}"
+        value_template: '{{ trigger.event.data.action == ''press'' }}'
       sequence:
       - choose:
         - conditions:
@@ -1705,7 +1735,7 @@
         - action: script.rotary_ui_page_press
     - conditions:
       - condition: template
-        value_template: "{{ trigger.event.data.action == 'long_press' }}"
+        value_template: '{{ trigger.event.data.action == ''long_press'' }}'
       sequence:
       - action: script.rotary_ui_return_front
 - id: rotary_ui_timeout_return_front
@@ -1720,3 +1750,54 @@
   conditions: []
   actions:
   - action: script.rotary_ui_return_front
+- id: octoprint_print_done
+  alias: OctoPrint - Print Complete Announcement
+  description: Announce on alarm Alexa when print finishes. Silent 8pm-7am.
+  mode: single
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.octoprint_printing
+    from: 'on'
+    to: 'off'
+  conditions:
+  - condition: template
+    value_template: '{{ trigger.from_state is not none and trigger.to_state is not
+      none and trigger.from_state.state == ''on'' and trigger.to_state.state == ''off''
+      }}'
+  - condition: state
+    entity_id: binary_sensor.octoprint_printing_error
+    state: 'off'
+  - condition: time
+    after: 07:00:00
+    before: '20:00:00'
+  actions:
+  - action: notify.alexa_media_alarm
+    data:
+      message: Your 3D print has finished.
+      data:
+        type: announce
+        method: speak
+- id: octoprint_print_failed
+  alias: OctoPrint - Print Failed Announcement
+  description: Announce on alarm Alexa when print errors. Silent 8pm-7am.
+  mode: single
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.octoprint_printing_error
+    from: 'off'
+    to: 'on'
+  conditions:
+  - condition: template
+    value_template: '{{ trigger.from_state is not none and trigger.to_state is not
+      none and trigger.from_state.state == ''off'' and trigger.to_state.state == ''on''
+      }}'
+  - condition: time
+    after: 07:00:00
+    before: '20:00:00'
+  actions:
+  - action: notify.alexa_media_alarm
+    data:
+      message: Warning! Your 3D print has failed. Please check OctoPrint.
+      data:
+        type: announce
+        method: speak

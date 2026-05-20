@@ -22,23 +22,16 @@ cards:
     entity: alarm_control_panel.alarmo
     name: Home Alarm
 
-  # Camera and door sensors REMOVED - camera.front_door, binary_sensor.front_door_contact, binary_sensor.garage_motion missing
   # - type: horizontal-stack
   #   cards:
   #     - type: picture-entity
-  #       entity: camera.front_door
   #       camera_view: live
   #       show_name: false
   #     - type: entities
   #       entities:
-  #         - binary_sensor.front_door_contact
-  #         - binary_sensor.garage_motion
 
   - type: custom:mushroom-title-card
     subtitle: Sensors
 
-  # Sensors REMOVED - sensor.door_left_open_duration and sensor.last_alarm_event missing
   # - type: entities
   #   entities:
-  #     - sensor.door_left_open_duration
-  #     - sensor.last_alarm_event

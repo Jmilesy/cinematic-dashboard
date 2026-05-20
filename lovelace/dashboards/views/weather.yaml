@@ -11,7 +11,6 @@ cards:
   - type: custom:platinum-weather-card
     entity_apparent_temp: sensor.pirateweather_apparent_temperature
     entity_forecast_icon: sensor.pirateweather_icon
-    # Removed: sensor.home_realfeel_temperature_max_day_1, sensor.home_realfeel_temperature_min_day_1, sensor.home_condition_day_1, sensor.home_realfeel_temperature (all missing)
     entity_humidity: sensor.pirateweather_humidity
     entity_pop: sensor.pirateweather_precip_probability
     entity_pressure: sensor.pirateweather_pressure

@@ -3,12 +3,10 @@ path: floorplan
 panel: true
 icon: mdi:floor-plan
 cards:
-  - type: custom:floorplan-card
-    config: /local/floorplan/floorplan.yaml?v=3
-    card_mod:
-      style: |
-        :host {
-          height: calc(100vw * 552 / 1336) !important;
-          max-height: calc(100vh - 56px) !important;
-          display: block !important;
-        }
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: custom:floorplan-card
+            config: /local/floorplan/floorplan.yaml?v=4
+            full_height: true

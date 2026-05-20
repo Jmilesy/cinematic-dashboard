@@ -55,13 +55,6 @@ cards:
           accent: "255,150,0"
 
       - type: custom:button-card
-        entity: sensor.kitchen_humidity
-        name: HUMIDITY
-        template: room_stat
-        variables:
-          accent: "100,200,255"
-
-      - type: custom:button-card
         entity: sensor.kitchen_brightness
         name: LIGHT
         template: room_stat

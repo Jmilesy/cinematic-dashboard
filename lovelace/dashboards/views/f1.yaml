@@ -24,8 +24,5 @@ cards:
   - type: custom:mushroom-title-card
     subtitle: Live Timing
 
-  # F1 Live Timing REMOVED - sensor.f1_leader and sensor.f1_race_status missing
   # - type: entities
   #   entities:
-  #     - sensor.f1_leader
-  #     - sensor.f1_race_status

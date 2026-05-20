@@ -107,7 +107,6 @@ mqtt:
 
 recorder:
   purge_keep_days: 30
-  purge_interval: 1
   commit_interval: 30
   exclude:
     entities:
@@ -121,6 +120,11 @@ input_boolean:
   natalie_makeup:
     name: Natalie Makeup Light
     icon: mdi:mirror
+
+input_button:
+  start_jon_pc:
+    name: Start Jon PC
+    icon: mdi:desktop-tower
 
 input_select:
   rotary_ui_state:
@@ -168,6 +172,10 @@ wake_on_lan:
 http:
   ssl_certificate: /ssl/fullchain.pem
   ssl_key: /ssl/privkey.pem
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 192.168.1.76
+    - 127.0.0.1
 
 rest_command:
   shutdown_jon_pc:

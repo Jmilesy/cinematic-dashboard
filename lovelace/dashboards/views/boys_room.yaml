@@ -32,17 +32,15 @@ cards:
         variables:
           accent: "255,150,0"
 
-      # humidity sensor unavailable until ESP32 deployed — shows —
       - type: custom:button-card
-        entity: sensor.boysroom_humidity
+        entity: sensor.boys_room_humidity
         name: HUMIDITY
         template: room_stat
         variables:
           accent: "100,200,255"
 
-      # brightness sensor unavailable until ESP32 deployed — shows —
       - type: custom:button-card
-        entity: sensor.boysroom_brightness
+        entity: sensor.mmwave_test_bed_testbed_light
         name: LIGHT
         template: room_stat
         variables:

@@ -25,11 +25,9 @@ cards:
   - type: entities
     entities:
       - entity: binary_sensor.ugw3_wan_status
-      # Removed: sensor.tautulli_lan_bandwidth (disabled), sensor.nzbget_uptime (missing)
 
   - type: custom:mushroom-title-card
     subtitle: Services
 
   - type: entities
     entities:
-      # Removed: sensor.tautulli_direct_plays (disabled), sensor.nzbget_queue_size (missing), sensor.jellyfin_active_streams (missing)

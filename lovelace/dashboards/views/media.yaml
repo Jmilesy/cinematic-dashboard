@@ -18,15 +18,12 @@ cards:
           - type: heading
             heading: Players
           # media_player.plex_plex_for_android_tv_aftmm - REMOVED (unavailable)
-          # media_player.sky_q - REMOVED (missing)
-          # media_player.fpp - REMOVED (unavailable)
           - type: media-control
             entity: media_player.boy_s_new_dot
       - type: grid
         cards:
           - type: heading
             heading: Quick Controls
-          # sky_q and fpp removed - both unavailable/missing
 
   - type: custom:mushroom-title-card
     subtitle: Now Playing

@@ -46,12 +46,10 @@ cards:
           action: call-service
           service: light.turn_off
           service_data:
-            entity_id: group.all_lights
-      # Evening scene button REMOVED - scene.evening missing
+            entity_id: all
       # - type: button
       #   name: Evening
       #   tap_action:
       #     action: call-service
       #     service: scene.turn_on
       #     service_data:
-      #       entity_id: scene.evening

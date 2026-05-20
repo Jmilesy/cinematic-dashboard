@@ -160,10 +160,8 @@ cards:
   ###############################################################
   - type: horizontal-stack
     cards:
-      # light.home_lights card REMOVED - entity missing
       # - type: custom:button-card
       #   template: nav_button
-      #   entity: light.home_lights
       #   name: House
       #   icon: mdi:home
       #   variables:

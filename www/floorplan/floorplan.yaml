@@ -1,5 +1,5 @@
-image: /local/floorplan/floorplan.svg?v=22
-stylesheet: /local/floorplan/floorplan.css?v=4
+image: /local/floorplan/floorplan.svg?v=27
+stylesheet: /local/floorplan/floorplan.css?v=6
 log_level: warn
 
 rules:
@@ -7,92 +7,138 @@ rules:
   - name: Boys room light overlay
     entities:
       - entity: light.boys_light
-        element: room-boys
+        element: room-boys-light
     state_action:
       - state: "on"
         action: call-service
-        service: floorplan.style_set
+        service: floorplan.class_set
         service_data:
-          element: room-boys
-          style: "fill: rgba(255,220,80,0.35) !important;"
+          element: room-boys-light
+          class: "room-overlay overlay-light-on"
       - state: "off"
         action: call-service
-        service: floorplan.style_set
+        service: floorplan.class_set
         service_data:
-          element: room-boys
-          style: "fill: transparent !important;"
+          element: room-boys-light
+          class: "room-overlay overlay-off"
 
   - name: Boys room presence overlay
     entities:
       - entity: binary_sensor.mmwave_test_bed_ld2450_presence
-        element: room-boys
+        element: room-boys-presence
     state_action:
       - state: "on"
         action: call-service
-        service: floorplan.style_set
+        service: floorplan.class_set
         service_data:
-          element: room-boys
-          style: "fill: rgba(0,170,255,0.2) !important;"
+          element: room-boys-presence
+          class: "room-overlay overlay-presence-on"
       - state: "off"
         action: call-service
-        service: floorplan.style_set
+        service: floorplan.class_set
         service_data:
-          element: room-boys
-          style: "fill: transparent !important;"
+          element: room-boys-presence
+          class: "room-overlay overlay-off"
 
   - name: Bedroom light overlay
     entities:
       - entity: light.bedroom_light
-        element: room-bedroom
+        element: room-bedroom-light
     state_action:
       - state: "on"
         action: call-service
-        service: floorplan.style_set
+        service: floorplan.class_set
         service_data:
-          element: room-bedroom
-          style: "fill: rgba(255,220,80,0.35) !important;"
+          element: room-bedroom-light
+          class: "room-overlay overlay-light-on"
       - state: "off"
         action: call-service
-        service: floorplan.style_set
+        service: floorplan.class_set
         service_data:
-          element: room-bedroom
-          style: "fill: transparent !important;"
+          element: room-bedroom-light
+          class: "room-overlay overlay-off"
 
   - name: Landing light overlay
     entities:
       - entity: light.hall_light
-        element: room-landing
+        element: room-landing-light
     state_action:
       - state: "on"
         action: call-service
-        service: floorplan.style_set
+        service: floorplan.class_set
         service_data:
-          element: room-landing
-          style: "fill: rgba(255,220,80,0.35) !important;"
+          element: room-landing-light
+          class: "room-overlay overlay-light-on"
       - state: "off"
         action: call-service
-        service: floorplan.style_set
+        service: floorplan.class_set
         service_data:
-          element: room-landing
-          style: "fill: transparent !important;"
+          element: room-landing-light
+          class: "room-overlay overlay-off"
+
+  - name: Landing occupancy overlay
+    entities:
+      - entity: binary_sensor.hall_multi_sensor
+        element: room-landing-presence
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: room-landing-presence
+          class: "room-overlay overlay-presence-on"
+      - state: "off"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: room-landing-presence
+          class: "room-overlay overlay-off"
 
   - name: Bathroom presence overlay
     entities:
-      - entity: binary_sensor.hall_multi_sensor
-        element: room-bathroom
+      - entity: binary_sensor.bathroom_multi_sensor
+        element: room-bathroom-presence
     state_action:
       - state: "on"
         action: call-service
-        service: floorplan.style_set
+        service: floorplan.class_set
         service_data:
-          element: room-bathroom
-          style: "fill: rgba(0,170,255,0.3) !important;"
+          element: room-bathroom-presence
+          class: "room-overlay overlay-presence-on"
       - state: "off"
         action: call-service
-        service: floorplan.style_set
+        service: floorplan.class_set
         service_data:
-          element: room-bathroom
-          style: "fill: transparent !important;"
+          element: room-bathroom-presence
+          class: "room-overlay overlay-off"
+
+  - name: Bathroom temperature
+    entities:
+      - entity: sensor.bathroom_multi_sensor_temperature
+        element: bathroom-temp
+    state_action:
+      action: call-service
+      service: floorplan.text_set
+      service_data:
+        element: bathroom-temp
+        text: |
+          >
+          const value = Number(entity.state);
+          return Number.isFinite(value) ? `${value.toFixed(1)}°C` : '--°C';
+
+  - name: Bathroom humidity
+    entities:
+      - entity: sensor.bathroom_multi_sensor_humidity
+        element: bathroom-hum
+    state_action:
+      action: call-service
+      service: floorplan.text_set
+      service_data:
+        element: bathroom-hum
+        text: |
+          >
+          const value = Number(entity.state);
+          return Number.isFinite(value) ? `${Math.round(value)}%` : '--%';
 
   - name: Boys room light button
     entities:
@@ -174,11 +220,13 @@ rules:
         element: bedroom-temp
     state_action:
       action: call-service
-      service: floorplan.attr_set
+      service: floorplan.text_set
       service_data:
         element: bedroom-temp
-        attribute: innerHTML
-        value: "{{states('sensor.bedroom_temperature') | round(1)}}°C"
+        text: |
+          >
+          const value = Number(entity.state);
+          return Number.isFinite(value) ? `${value.toFixed(1)}°C` : '--°C';
 
   - name: Bedroom humidity
     entities:
@@ -186,11 +234,13 @@ rules:
         element: bedroom-hum
     state_action:
       action: call-service
-      service: floorplan.attr_set
+      service: floorplan.text_set
       service_data:
         element: bedroom-hum
-        attribute: innerHTML
-        value: "{{states('sensor.bedroom_humidity') | round(0) | int}}%"
+        text: |
+          >
+          const value = Number(entity.state);
+          return Number.isFinite(value) ? `${Math.round(value)}%` : '--%';
 
   - name: Boys room temperature
     entities:
@@ -198,11 +248,13 @@ rules:
         element: boysroom-temp
     state_action:
       action: call-service
-      service: floorplan.attr_set
+      service: floorplan.text_set
       service_data:
         element: boysroom-temp
-        attribute: innerHTML
-        value: "{{states('sensor.boysroom_temperature') | round(1)}}°C"
+        text: |
+          >
+          const value = Number(entity.state);
+          return Number.isFinite(value) ? `${value.toFixed(1)}°C` : '--°C';
 
   - name: Landing temperature
     entities:
@@ -210,11 +262,13 @@ rules:
         element: landing-temp
     state_action:
       action: call-service
-      service: floorplan.attr_set
+      service: floorplan.text_set
       service_data:
         element: landing-temp
-        attribute: innerHTML
-        value: "{{states('sensor.hall_multi_sensor_temperature') | round(1)}}°C"
+        text: |
+          >
+          const value = Number(entity.state);
+          return Number.isFinite(value) ? `${value.toFixed(1)}°C` : '--°C';
 
   - name: Landing humidity
     entities:
@@ -222,8 +276,259 @@ rules:
         element: landing-hum
     state_action:
       action: call-service
-      service: floorplan.attr_set
+      service: floorplan.text_set
       service_data:
         element: landing-hum
-        attribute: innerHTML
-        value: "{{states('sensor.hall_multi_sensor_humidity') | round(0) | int}}%"
+        text: |
+          >
+          const value = Number(entity.state);
+          return Number.isFinite(value) ? `${Math.round(value)}%` : '--%';
+
+  - name: Boys room occupied status
+    entities:
+      - entity: binary_sensor.mmwave_test_bed_ld2450_presence
+        element: boys-occupied-status
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.text_set
+        service_data:
+          element: boys-occupied-status
+          text: "Occupied"
+      - state: "off"
+        action: call-service
+        service: floorplan.text_set
+        service_data:
+          element: boys-occupied-status
+          text: "Clear"
+
+  - name: Landing occupied status text
+    entities:
+      - entity: binary_sensor.hall_multi_sensor
+        element: landing-occupied-status
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.text_set
+        service_data:
+          element: landing-occupied-status
+          text: "Hall occupied"
+      - state: "off"
+        action: call-service
+        service: floorplan.text_set
+        service_data:
+          element: landing-occupied-status
+          text: "Hall clear"
+
+  - name: Landing occupied status background
+    entities:
+      - entity: binary_sensor.hall_multi_sensor
+        element: landing-occupancy-bg
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: landing-occupancy-bg
+          class: "status-pill status-open"
+      - state: "off"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: landing-occupancy-bg
+          class: "status-pill status-closed"
+
+  - name: Bathroom occupied status text
+    entities:
+      - entity: binary_sensor.bathroom_multi_sensor
+        element: bathroom-occupied-status
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.text_set
+        service_data:
+          element: bathroom-occupied-status
+          text: "Occupied"
+      - state: "off"
+        action: call-service
+        service: floorplan.text_set
+        service_data:
+          element: bathroom-occupied-status
+          text: "Clear"
+
+  - name: Bathroom occupied status background
+    entities:
+      - entity: binary_sensor.bathroom_multi_sensor
+        element: bathroom-occupancy-bg
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: bathroom-occupancy-bg
+          class: "status-pill status-open"
+      - state: "off"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: bathroom-occupancy-bg
+          class: "status-pill status-closed"
+
+  - name: Front door status text
+    entities:
+      - entity: binary_sensor.front_door_2
+        element: front-door-status
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.text_set
+        service_data:
+          element: front-door-status
+          text: "Front open"
+      - state: "off"
+        action: call-service
+        service: floorplan.text_set
+        service_data:
+          element: front-door-status
+          text: "Front closed"
+
+  - name: Front door status background
+    entities:
+      - entity: binary_sensor.front_door_2
+        element: front-door-bg
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: front-door-bg
+          class: "status-pill status-open"
+      - state: "off"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: front-door-bg
+          class: "status-pill status-closed"
+
+  - name: Boys door status text
+    entities:
+      - entity: binary_sensor.boys_room_door
+        element: boys-door-status
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.text_set
+        service_data:
+          element: boys-door-status
+          text: "Door open"
+      - state: "off"
+        action: call-service
+        service: floorplan.text_set
+        service_data:
+          element: boys-door-status
+          text: "Door closed"
+
+  - name: Boys door status background
+    entities:
+      - entity: binary_sensor.boys_room_door
+        element: boys-door-bg
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: boys-door-bg
+          class: "status-pill status-open"
+      - state: "off"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: boys-door-bg
+          class: "status-pill status-closed"
+
+  - name: Boys light status text
+    entities:
+      - entity: light.boys_light
+        element: boys-light-status
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.text_set
+        service_data:
+          element: boys-light-status
+          text: "Light on"
+      - state: "off"
+        action: call-service
+        service: floorplan.text_set
+        service_data:
+          element: boys-light-status
+          text: "Light off"
+
+  - name: Boys light status background
+    entities:
+      - entity: light.boys_light
+        element: boys-light-bg
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: boys-light-bg
+          class: "status-pill status-on"
+      - state: "off"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: boys-light-bg
+          class: "status-pill status-off"
+
+  - name: Hall light status text
+    entities:
+      - entity: light.hall_light
+        element: hall-light-status
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.text_set
+        service_data:
+          element: hall-light-status
+          text: "Hall on"
+      - state: "off"
+        action: call-service
+        service: floorplan.text_set
+        service_data:
+          element: hall-light-status
+          text: "Hall off"
+
+  - name: Hall light status background
+    entities:
+      - entity: light.hall_light
+        element: hall-light-bg
+    state_action:
+      - state: "on"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: hall-light-bg
+          class: "status-pill status-on"
+      - state: "off"
+        action: call-service
+        service: floorplan.class_set
+        service_data:
+          element: hall-light-bg
+          class: "status-pill status-off"
+
+  - name: Bathroom light level status
+    entities:
+      - entity: sensor.bathroom_multi_sensor_illuminance
+        element: bathroom-light-status
+    state_action:
+      action: call-service
+      service: floorplan.text_set
+      service_data:
+        element: bathroom-light-status
+        text: |
+          >
+          const value = Number(entity.state);
+          if (!Number.isFinite(value)) return '-- lx';
+          return value >= 20 ? `Bright ${Math.round(value)}lx` : `Dark ${Math.round(value)}lx`;

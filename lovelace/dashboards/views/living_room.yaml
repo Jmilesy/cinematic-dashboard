@@ -33,7 +33,7 @@ cards:
           accent: "255,150,0"
 
       - type: custom:button-card
-        entity: sensor.first_air_quality_monitor_humidity
+        entity: sensor.first_air_quality_monitor_humidity_2
         name: HUMIDITY
         template: room_stat
         variables:
@@ -45,6 +45,45 @@ cards:
         template: room_stat
         variables:
           accent: "255,255,80"
+
+  # ── AIR QUALITY ───────────────────────────────────────────────────────────
+  - type: custom:button-card
+    template: room_section_title
+    variables:
+      title: "🌫️ AIR QUALITY"
+      accent: "100,200,255"
+
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+      - type: custom:button-card
+        entity: sensor.first_air_quality_monitor_indoor_air_quality_2
+        name: IAQ
+        template: room_stat
+        variables:
+          accent: "100,255,180"
+
+      - type: custom:button-card
+        entity: sensor.first_air_quality_monitor_particulate_matter_2
+        name: PM
+        template: room_stat
+        variables:
+          accent: "255,200,80"
+
+      - type: custom:button-card
+        entity: sensor.first_air_quality_monitor_carbon_monoxide_2
+        name: CO
+        template: room_stat
+        variables:
+          accent: "255,100,100"
+
+      - type: custom:button-card
+        entity: sensor.first_air_quality_monitor_volatile_organic_compounds_2
+        name: VOC
+        template: room_stat
+        variables:
+          accent: "180,120,255"
 
   # ── LIGHTING ──────────────────────────────────────────────────────────────
   - type: custom:button-card
