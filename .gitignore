@@ -56,3 +56,8 @@ go2rtc-1.9.9
 *.py
 .cache/
 .aider*
+
+# Local safety backups from manual/agent edits
+*.bak
+*.bak-*
+*.bak-*/
