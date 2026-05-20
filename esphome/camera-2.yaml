@@ -10,9 +10,8 @@ esp32:
 logger:
 # Enable Home Assistant API
 api: # https://esphome.io/components/api.html#configuration-variables  
-  password: !secret api_password
   encryption:
-    key: !secret api_key  
+    key: !secret api_key
   services:  # change camera parameters on-the-fly
   - service: camera_set_param
     variables:
@@ -57,6 +56,8 @@ esp32_camera_web_server:
     mode: stream
 #  - port: 8081
 #    mode: snapshot
+psram:
+
 esp32_camera:
   id: cam_1
   name: ESP Camera
@@ -119,4 +120,3 @@ binary_sensor:
 sensor:
   - platform: wifi_signal
     name: '$hostname WiFi Signal'
-

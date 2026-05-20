@@ -9,9 +9,11 @@ esphome:
   project:
     name: "jon.frontroom"
     version: "0.0.1"
-  platform: ESP8266
-  board: d1_mini_lite
+
 # Enable logging
+esp8266:
+  board: d1_mini_lite
+
 logger:
 
 # Enable Home Assistant API

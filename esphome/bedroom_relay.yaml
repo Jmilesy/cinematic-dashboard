@@ -1,7 +1,5 @@
 esphome:
   name: bedroom_relay
-  platform: ESP8266
-  board: esp01
 
 wifi:
   ssid: !secret wifi_ssid
@@ -14,12 +12,13 @@ wifi:
 
 captive_portal:
 
-# Enable logging
+esp8266:
+  board: esp01
+
 logger:
 
 # Enable Home Assistant API
 api:
-  password: !secret api_password
 
 ota:
   - platform: esphome
