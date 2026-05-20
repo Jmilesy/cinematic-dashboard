@@ -21,8 +21,8 @@
       unique_id: waste_next_date
       device_class: date
       state: >
-        {% set days = state_attr('sensor.next_waste_collection', 'daysTo') | int(0) %}
-        {{ (now().date() + timedelta(days=days)) }}
+        {% set days = state_attr('sensor.next_waste_collection', 'daysTo') %}
+        {{ (now().date() + timedelta(days=days | int)) if days is not none else 'unknown' }}
 
     # ------------------------------------------------------------
     # First collection friendly date
@@ -30,9 +30,13 @@
     - name: waste_next_friendly_date
       unique_id: waste_next_friendly_date
       state: >
-        {% set days = state_attr('sensor.next_waste_collection', 'daysTo') | int(0) %}
-        {% set d = now() + timedelta(days=days) %}
-        {{ d.strftime('%A %-d %B %Y') }}
+        {% set days = state_attr('sensor.next_waste_collection', 'daysTo') %}
+        {% if days is not none %}
+          {% set d = now() + timedelta(days=days | int) %}
+          {{ d.strftime('%A %-d %B %Y') }}
+        {% else %}
+          unknown
+        {% endif %}
 
     # ------------------------------------------------------------
     # First collection relative text
@@ -40,13 +44,15 @@
     - name: waste_next_relative
       unique_id: waste_next_relative
       state: >
-        {% set days = state_attr('sensor.next_waste_collection', 'daysTo') | int(0) %}
-        {% if days == 0 %}
+        {% set days = state_attr('sensor.next_waste_collection', 'daysTo') %}
+        {% if days is none %}
+          unknown
+        {% elif days | int == 0 %}
           today
-        {% elif days == 1 %}
+        {% elif days | int == 1 %}
           tomorrow
         {% else %}
-          in {{ days }} days
+          in {{ days | int }} days
         {% endif %}
 
     # ------------------------------------------------------------
@@ -56,8 +62,8 @@
       unique_id: waste_second_date
       device_class: date
       state: >
-        {% set first = state_attr('sensor.next_waste_collection', 'daysTo') | int(0) %}
-        {{ (now().date() + timedelta(days=first + 7)) }}
+        {% set first = state_attr('sensor.next_waste_collection', 'daysTo') %}
+        {{ (now().date() + timedelta(days=(first | int) + 7)) if first is not none else 'unknown' }}
 
     # ------------------------------------------------------------
     # Second collection friendly date
@@ -65,9 +71,13 @@
     - name: waste_second_friendly_date
       unique_id: waste_second_friendly_date
       state: >
-        {% set first = state_attr('sensor.next_waste_collection', 'daysTo') | int(0) %}
-        {% set d = now() + timedelta(days=first + 7) %}
-        {{ d.strftime('%A %-d %B %Y') }}
+        {% set first = state_attr('sensor.next_waste_collection', 'daysTo') %}
+        {% if first is not none %}
+          {% set d = now() + timedelta(days=(first | int) + 7) %}
+          {{ d.strftime('%A %-d %B %Y') }}
+        {% else %}
+          unknown
+        {% endif %}
 
     # ------------------------------------------------------------
     # Second collection relative text
@@ -75,13 +85,18 @@
     - name: waste_second_relative
       unique_id: waste_second_relative
       state: >
-        {% set days = (state_attr('sensor.next_waste_collection', 'daysTo') | int(0)) + 7 %}
-        {% if days == 0 %}
-          today
-        {% elif days == 1 %}
-          tomorrow
+        {% set first = state_attr('sensor.next_waste_collection', 'daysTo') %}
+        {% if first is none %}
+          unknown
         {% else %}
-          in {{ days }} days
+          {% set days = (first | int) + 7 %}
+          {% if days == 0 %}
+            today
+          {% elif days == 1 %}
+            tomorrow
+          {% else %}
+            in {{ days }} days
+          {% endif %}
         {% endif %}
 
     # ------------------------------------------------------------
@@ -90,8 +105,8 @@
     - name: waste_types
       unique_id: waste_types
       state: >
-        {% set raw = states('sensor.next_waste_collection').split(' in ')[0] %}
-        {{ raw }}
+        {% set raw = states('sensor.next_waste_collection') %}
+        {{ raw.split(' in ')[0] if raw not in ['unknown', 'unavailable', 'none', ''] else 'unknown' }}
 
     # ------------------------------------------------------------
     # Boolean flags per type
@@ -118,7 +133,9 @@
     - name: waste_next_refuse
       unique_id: waste_next_refuse
       state: >
-        {% if is_state('sensor.waste_has_refuse', 'True') %}
+        {% if is_state('sensor.waste_types', 'unknown') %}
+          unknown
+        {% elif is_state('sensor.waste_has_refuse', 'True') %}
           {{ states('sensor.waste_next_relative') }} ({{ states('sensor.waste_next_friendly_date') }})
         {% else %}
           {{ states('sensor.waste_second_relative') }} ({{ states('sensor.waste_second_friendly_date') }})
@@ -127,7 +144,9 @@
     - name: waste_next_food
       unique_id: waste_next_food
       state: >
-        {% if is_state('sensor.waste_has_food', 'True') %}
+        {% if is_state('sensor.waste_types', 'unknown') %}
+          unknown
+        {% elif is_state('sensor.waste_has_food', 'True') %}
           {{ states('sensor.waste_next_relative') }} ({{ states('sensor.waste_next_friendly_date') }})
         {% else %}
           {{ states('sensor.waste_second_relative') }} ({{ states('sensor.waste_second_friendly_date') }})
@@ -136,7 +155,9 @@
     - name: waste_next_recycling
       unique_id: waste_next_recycling
       state: >
-        {% if is_state('sensor.waste_has_recycling', 'True') %}
+        {% if is_state('sensor.waste_types', 'unknown') %}
+          unknown
+        {% elif is_state('sensor.waste_has_recycling', 'True') %}
           {{ states('sensor.waste_next_relative') }} ({{ states('sensor.waste_next_friendly_date') }})
         {% else %}
           {{ states('sensor.waste_second_relative') }} ({{ states('sensor.waste_second_friendly_date') }})
@@ -145,7 +166,9 @@
     - name: waste_next_papercard
       unique_id: waste_next_papercard
       state: >
-        {% if is_state('sensor.waste_has_papercard', 'True') %}
+        {% if is_state('sensor.waste_types', 'unknown') %}
+          unknown
+        {% elif is_state('sensor.waste_has_papercard', 'True') %}
           {{ states('sensor.waste_next_relative') }} ({{ states('sensor.waste_next_friendly_date') }})
         {% else %}
           {{ states('sensor.waste_second_relative') }} ({{ states('sensor.waste_second_friendly_date') }})
@@ -160,4 +183,4 @@
         {% set types = states('sensor.waste_types') %}
         {% set rel = states('sensor.waste_next_relative') %}
         {% set date = states('sensor.waste_next_friendly_date') %}
-        {{ types }} — {{ rel }} ({{ date }})
+        {{ types ~ ' — ' ~ rel ~ ' (' ~ date ~ ')' if types != 'unknown' else 'unknown' }}
