@@ -954,6 +954,53 @@
       flash_interval_s: 1
       yellow_red_mode: steady
       sc_vsc_mode: flash_continuous
+- id: f1_track_status_light_cleanup
+  alias: F1 Track Status Light - Cleanup
+  description: Turn the F1 status light off when live timing ends or drops offline.
+  mode: restart
+  triggers:
+  - trigger: state
+    entity_id: sensor.f1_session_status
+    to: finished
+    for:
+      seconds: 20
+  - trigger: state
+    entity_id: sensor.f1_session_status
+    to: finalised
+    for:
+      seconds: 20
+  - trigger: state
+    entity_id: sensor.f1_session_status
+    to: ended
+    for:
+      seconds: 20
+  - trigger: state
+    entity_id: sensor.f1_session_status
+    to: unavailable
+    for:
+      seconds: 20
+  - trigger: state
+    entity_id: sensor.f1_session_status
+    to: unknown
+    for:
+      seconds: 20
+  - trigger: state
+    entity_id: sensor.f1_track_status
+    to: unavailable
+    for:
+      seconds: 20
+  - trigger: state
+    entity_id: sensor.f1_track_status
+    to: unknown
+    for:
+      seconds: 20
+  conditions: []
+  actions:
+  - action: light.turn_off
+    target:
+      entity_id: light.medicine
+    data:
+      transition: 1
 - id: jon_pc_wake
   alias: Jon PC - Wake on LAN
   description: Wake Jon's PC when start_jon_pc sensor turns on
