@@ -231,8 +231,9 @@ cinematic_header:
         const summary = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
 
         const pollenLevel = states['weather.silam_pollen_home_forecast']?.attributes?.next_condition || '';
-        const pollenCulprit = states['weather.silam_pollen_home_forecast']?.attributes?.responsible_elevated || '';
-        const pollenEmoji = { low: '🟢', medium: '🟡', high: '🟠', very_high: '🔴' }[pollenLevel] || '';
+        const rawPollenCulprit = states['weather.silam_pollen_home_forecast']?.attributes?.responsible_elevated || '';
+        const pollenCulprit = rawPollenCulprit && rawPollenCulprit !== 'missing' ? rawPollenCulprit : '';
+        const pollenEmoji = { very_low: '🟢', low: '🟢', medium: '🟡', high: '🟠', very_high: '🔴' }[pollenLevel] || '';
         const pollenText = pollenLevel
           ? ` · ${pollenEmoji} Pollen: ${pollenLevel.replace('_', ' ')}${pollenCulprit ? ' (' + pollenCulprit + ')' : ''}`
           : '';
