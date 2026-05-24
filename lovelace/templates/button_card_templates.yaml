@@ -230,8 +230,12 @@ cinematic_header:
         const raw = states['sensor.header_weather_summary'].state;
         const summary = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
 
-        const pollenLevel = states['weather.silam_pollen_home_forecast']?.attributes?.next_condition || '';
-        const rawPollenCulprit = states['weather.silam_pollen_home_forecast']?.attributes?.responsible_elevated || '';
+        const metOfficePollen = states['sensor.met_office_pollen_london_south_east'];
+        const silamPollen = states['weather.silam_pollen_home_forecast'];
+        const pollenLevel = metOfficePollen?.state && !['unknown', 'unavailable'].includes(metOfficePollen.state)
+          ? metOfficePollen.state
+          : silamPollen?.attributes?.next_condition || '';
+        const rawPollenCulprit = metOfficePollen?.attributes?.summary || silamPollen?.attributes?.responsible_elevated || '';
         const pollenCulprit = rawPollenCulprit && rawPollenCulprit !== 'missing' ? rawPollenCulprit : '';
         const pollenEmoji = { very_low: '🟢', low: '🟢', medium: '🟡', high: '🟠', very_high: '🔴' }[pollenLevel] || '';
         const pollenText = pollenLevel

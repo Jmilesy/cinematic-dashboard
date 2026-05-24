@@ -31,6 +31,21 @@ scene: !include scenes.yaml
 # Template sensors (loads all YAML files in templates/ folder)
 template: !include_dir_merge_list templates/
 
+command_line:
+  - sensor:
+      name: Met Office Pollen London South East
+      unique_id: met_office_pollen_london_south_east
+      command: "python3 /config/scripts/met_office_pollen.py"
+      scan_interval: 21600
+      value_template: "{{ value_json.today_level }}"
+      json_attributes:
+        - region
+        - summary
+        - forecast_codes
+        - forecast_levels
+        - issued
+        - source
+
 homeassistant:
   allowlist_external_dirs:
     - "/media"
