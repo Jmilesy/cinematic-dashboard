@@ -493,7 +493,7 @@
   - if:
     - condition: template
       value_template: '{{ (now().date() + timedelta(days=1)).weekday() >= 5 or    tomorrow_school_events[''calendar.sandown_school_calendar''][''events'']         |
-        selectattr(''summary'', ''search'', ''holiday|inset|bank holiday'', ignorecase=True)         |
+        selectattr(''summary'', ''search'', ''holiday|half\s*-?\s*term|inset|bank'', ignorecase=True)         |
         list | count > 0 }} '
     then:
     - stop: Tomorrow is not a school day
@@ -1601,7 +1601,7 @@
 - id: school_day_manager
   alias: School Day Manager
   description: 'At midnight: get today''s events from calendar.sandown_school_calendar.
-    Weekend, or any event containing ''holiday'', ''inset'', or ''bank'' -> school
+    Weekend, or any event containing ''holiday'', ''half term'', ''inset'', or ''bank'' -> school
     day OFF. Otherwise (no events or other special events) -> school day ON. '
   mode: single
   triggers:
@@ -1618,7 +1618,7 @@
   - if:
     - condition: template
       value_template: "{{ now().weekday() >= 5 or\n   todays_events['calendar.sandown_school_calendar']['events']\
-        \ |\n   selectattr('summary', 'search', 'holiday|inset|bank holiday', ignorecase=True)\
+        \ |\n   selectattr('summary', 'search', 'holiday|half\\s*-?\\s*term|inset|bank', ignorecase=True)\
         \ |\n   list | count > 0 }}\n"
     then:
     - action: input_boolean.turn_off
@@ -1629,7 +1629,7 @@
         entity_id: input_text.boys_school
       data:
         value: "{%- set off_event = todays_events['calendar.sandown_school_calendar']['events']\
-          \ |\n   selectattr('summary', 'search', 'holiday|inset|bank holiday', ignorecase=True)\
+          \ |\n   selectattr('summary', 'search', 'holiday|half\\s*-?\\s*term|inset|bank', ignorecase=True)\
           \ |\n   map(attribute='summary') | first | default('') -%}\n{% if off_event\
           \ %}{{ off_event }}{% else %}Enjoy your day off{% endif %}\n"
     else:
