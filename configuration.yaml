@@ -125,8 +125,21 @@ recorder:
   commit_interval: 30
   exclude:
     entities:
-      # Add any entities that change too frequently here
+      # High-churn diagnostic/display helpers that do not need history.
       - sensor.jacob_phone_active_notification_count # This one was causing large attributes
+      - sensor.header_current_time
+      - sensor.boys_room_jacob_svg_x
+      - sensor.boys_room_jacob_svg_y
+      - sensor.boys_room_joseph_svg_x
+      - sensor.boys_room_joseph_svg_y
+      - sensor.boys_room_jacob_dot_style
+      - sensor.boys_room_joseph_dot_style
+      - sensor.system_monitor_load_1m
+      - sensor.system_monitor_load_5m
+      - sensor.system_monitor_load_15m
+      - sensor.system_monitor_processor_use
+      - sensor.system_monitor_memory_usage
+      - sensor.system_monitor_processor_temperature
 
 input_boolean:
   alert_active:
