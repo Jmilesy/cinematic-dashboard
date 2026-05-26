@@ -159,41 +159,106 @@
         {% set still = states('binary_sensor.mmwave_test_bed_ld2410c_still') %}
         {% set moving_energy = states('sensor.mmwave_test_bed_ld2410c_moving_energy') | float(0) %}
         {% set still_energy = states('sensor.mmwave_test_bed_ld2410c_still_energy') | float(0) %}
-        {% set ns = namespace(x=none, y=none, speed=0) %}
+        {% set ns = namespace(targets=0, bed=0, right=0, left=0, top_cluster=0, bottom=0, fast=false) %}
         {% for t in [1, 2, 3] %}
           {% set tx = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_x') | float(none) %}
           {% set ty = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_y') | float(none) %}
           {% set ts = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_speed') | float(0) %}
-          {% if tx is not none and ty is not none and ns.x is none %}
-            {% set ns.x = tx %}
-            {% set ns.y = ty %}
-            {% set ns.speed = ts %}
+          {% if tx is not none and ty is not none and not (tx == 0 and ty == 0) %}
+            {% set ns.targets = ns.targets + 1 %}
+            {% if ts | abs >= 80 %}
+              {% set ns.fast = true %}
+            {% endif %}
+            {% if tx > 500 and ty >= 2200 and ty <= 3350 %}
+              {% set ns.bed = ns.bed + 1 %}
+              {% set ns.right = ns.right + 1 %}
+            {% endif %}
+            {% if tx < -500 and ty >= 2550 and ty <= 3600 %}
+              {% set ns.bed = ns.bed + 1 %}
+              {% set ns.left = ns.left + 1 %}
+            {% endif %}
+            {% if tx >= -1300 and tx <= 900 and ty >= 2300 and ty <= 3000 %}
+              {% set ns.top_cluster = ns.top_cluster + 1 %}
+            {% endif %}
+            {% if tx <= -800 and ty >= 3000 and ty <= 3800 %}
+              {% set ns.bottom = ns.bottom + 1 %}
+            {% endif %}
           {% endif %}
         {% endfor %}
-        {% if presence != 'on' or ns.x is none %}
+        {% if presence != 'on' or ns.targets == 0 %}
           empty
-        {% elif moving == 'on' or (ns.speed | abs) >= 80 or moving_energy > 10 %}
+        {% elif moving == 'on' or ns.fast or moving_energy > 10 %}
           active_or_messing
-        {% elif ns.x > 0 and ns.y >= 2300 and ns.y <= 2900 %}
-          jacob_top_likely
-        {% elif ns.x <= -800 and ns.y >= 3000 %}
-          joseph_bottom_likely
-        {% elif ns.x >= -1100 and ns.x <= -700 and ns.y >= 2450 and ns.y <= 2750 and still == 'on' and still_energy >= 70 %}
+        {% elif ns.right > 0 and ns.left > 0 %}
+          both_separate_likely
+        {% elif ns.top_cluster >= 2 %}
           both_top_possible
-        {% elif ns.x >= -1400 and ns.x <= -800 and ns.y >= 2550 and ns.y <= 2950 and still == 'on' %}
-          both_separate_possible
+        {% elif ns.right > 0 %}
+          jacob_top_likely
+        {% elif ns.bottom > 0 or ns.left > 0 %}
+          joseph_bottom_likely
+        {% elif ns.top_cluster > 0 and still == 'on' and still_energy >= 70 %}
+          both_top_possible
+        {% elif ns.bed > 0 and still == 'on' %}
+          in_bed_likely
         {% else %}
           uncertain
         {% endif %}
       attributes:
         target_count: "{{ states('sensor.mmwave_test_bed_ld2450_target_count') }}"
         ld2450_presence: "{{ states('binary_sensor.mmwave_test_bed_ld2450_presence') }}"
+        classified_targets: >
+          {% set ns = namespace(targets=0) %}
+          {% for t in [1, 2, 3] %}
+            {% set tx = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_x') | float(none) %}
+            {% set ty = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_y') | float(none) %}
+            {% if tx is not none and ty is not none and not (tx == 0 and ty == 0) %}
+              {% set ns.targets = ns.targets + 1 %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.targets }}
+        right_bed_targets: >
+          {% set ns = namespace(count=0) %}
+          {% for t in [1, 2, 3] %}
+            {% set tx = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_x') | float(none) %}
+            {% set ty = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_y') | float(none) %}
+            {% if tx is not none and ty is not none and tx > 500 and ty >= 2200 and ty <= 3350 %}
+              {% set ns.count = ns.count + 1 %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.count }}
+        left_bed_targets: >
+          {% set ns = namespace(count=0) %}
+          {% for t in [1, 2, 3] %}
+            {% set tx = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_x') | float(none) %}
+            {% set ty = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_y') | float(none) %}
+            {% if tx is not none and ty is not none and tx < -500 and ty >= 2550 and ty <= 3600 %}
+              {% set ns.count = ns.count + 1 %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.count }}
+        top_cluster_targets: >
+          {% set ns = namespace(count=0) %}
+          {% for t in [1, 2, 3] %}
+            {% set tx = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_x') | float(none) %}
+            {% set ty = states('sensor.mmwave_test_bed_ld2450_t' ~ t ~ '_y') | float(none) %}
+            {% if tx is not none and ty is not none and tx >= -1300 and tx <= 900 and ty >= 2300 and ty <= 3000 %}
+              {% set ns.count = ns.count + 1 %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.count }}
         t1_x: "{{ states('sensor.mmwave_test_bed_ld2450_t1_x') }}"
         t1_y: "{{ states('sensor.mmwave_test_bed_ld2450_t1_y') }}"
         t1_speed: "{{ states('sensor.mmwave_test_bed_ld2450_t1_speed') }}"
+        t2_x: "{{ states('sensor.mmwave_test_bed_ld2450_t2_x') }}"
+        t2_y: "{{ states('sensor.mmwave_test_bed_ld2450_t2_y') }}"
+        t2_speed: "{{ states('sensor.mmwave_test_bed_ld2450_t2_speed') }}"
+        t3_x: "{{ states('sensor.mmwave_test_bed_ld2450_t3_x') }}"
+        t3_y: "{{ states('sensor.mmwave_test_bed_ld2450_t3_y') }}"
+        t3_speed: "{{ states('sensor.mmwave_test_bed_ld2450_t3_speed') }}"
         ld2410c_presence: "{{ states('binary_sensor.mmwave_test_bed_ld2410c_presence') }}"
         ld2410c_moving: "{{ states('binary_sensor.mmwave_test_bed_ld2410c_moving') }}"
         ld2410c_still: "{{ states('binary_sensor.mmwave_test_bed_ld2410c_still') }}"
         ld2410c_moving_energy: "{{ states('sensor.mmwave_test_bed_ld2410c_moving_energy') }}"
         ld2410c_still_energy: "{{ states('sensor.mmwave_test_bed_ld2410c_still_energy') }}"
-        calibration_note: "Experimental diagnostic only. Uses May 20 labelled bunk-bed samples; do not use for alerts yet."
+        calibration_note: "Experimental diagnostic only. Updated May 26 to classify unordered LD2450 targets by bed zones; do not use for alerts yet."
