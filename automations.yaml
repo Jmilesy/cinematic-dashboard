@@ -389,6 +389,12 @@
   - condition: state
     entity_id: input_boolean.school_day
     state: 'on'
+  - condition: template
+    value_template: "{% set school_text = (states('input_text.boys_school') ~ ' ' ~
+      (state_attr('calendar.sandown_school_calendar', 'message') | default('', true)))
+      | lower %} {{ 'holiday' not in school_text and 'half term' not in school_text
+      and 'half-term' not in school_text and 'inset' not in school_text and 'bank'
+      not in school_text }}"
   actions:
   - action: weather.get_forecasts
     metadata: {}
@@ -1607,6 +1613,8 @@
   triggers:
   - trigger: time
     at: 00:01:00
+  - trigger: homeassistant
+    event: start
   actions:
   - action: calendar.get_events
     target:
