@@ -99,6 +99,16 @@
     <text id="bathroom-light-status" x="1040" y="247" class="status-text">-- lx</text>
   </g>
 
+  <!-- Boys room named bed/radar markers. Default transform keeps them off-screen until ha-floorplan positions them. -->
+  <g id="boy-jacob-marker" class="boy-marker boy-jacob" transform="translate(-100 363)">
+    <circle r="13"/>
+    <text y="4">Ja</text>
+  </g>
+  <g id="boy-joseph-marker" class="boy-marker boy-joseph" transform="translate(-100 363)">
+    <circle r="13"/>
+    <text y="4">Jo</text>
+  </g>
+
   <!-- LD2450 target dots — default cx=-100 keeps them off-screen until ha-floorplan positions them -->
   <circle id="target-1" cx="-100" cy="363" r="9" fill="#ff4444" stroke="white" stroke-width="2" opacity="0.9"/>
   <circle id="target-2" cx="-100" cy="363" r="9" fill="#ff00ff" stroke="white" stroke-width="2" opacity="0.9"/>

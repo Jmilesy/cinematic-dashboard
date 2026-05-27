@@ -77,3 +77,40 @@
   animation: presence-pulse 2s ease-in-out infinite;
   fill: rgba(255, 100, 68, 0.55) !important;
 }
+
+/* Boys room live radar markers */
+.boy-marker {
+  pointer-events: none;
+  opacity: 0;
+  transition: transform 0.9s ease-out, opacity 0.35s ease;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.boy-marker circle {
+  fill: rgba(20, 20, 20, 0.82);
+  stroke: white;
+  stroke-width: 2;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.55));
+}
+
+.boy-marker text {
+  fill: white;
+  font: 700 10px Arial, sans-serif;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.boy-jacob circle { fill: rgba(220, 68, 68, 0.92); }
+.boy-joseph circle { fill: rgba(210, 55, 210, 0.92); }
+
+.boy-marker-visible {
+  opacity: 1;
+  animation: boy-marker-bob 1.8s ease-in-out infinite;
+}
+
+@keyframes boy-marker-bob {
+  0% { scale: 1; }
+  50% { scale: 1.08; }
+  100% { scale: 1; }
+}

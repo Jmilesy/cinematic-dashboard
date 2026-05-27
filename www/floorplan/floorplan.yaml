@@ -1,5 +1,5 @@
-image: /local/floorplan/floorplan.svg?v=27
-stylesheet: /local/floorplan/floorplan.css?v=6
+image: /local/floorplan/floorplan.svg?v=28
+stylesheet: /local/floorplan/floorplan.css?v=7
 log_level: warn
 
 rules:
@@ -301,6 +301,50 @@ rules:
         service_data:
           element: boys-occupied-status
           text: "Clear"
+
+  - name: Jacob live bed marker
+    entities:
+      - entity: sensor.boys_room_jacob_svg_x
+        element: boy-jacob-marker
+      - entity: sensor.boys_room_jacob_svg_y
+        element: boy-jacob-marker
+    state_action:
+      action: call-service
+      service: floorplan.style_set
+      service_data:
+        element: boy-jacob-marker
+        style: |
+          >
+          const xEntity = hass.states['sensor.boys_room_jacob_svg_x'];
+          const yEntity = hass.states['sensor.boys_room_jacob_svg_y'];
+          const x = Number(xEntity && xEntity.state);
+          const y = Number(yEntity && yEntity.state);
+          if (!Number.isFinite(x) || !Number.isFinite(y) || x < 0) {
+            return 'transform: translate(-100px, 363px); opacity: 0; animation: none;';
+          }
+          return `transform: translate(${x}px, ${y}px); opacity: 1; animation: boy-marker-bob 1.8s ease-in-out infinite;`;
+
+  - name: Joseph live bed marker
+    entities:
+      - entity: sensor.boys_room_joseph_svg_x
+        element: boy-joseph-marker
+      - entity: sensor.boys_room_joseph_svg_y
+        element: boy-joseph-marker
+    state_action:
+      action: call-service
+      service: floorplan.style_set
+      service_data:
+        element: boy-joseph-marker
+        style: |
+          >
+          const xEntity = hass.states['sensor.boys_room_joseph_svg_x'];
+          const yEntity = hass.states['sensor.boys_room_joseph_svg_y'];
+          const x = Number(xEntity && xEntity.state);
+          const y = Number(yEntity && yEntity.state);
+          if (!Number.isFinite(x) || !Number.isFinite(y) || x < 0) {
+            return 'transform: translate(-100px, 363px); opacity: 0; animation: none;';
+          }
+          return `transform: translate(${x}px, ${y}px); opacity: 1; animation: boy-marker-bob 1.8s ease-in-out infinite;`;
 
   - name: Landing occupied status text
     entities:
