@@ -1986,7 +1986,7 @@
                       "textcolour": "#FFF"
                     },
                     {
-                      "entity": "device_tracker.jacob_phone",
+                      "entity": "person.jacob",
                       "name": "Jacob",
                       "colour": "#F00",
                       "textcolour": "#FFF"
