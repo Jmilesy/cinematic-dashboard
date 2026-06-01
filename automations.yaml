@@ -335,12 +335,14 @@
       text: make this more fun for an 11 year old "joseph get  your school bag ready!"
       agent_id: conversation.bags
     response_variable: agent
+  - variables:
+      joseph_bags_message: "{% set speech = agent.response.speech.plain.speech | default('', true) %}\n{% set lower_speech = speech | lower %}\n{% if speech | trim == '' or 'problem getting a response' in lower_speech or 'google generative ai' in lower_speech or 'unavailable' in lower_speech or '503' in lower_speech or 'error' in lower_speech %}\n  Joseph, tiny plot twist: the joke machine is asleep. Your school bag is not. Get it ready before it starts charging rent in the hallway.\n{% else %}\n  {{ speech }}\n{% endif %}\n"
   - action: notify.alexa_media_lounge_plus
     data:
-      message: '{{agent.response.speech.plain.speech}}'
+      message: '{{ joseph_bags_message }}'
   - action: notify.mobile_app_joseph
     data:
-      message: '{{agent.response.speech.plain.speech}}'
+      message: '{{ joseph_bags_message }}'
       title: School Reminder
     enabled: true
   mode: single
@@ -454,9 +456,22 @@
         \ }}.{% endif %} "
       agent_id: conversation.kids_weather
     response_variable: agent
+  - if:
+    - condition: template
+      value_template: "{% set speech = agent.response.speech.plain.speech | default('', true) %}\n{% set lower_speech = speech | lower %}\n{{ speech | trim == '' or 'problem getting a response' in lower_speech or 'google generative ai' in lower_speech or 'unavailable' in lower_speech or '503' in lower_speech or 'error' in lower_speech }}\n"
+    then:
+    - delay: '00:00:30'
+    - action: conversation.process
+      metadata: {}
+      data:
+        text: "Write a short, funny school-morning weather announcement for Jacob and Joseph. Keep it under 30 seconds. School update first: {{ states('sensor.school_event_today') }}. Current weather is {{ states('weather.met_office_deal') if has_value('weather.met_office_deal') else states('weather.home_weather') if has_value('weather.home_weather') else states('weather.forecast_home') if has_value('weather.forecast_home') else states('weather.pirateweather') }}. Temperature is {{ states('sensor.met_office_deal_temperature') if has_value('sensor.met_office_deal_temperature') else state_attr('weather.home_weather', 'temperature') if has_value('weather.home_weather') else state_attr('weather.forecast_home', 'temperature') if has_value('weather.forecast_home') else states('sensor.pirateweather_temperature') }} degrees C. Mention coats, rain, or sun if useful."
+        agent_id: conversation.kids_weather
+      response_variable: agent
+  - variables:
+      kids_weather_message: "{% set speech = agent.response.speech.plain.speech | default('', true) %}\n{% set lower_speech = speech | lower %}\n{% if speech | trim == '' or 'problem getting a response' in lower_speech or 'google generative ai' in lower_speech or 'unavailable' in lower_speech or '503' in lower_speech or 'error' in lower_speech %}\n  Morning team. The fancy weather robot is having a lie-in, so here is the practical version: check the sky, grab your school bags, and take a coat if it looks even slightly suspicious outside.\n{% else %}\n  {{ speech }}\n{% endif %}\n"
   - action: notify.alexa_media
     data:
-      message: '{{ agent.response.speech.plain.speech }}'
+      message: '{{ kids_weather_message }}'
       data:
         type: announce
         method: all
@@ -469,7 +484,7 @@
   - action: notify.mobile_app_jon_phone
     metadata: {}
     data:
-      message: '{{ agent.response.speech.plain.speech }}'
+      message: '{{ kids_weather_message }}'
   mode: single
 - id: jacob_school_evening_prep
   alias: Jacob school evening prep
@@ -541,9 +556,25 @@
         }}. {% endif %} Style: chaotic dad humour, dry sarcasm, short punchy sentences.
         No emojis. No baby talk. Address both boys directly. '
     response_variable: agent_response
+  - if:
+    - condition: template
+      value_template: "{% set speech = agent_response.response.speech.plain.speech | default('', true) %}\n{% set lower_speech = speech | lower %}\n{{ speech | trim == '' or 'problem getting a response' in lower_speech or 'google generative ai' in lower_speech or 'unavailable' in lower_speech or '503' in lower_speech or 'error' in lower_speech }}\n"
+    then:
+    - delay: '00:00:30'
+    - action: conversation.process
+      data:
+        agent_id: conversation.evening_prep
+        text: 'Try again. Write a short evening school prep announcement for both
+          boys. School is tomorrow. Bags packed, homework done, Jacob drink bottle
+          in the fridge. {% if is_state(''input_boolean.jacob_pe_tomorrow'', ''on'')
+          %} Jacob has PE tomorrow and needs his kit ready. {% endif %} Style: chaotic
+          dad humour, dry sarcasm, short punchy sentences. No emojis. '
+      response_variable: agent_response
+  - variables:
+      evening_prep_message: "{% set speech = agent_response.response.speech.plain.speech | default('', true) %}\n{% set lower_speech = speech | lower %}\n{% if speech | trim == '' or 'problem getting a response' in lower_speech or 'google generative ai' in lower_speech or 'unavailable' in lower_speech or '503' in lower_speech or 'error' in lower_speech %}\n  Evening school prep. Bags packed, homework checked, uniforms found, and Jacob's drink bottle in the fridge. Glamorous? No. Useful? Annoyingly, yes.\n{% else %}\n  {{ speech }}\n{% endif %}\n"
   - action: notify.alexa_media
     data:
-      message: '{{ agent_response.response.speech.plain.speech }}'
+      message: '{{ evening_prep_message }}'
       target:
       - media_player.lounge_plus
       - media_player.boy_s_new_dot
