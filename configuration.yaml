@@ -203,7 +203,7 @@ emulated_hue:
   expose_by_default: false
   entities:
     input_boolean.boys_bedtime_switch:
-      name: "Boys Bedtime"
+      name: "Sleep Mode"
       hidden: false
 
 http:
