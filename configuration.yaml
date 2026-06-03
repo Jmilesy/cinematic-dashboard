@@ -197,6 +197,15 @@ input_text:
 
 wake_on_lan:
 
+emulated_hue:
+  host_ip: 192.168.1.104
+  listen_port: 80
+  expose_by_default: false
+  entities:
+    input_boolean.boys_bedtime_switch:
+      name: "Boys Bedtime"
+      hidden: false
+
 http:
   ssl_certificate: /ssl/fullchain.pem
   ssl_key: /ssl/privkey.pem
