@@ -863,7 +863,7 @@
   - condition: template
     value_template: '{{ trigger.from_state is not none and trigger.to_state is not
       none and trigger.from_state.state not in [''unavailable'', ''unknown''] and
-      trigger.to_state.state not in [''unavailable'', ''unknown''] }}'
+      trigger.to_state.state != ''unknown'' }}'
   actions:
   - choose:
     - conditions:
@@ -899,6 +899,14 @@
             type: announce
             method: speak
         action: notify.alexa_media_lounge_plus
+      - delay:
+          minutes: 10
+      - condition: state
+        entity_id: sensor.wash_cycle_status
+        state: Stopped
+      - target:
+          entity_id: light.washing
+        action: light.turn_off
     - conditions:
       - condition: state
         entity_id: sensor.wash_cycle_status
