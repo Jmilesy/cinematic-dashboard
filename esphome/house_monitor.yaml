@@ -8,6 +8,12 @@ esp32:
     framework:
       type: esp-idf    
 
+esp32_ble_tracker:
+
+bluetooth_proxy:
+  active: true
+  connection_slots: 3
+
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
@@ -226,4 +232,3 @@ light:
         spark_probability: 10%
         use_random_color: false
         fade_out_rate: 120
-
