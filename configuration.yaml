@@ -54,8 +54,18 @@ homeassistant:
     - type: trusted_networks
       trusted_networks:
         - 10.0.0.0/24
+        - 192.168.1.0/24
+        - 100.64.0.0/10
       trusted_users:
         192.168.1.43: a663b3fdb7874445be8a4dfefaee08d9
+        100.64.239.100: a663b3fdb7874445be8a4dfefaee08d9
+
+http:
+  use_x_forwarded_for: true
+  trusted_proxies:
+    - 127.0.0.1
+    - 100.64.0.0/10
+    - 192.168.1.0/24
 
 
 # ============================================================
