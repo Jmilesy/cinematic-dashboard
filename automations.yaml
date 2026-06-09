@@ -1274,22 +1274,39 @@
       - light.boys_led_light
 - id: boys_bedtime_reset
   alias: Boys Bedtime - Daily Reset
-  description: Clears bedtime when boys room has been empty for 20 minutes
+  description: Clears bedtime after the room has been empty for 5 minutes, from
+    07:05 on school weekdays or 08:05 on weekends and holidays
   mode: single
   triggers:
   - trigger: state
     entity_id: sensor.mmwave_test_bed_ld2450_target_count
     to: '0.0'
     for:
-      minutes: 20
+      minutes: 5
+  - trigger: time
+    at: 07:05:00
+  - trigger: time
+    at: 08:05:00
   conditions:
   - condition: state
     entity_id: input_boolean.boys_bedtime
     state: 'on'
+  - condition: state
+    entity_id: sensor.mmwave_test_bed_ld2450_target_count
+    state: '0.0'
+    for:
+      minutes: 5
+  - condition: template
+    value_template: >-
+      {% set school_weekday =
+        now().weekday() < 5 and is_state('input_boolean.school_day', 'on') %}
+      {{ now() >= today_at('07:05') if school_weekday
+         else now() >= today_at('08:05') }}
   actions:
   - action: input_boolean.turn_off
     target:
       entity_id:
+      - input_boolean.boys_bedtime_switch
       - input_boolean.boys_bedtime
       - input_boolean.wakeup_boys
   - action: light.turn_off
@@ -1380,22 +1397,14 @@
     data: {}
     target:
       entity_id: switch.hall_wall
-  - wait_for_trigger:
-    - trigger: state
-      entity_id: binary_sensor.hall_multi_sensor
-      to: 'off'
-    - trigger: state
-      entity_id: binary_sensor.hall_pir
-      to: 'off'
+  - wait_template: '{{ is_state(''binary_sensor.hall_multi_sensor'', ''off'') and
+      is_state(''binary_sensor.hall_pir'', ''off'') }}'
     timeout:
       minutes: 15
     continue_on_timeout: true
   - delay:
       seconds: '{{ 30 if is_state(''input_boolean.boys_bedtime'', ''on'') else 45
         }}'
-  - condition: template
-    value_template: '{{ is_state(''binary_sensor.hall_multi_sensor'', ''off'') and
-      is_state(''binary_sensor.hall_pir'', ''off'') }}'
   - action: light.turn_off
     target:
       entity_id: light.hall_light
