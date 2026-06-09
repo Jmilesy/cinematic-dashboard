@@ -22,7 +22,12 @@ blocks secrets/runtime data, commits, and pushes `main`.
 
 ## Desktop Editing
 
-The desktop clone is `C:\Users\jon_m\cinematic-dashboard`.
+The clean operational desktop clone is
+`C:\Users\jon_m\cinematic-dashboard-live`.
+
+The older `C:\Users\jon_m\cinematic-dashboard` checkout contains unfinished
+May 2026 work. Treat it as WIP reference material and do not pull, deploy, or
+push from it until those changes have been reviewed and selectively recovered.
 
 Before editing:
 
