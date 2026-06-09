@@ -1,7 +1,8 @@
 from datetime import datetime
 
 import requests
-from waste_collection_schedule import Collection  # type: ignore[attr-defined]
+from bs4 import BeautifulSoup
+from waste_collection_schedule import Collection, Icons  # type: ignore[attr-defined]
 
 TITLE = "Dover District Council"
 DESCRIPTION = "Source for Dover District Council."
@@ -13,16 +14,15 @@ TEST_CASES = {
 
 
 ICON_MAP = {
-    "Garden Waste Collection": "mdi:leaf",
-    "Food Collection": "mdi:food-apple",
-    "Refuse Collection": "mdi:trash-can",
-    "Paper/Card Collection": "mdi:package-variant",
-    "Recycling Collection": "mdi:recycle",
+    "Garden Waste Collection": Icons.GARDEN,
+    "Food Collection": Icons.BIO_KITCHEN,
+    "Refuse Collection": Icons.GENERAL_WASTE,
+    "Paper/Card Collection": Icons.PAPER,
+    "Recycling Collection": Icons.RECYCLING,
 }
 
 
-API_URL = "https://portal.waste.dover.gov.uk"
-COUNCIL_ID = "39"
+API_URL = "https://collections.dover.gov.uk/"
 
 
 class Source:
@@ -30,40 +30,35 @@ class Source:
         self._uprn: str | int = uprn
 
     def fetch(self) -> list[Collection]:
-        session = requests.Session()
-        headers = {
-            "Accept": "application/json, text/plain, */*",
-            "Content-Type": "application/json",
-            "Origin": API_URL,
-            "Referer": f"{API_URL}/recycling-rubbish/property-search/{self._uprn}/your-collection-days",
-            "User-Agent": "Mozilla/5.0",
-            "x-recaptcha-token": "",
-        }
+        # copy of haringey_gov_uk.py just some minor changes
+        api_url = f"https://collections.dover.gov.uk/property/{self._uprn}"
+        response = requests.get(api_url)
 
-        # The old collections.dover.gov.uk HTML endpoint now redirects to a
-        # Next.js portal. The portal's calendar endpoint returns future
-        # collection records directly for the UPRN.
-        session.get(headers["Referer"], headers=headers, timeout=20)
-        response = session.post(
-            f"{API_URL}/api/getCalendarData",
-            json={"uprn": str(self._uprn), "councilId": COUNCIL_ID},
-            headers=headers,
-            timeout=30,
-        )
-        response.raise_for_status()
+        soup = BeautifulSoup(response.text, features="html.parser")
+        soup.prettify()
 
         entries = []
-        for collection_group in response.json().get("data", []):
-            for record in collection_group.get("records", []):
-                service_name = record.get("service")
-                service_date = record.get("actual_scheduled_date")
-                if not service_name or not service_date:
+
+        service_elements = soup.select(".service-wrapper")
+
+        for service_element in service_elements:
+            service_name = service_element.select(".service-name")[0].text.strip()
+
+            next_service_dates = service_element.select(
+                "td.next-service"
+            ) + service_element.select("td.last-service")
+            if len(next_service_dates) == 0:
+                continue
+            for next_service_date in next_service_dates:
+                next_service_date.span.extract()
+
+                if next_service_date.text.strip().strip("-") == "":
                     continue
 
                 entries.append(
                     Collection(
-                        date=datetime.fromisoformat(
-                            service_date.replace("Z", "+00:00")
+                        date=datetime.strptime(
+                            next_service_date.text.strip(), "%d/%m/%Y"
                         ).date(),
                         t=service_name,
                         icon=ICON_MAP.get(service_name),
