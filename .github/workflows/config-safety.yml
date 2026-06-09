@@ -1,0 +1,43 @@
+name: Home Assistant config safety
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  repository-safety:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reject secrets and runtime files
+        shell: bash
+        run: |
+          set -euo pipefail
+          forbidden='(^|/)(secrets\.yaml|\.storage/|\.cache/|backups/|.*\.db(-shm|-wal)?$|.*\.bak.*$|.*\.pickle$|.*_key\.pem$)'
+          if git ls-files | grep -E "$forbidden"; then
+            echo "Forbidden secret/runtime files are tracked."
+            exit 1
+          fi
+
+      - name: Check whitespace and conflict markers
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --check HEAD^ HEAD
+          if git grep -nE '^(<<<<<<<|=======|>>>>>>>)' -- \
+            '*.yaml' '*.yml' '*.json' '*.py' '*.sh'; then
+            echo "Merge-conflict markers found."
+            exit 1
+          fi
+
+      - name: Compile tracked Python
+        shell: bash
+        run: |
+          python -m py_compile \
+            scripts/*.py \
+            custom_components/waste_collection_schedule/waste_collection_schedule/source/dover_gov_uk.py
