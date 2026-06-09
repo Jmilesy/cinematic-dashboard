@@ -41,6 +41,8 @@ arduino/alarm_panel/secrets.h
 # OS junk
 .DS_Store
 Thumbs.db
+__pycache__/
+*.pyc
 
 # Runtime/lock files
 .ha_run.lock
