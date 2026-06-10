@@ -3,6 +3,34 @@
 GitHub is the durable record. The live Home Assistant checkout on `main`
 represents the currently deployed configuration.
 
+## Repository Scope
+
+The GitHub repository is currently named `cinematic-dashboard`, but it is the
+full operational Home Assistant configuration repository, not only the
+Cinematic dashboard. It includes automations, scripts, templates, Lovelace,
+floorplan assets, operational documentation, and ESPHome configuration.
+
+Renaming the repository to `ha-config` may be considered later as a separately
+approved maintenance task. The existing name does not change its current scope.
+
+## Installed Commands
+
+These commands already exist on the Home Assistant host:
+
+- `/usr/local/bin/ha-git-status`
+- `/usr/local/bin/ha-git-save`
+- `/usr/local/bin/ha-github-backup`
+
+`ha-git-save` is an implemented and tested guard, not a proposal. It:
+
+1. Locks Git operations so two sessions cannot save concurrently.
+2. Requires the deployed checkout to be on `main`.
+3. Fetches GitHub and refuses to commit if GitHub is ahead.
+4. Runs `ha core check`.
+5. Stages only approved configuration and documentation paths.
+6. Blocks secrets, runtime storage, databases, credentials, and backups.
+7. Checks the staged diff, commits it, and pushes to GitHub.
+
 ## Normal Change
 
 1. Run `ha-git-status` before editing.
@@ -19,6 +47,23 @@ represents the currently deployed configuration.
 
 The save command validates Home Assistant again, stages only approved paths,
 blocks secrets/runtime data, commits, and pushes `main`.
+
+## ESPHome
+
+ESPHome YAML belongs in this repository under `esphome/` and is included by
+`ha-git-save`. Keep secrets out of Git and use the existing ESPHome secrets
+mechanism.
+
+For an ESPHome change:
+
+1. Check Git status and identify the exact device YAML.
+2. Back up before risky firmware or connectivity changes.
+3. Validate or compile the device configuration.
+4. Install by OTA only when the device is online and recovery is understood.
+5. Confirm the device reconnects to Home Assistant and its key entities work.
+6. Use `ha-git-save` with a device-specific commit message.
+
+Do not bulk-update every device as part of an unrelated configuration change.
 
 ## Desktop Editing
 
@@ -62,6 +107,21 @@ changes. This is a recovery net, not the normal way to finish work.
 - `main` must always match the deployed state.
 - Do not force-push `main`.
 - Do not reset or discard dirty files without reviewing who created them.
+
+## Session Handover
+
+Every Home Assistant work session must end with a handover entry in the shared
+priorities/task database. Record:
+
+- What changed and why.
+- Validation or physical testing performed.
+- The Git commit hash, or why no commit was made.
+- Backups created.
+- Remaining work, known risks, and anything awaiting human testing.
+- Any dirty files intentionally left on the live host or desktop.
+
+The Git commit is the technical record; the task database is the operational
+handover. Both are required when a session changes Home Assistant.
 
 ## Recovery
 
