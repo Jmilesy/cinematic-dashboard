@@ -153,9 +153,9 @@
   actions:
   - action: notify.alexa_media
     data:
-      message: "<speak>\n  <emphasis level=\"strong\">Attention! The home alarm has\
-        \ been triggered!</emphasis>\n  <break time=\"500ms\"/>\n  Check all doors\
-        \ and windows immediately!\n</speak>\n"
+      message: "<speak>\n  <emphasis level=\"strong\">Attention! The home alarm has
+        been triggered!</emphasis>\n  <break time=\"500ms\"/>\n  Check all doors and
+        windows immediately!\n</speak>\n"
       data:
         type: announce
         method: all
@@ -216,7 +216,7 @@
         type: announce
   - action: notify.mobile_app_jon_phone
     data:
-      title: "\U0001F5D1\uFE0F Bin Day Tomorrow"
+      title: "\U0001F5D1️ Bin Day Tomorrow"
       message: Don't forget to put the bins out!
   mode: single
 - id: aad83719661b40969efbb9725fd1be4a
@@ -238,9 +238,9 @@
   actions:
   - action: notify.alexa_media_bedroom_dot
     data:
-      message: "Welcome home {{ trigger.to_state.attributes.friendly_name }}! {% if\
-        \ now().hour < 12 %}\n  Good morning.\n{% elif now().hour < 18 %}\n  Good\
-        \ afternoon.\n{% else %}\n  Good evening.\n{% endif %}\n"
+      message: "Welcome home {{ trigger.to_state.attributes.friendly_name }}! {% if
+        now().hour < 12 %}\n  Good morning.\n{% elif now().hour < 18 %}\n  Good afternoon.\n{%
+        else %}\n  Good evening.\n{% endif %}\n"
   - action: light.turn_on
     target:
       entity_id: light.hall_light
@@ -336,7 +336,13 @@
       agent_id: conversation.bags
     response_variable: agent
   - variables:
-      joseph_bags_message: "{% set speech = agent.response.speech.plain.speech | default('', true) %}\n{% set lower_speech = speech | lower %}\n{% if speech | trim == '' or 'problem getting a response' in lower_speech or 'google generative ai' in lower_speech or 'unavailable' in lower_speech or '503' in lower_speech or 'error' in lower_speech %}\n  Joseph, tiny plot twist: the joke machine is asleep. Your school bag is not. Get it ready before it starts charging rent in the hallway.\n{% else %}\n  {{ speech }}\n{% endif %}\n"
+      joseph_bags_message: "{% set speech = agent.response.speech.plain.speech | default('',
+        true) %}\n{% set lower_speech = speech | lower %}\n{% if speech | trim ==
+        '' or 'problem getting a response' in lower_speech or 'google generative ai'
+        in lower_speech or 'unavailable' in lower_speech or '503' in lower_speech
+        or 'error' in lower_speech %}\n  Joseph, tiny plot twist: the joke machine
+        is asleep. Your school bag is not. Get it ready before it starts charging
+        rent in the hallway.\n{% else %}\n  {{ speech }}\n{% endif %}\n"
   - action: notify.alexa_media_lounge_plus
     data:
       message: '{{ joseph_bags_message }}'
@@ -392,83 +398,107 @@
     entity_id: input_boolean.school_day
     state: 'on'
   - condition: template
-    value_template: "{% set school_text = (states('input_text.boys_school') ~ ' ' ~
-      (state_attr('calendar.sandown_school_calendar', 'message') | default('', true)))
-      | lower %} {{ 'holiday' not in school_text and 'half term' not in school_text
-      and 'half-term' not in school_text and 'inset' not in school_text and 'bank'
-      not in school_text }}"
+    value_template: '{% set school_text = (states(''input_text.boys_school'') ~ ''
+      '' ~ (state_attr(''calendar.sandown_school_calendar'', ''message'') | default('''',
+      true))) | lower %} {{ ''holiday'' not in school_text and ''half term'' not in
+      school_text and ''half-term'' not in school_text and ''inset'' not in school_text
+      and ''bank'' not in school_text }}'
   actions:
   - action: weather.get_forecasts
     metadata: {}
     target:
-      entity_id: "{% if has_value('weather.met_office_deal') %}\n  weather.met_office_deal\n\
-        {% elif has_value('weather.home_weather') %}\n  weather.home_weather\n{% elif\
-        \ has_value('weather.forecast_home') %}\n  weather.forecast_home\n{% else\
-        \ %}\n  weather.pirateweather\n{% endif %}\n"
+      entity_id: "{% if has_value('weather.met_office_deal') %}\n  weather.met_office_deal\n{%
+        elif has_value('weather.home_weather') %}\n  weather.home_weather\n{% elif
+        has_value('weather.forecast_home') %}\n  weather.forecast_home\n{% else %}\n
+        \ weather.pirateweather\n{% endif %}\n"
     data:
       type: daily
     response_variable: daily_forecast
   - action: conversation.process
     metadata: {}
     data:
-      text: "You are an advanced smart home with a built in personal weather station.\
-        \ Weather updates will be spoken out loud and should be funny and creative\
-        \ because two children 11 years old and 14 years old will be listening. Please\
-        \ use whole numbers and try to make it educational! This should be less than\
-        \ 30 seconds in length. it is important that the school update comes first\
-        \ {% if states('sensor.school_event_today') %} School Update: {{ states('sensor.school_event_today')\
-        \ }} {% endif %} Current Conditions: Current time is {{ now().strftime('%I:%M\
-        \ %p') }}. Temperature is {% if has_value('sensor.met_office_deal_temperature')\
-        \ %}{{ states('sensor.met_office_deal_temperature') | round(0) }}\xB0C{% elif\
-        \ has_value('weather.home_weather') %}{{ state_attr('weather.home_weather',\
-        \ 'temperature') | round(0) }}\xB0C{% elif has_value('weather.forecast_home')\
-        \ %}{{ state_attr('weather.forecast_home', 'temperature') | round(0) }}\xB0\
-        C{% else %}{{ states('sensor.pirateweather_temperature') | round(0) }}\xB0\
-        C{% endif %}. Feels like {% if has_value('sensor.pirateweather_apparent_temperature')\
-        \ %}{{ states('sensor.pirateweather_apparent_temperature') | round(0) }}\xB0\
-        C{% elif has_value('weather.forecast_home') %}{{ state_attr('weather.forecast_home',\
-        \ 'dew_point') | round(0) }}\xB0C{% else %}the same{% endif %}. Humidity is\
-        \ {% if has_value('weather.pirateweather') %}{{ state_attr('weather.pirateweather',\
-        \ 'humidity') | round(0) }}%{% elif has_value('weather.met_office_deal') %}{{\
-        \ state_attr('weather.met_office_deal', 'humidity') | round(0) }}%{% elif\
-        \ has_value('weather.home_weather') %}{{ state_attr('weather.home_weather',\
-        \ 'humidity') | round(0) }}%{% elif has_value('weather.forecast_home') %}{{\
-        \ state_attr('weather.forecast_home', 'humidity') | round(0) }}%{% endif %}.\
-        \ {% if has_value('sensor.pirateweather_uv_index') %}UV Index is {{ states('sensor.pirateweather_uv_index')\
-        \ | round(0) }}.{% elif has_value('weather.forecast_home') %}UV Index is {{\
-        \ state_attr('weather.forecast_home', 'uv_index') | round(1) }}.{% endif %}\
-        \ Current conditions: {% if has_value('weather.met_office_deal') %}{{ states('weather.met_office_deal')\
-        \ }}{% elif has_value('weather.home_weather') %}{{ states('weather.home_weather')\
-        \ }}{% elif has_value('weather.forecast_home') %}{{ states('weather.forecast_home')\
-        \ }}{% else %}{{ states('weather.pirateweather') }}{% endif %}. Today's Forecast:\
-        \ {% if has_value('sensor.pirateweather_hourly_summary') %}Forecasted Conditions\
-        \ for Today {{ states('sensor.pirateweather_hourly_summary') }}{% endif %}\
-        \ {% set forecast_entity = 'weather.met_office_deal' if has_value('weather.met_office_deal')\
-        \ else 'weather.home_weather' if has_value('weather.home_weather') else 'weather.forecast_home'\
-        \ if has_value('weather.forecast_home') else 'weather.pirateweather' %} Temperature\
-        \ for Today {{ daily_forecast[forecast_entity].forecast[0].temperature }}\
-        \ Forecasted Low Temperature for Today {{ daily_forecast[forecast_entity].forecast[0].templow\
-        \ }} Forecasted Precipitation Probability {{ daily_forecast[forecast_entity].forecast[0].precipitation_probability\
-        \ }} {% set pollen_level = state_attr('weather.silam_pollen_home_forecast',\
-        \ 'next_condition') %}{% set pollen_culprit = state_attr('weather.silam_pollen_home_forecast',\
-        \ 'responsible_elevated') %}{% if pollen_level in ['medium', 'high', 'very_high']\
-        \ %}Pollen Alert: {{ pollen_level }} levels today, mainly {{ pollen_culprit\
-        \ }}.{% endif %} "
+      text: 'You are an advanced smart home with a built in personal weather station.
+        Weather updates will be spoken out loud and should be funny and creative because
+        two children 11 years old and 14 years old will be listening. Please use whole
+        numbers and try to make it educational! This should be less than 30 seconds
+        in length. it is important that the school update comes first {% if states(''sensor.school_event_today'')
+        %} School Update: {{ states(''sensor.school_event_today'') }} {% endif %}
+        Current Conditions: Current time is {{ now().strftime(''%I:%M %p'') }}. Temperature
+        is {% if has_value(''sensor.met_office_deal_temperature'') %}{{ states(''sensor.met_office_deal_temperature'')
+        | round(0) }}°C{% elif has_value(''weather.home_weather'') %}{{ state_attr(''weather.home_weather'',
+        ''temperature'') | round(0) }}°C{% elif has_value(''weather.forecast_home'')
+        %}{{ state_attr(''weather.forecast_home'', ''temperature'') | round(0) }}°C{%
+        else %}{{ states(''sensor.pirateweather_temperature'') | round(0) }}°C{% endif
+        %}. Feels like {% if has_value(''sensor.pirateweather_apparent_temperature'')
+        %}{{ states(''sensor.pirateweather_apparent_temperature'') | round(0) }}°C{%
+        elif has_value(''weather.forecast_home'') %}{{ state_attr(''weather.forecast_home'',
+        ''dew_point'') | round(0) }}°C{% else %}the same{% endif %}. Humidity is {%
+        if has_value(''weather.pirateweather'') %}{{ state_attr(''weather.pirateweather'',
+        ''humidity'') | round(0) }}%{% elif has_value(''weather.met_office_deal'')
+        %}{{ state_attr(''weather.met_office_deal'', ''humidity'') | round(0) }}%{%
+        elif has_value(''weather.home_weather'') %}{{ state_attr(''weather.home_weather'',
+        ''humidity'') | round(0) }}%{% elif has_value(''weather.forecast_home'') %}{{
+        state_attr(''weather.forecast_home'', ''humidity'') | round(0) }}%{% endif
+        %}. {% if has_value(''sensor.pirateweather_uv_index'') %}UV Index is {{ states(''sensor.pirateweather_uv_index'')
+        | round(0) }}.{% elif has_value(''weather.forecast_home'') %}UV Index is {{
+        state_attr(''weather.forecast_home'', ''uv_index'') | round(1) }}.{% endif
+        %} Current conditions: {% if has_value(''weather.met_office_deal'') %}{{ states(''weather.met_office_deal'')
+        }}{% elif has_value(''weather.home_weather'') %}{{ states(''weather.home_weather'')
+        }}{% elif has_value(''weather.forecast_home'') %}{{ states(''weather.forecast_home'')
+        }}{% else %}{{ states(''weather.pirateweather'') }}{% endif %}. Today''s Forecast:
+        {% if has_value(''sensor.pirateweather_hourly_summary'') %}Forecasted Conditions
+        for Today {{ states(''sensor.pirateweather_hourly_summary'') }}{% endif %}
+        {% set forecast_entity = ''weather.met_office_deal'' if has_value(''weather.met_office_deal'')
+        else ''weather.home_weather'' if has_value(''weather.home_weather'') else
+        ''weather.forecast_home'' if has_value(''weather.forecast_home'') else ''weather.pirateweather''
+        %} Temperature for Today {{ daily_forecast[forecast_entity].forecast[0].temperature
+        }} Forecasted Low Temperature for Today {{ daily_forecast[forecast_entity].forecast[0].templow
+        }} Forecasted Precipitation Probability {{ daily_forecast[forecast_entity].forecast[0].precipitation_probability
+        }} {% set pollen_level = state_attr(''weather.silam_pollen_home_forecast'',
+        ''next_condition'') %}{% set pollen_culprit = state_attr(''weather.silam_pollen_home_forecast'',
+        ''responsible_elevated'') %}{% if pollen_level in [''medium'', ''high'', ''very_high'']
+        %}Pollen Alert: {{ pollen_level }} levels today, mainly {{ pollen_culprit
+        }}.{% endif %} '
       agent_id: conversation.kids_weather
     response_variable: agent
   - if:
     - condition: template
-      value_template: "{% set speech = agent.response.speech.plain.speech | default('', true) %}\n{% set lower_speech = speech | lower %}\n{{ speech | trim == '' or 'problem getting a response' in lower_speech or 'google generative ai' in lower_speech or 'unavailable' in lower_speech or '503' in lower_speech or 'error' in lower_speech }}\n"
+      value_template: '{% set speech = agent.response.speech.plain.speech | default('''',
+        true) %}
+
+        {% set lower_speech = speech | lower %}
+
+        {{ speech | trim == '''' or ''problem getting a response'' in lower_speech
+        or ''google generative ai'' in lower_speech or ''unavailable'' in lower_speech
+        or ''503'' in lower_speech or ''error'' in lower_speech }}
+
+        '
     then:
-    - delay: '00:00:30'
+    - delay: 00:00:30
     - action: conversation.process
       metadata: {}
       data:
-        text: "Write a short, funny school-morning weather announcement for Jacob and Joseph. Keep it under 30 seconds. School update first: {{ states('sensor.school_event_today') }}. Current weather is {{ states('weather.met_office_deal') if has_value('weather.met_office_deal') else states('weather.home_weather') if has_value('weather.home_weather') else states('weather.forecast_home') if has_value('weather.forecast_home') else states('weather.pirateweather') }}. Temperature is {{ states('sensor.met_office_deal_temperature') if has_value('sensor.met_office_deal_temperature') else state_attr('weather.home_weather', 'temperature') if has_value('weather.home_weather') else state_attr('weather.forecast_home', 'temperature') if has_value('weather.forecast_home') else states('sensor.pirateweather_temperature') }} degrees C. Mention coats, rain, or sun if useful."
+        text: 'Write a short, funny school-morning weather announcement for Jacob
+          and Joseph. Keep it under 30 seconds. School update first: {{ states(''sensor.school_event_today'')
+          }}. Current weather is {{ states(''weather.met_office_deal'') if has_value(''weather.met_office_deal'')
+          else states(''weather.home_weather'') if has_value(''weather.home_weather'')
+          else states(''weather.forecast_home'') if has_value(''weather.forecast_home'')
+          else states(''weather.pirateweather'') }}. Temperature is {{ states(''sensor.met_office_deal_temperature'')
+          if has_value(''sensor.met_office_deal_temperature'') else state_attr(''weather.home_weather'',
+          ''temperature'') if has_value(''weather.home_weather'') else state_attr(''weather.forecast_home'',
+          ''temperature'') if has_value(''weather.forecast_home'') else states(''sensor.pirateweather_temperature'')
+          }} degrees C. Mention coats, rain, or sun if useful.'
         agent_id: conversation.kids_weather
       response_variable: agent
   - variables:
-      kids_weather_message: "{% set speech = agent.response.speech.plain.speech | default('', true) %}\n{% set lower_speech = speech | lower %}\n{% if speech | trim == '' or 'problem getting a response' in lower_speech or 'google generative ai' in lower_speech or 'unavailable' in lower_speech or '503' in lower_speech or 'error' in lower_speech %}\n  Morning team. The fancy weather robot is having a lie-in, so here is the practical version: check the sky, grab your school bags, and take a coat if it looks even slightly suspicious outside.\n{% else %}\n  {{ speech }}\n{% endif %}\n"
+      kids_weather_message: "{% set speech = agent.response.speech.plain.speech |
+        default('', true) %}\n{% set lower_speech = speech | lower %}\n{% if speech
+        | trim == '' or 'problem getting a response' in lower_speech or 'google generative
+        ai' in lower_speech or 'unavailable' in lower_speech or '503' in lower_speech
+        or 'error' in lower_speech %}\n  Morning team. The fancy weather robot is
+        having a lie-in, so here is the practical version: check the sky, grab your
+        school bags, and take a coat if it looks even slightly suspicious outside.\n{%
+        else %}\n  {{ speech }}\n{% endif %}\n"
   - action: notify.alexa_media
     data:
       message: '{{ kids_weather_message }}'
@@ -488,8 +518,8 @@
   mode: single
 - id: jacob_school_evening_prep
   alias: Jacob school evening prep
-  description: Evening school prep with AI announcement, PE detection, and actionable
-    notifications
+  description: Evening school prep with AI announcement, PE detection, YouTube block,
+    and actionable notifications
   triggers:
   - trigger: time
     at: '19:00:00'
@@ -513,9 +543,9 @@
     response_variable: tomorrow_school_events
   - if:
     - condition: template
-      value_template: '{{ (now().date() + timedelta(days=1)).weekday() >= 5 or    tomorrow_school_events[''calendar.sandown_school_calendar''][''events'']         |
-        selectattr(''summary'', ''search'', ''holiday|half\s*-?\s*term|inset|bank'', ignorecase=True)         |
-        list | count > 0 }} '
+      value_template: '{{ (now().date() + timedelta(days=1)).weekday() >= 5 or tomorrow_school_events[''calendar.sandown_school_calendar''][''events'']
+        | selectattr(''summary'', ''search'', ''holiday|half\s*-?\s*term|inset|bank'',
+        ignorecase=True) | list | count > 0 }}'
     then:
     - stop: Tomorrow is not a school day
   - action: input_boolean.turn_off
@@ -524,6 +554,7 @@
       - input_boolean.jacob_drink_confirmed
       - input_boolean.jacob_pe_kit_confirmed
       - input_boolean.jacob_pe_tomorrow
+      - input_boolean.kit_check_active
   - action: calendar.get_events
     target:
       entity_id:
@@ -537,9 +568,9 @@
     response_variable: school_events
   - if:
     - condition: template
-      value_template: "{{ (school_events['calendar.boys_school']['events'] +\n   school_events['calendar.jacob_timetable']['events'])\
-        \ |\n   selectattr('summary', 'search', 'PE', ignorecase=True) |\n   list\
-        \ | count > 0 }}\n"
+      value_template: '{{ (school_events[''calendar.boys_school''][''events''] + school_events[''calendar.jacob_timetable''][''events''])
+        | selectattr(''summary'', ''search'', ''PE'', ignorecase=True) | list | count
+        > 0 }}'
     then:
     - action: input_boolean.turn_on
       target:
@@ -553,25 +584,39 @@
         %} Jacob also has PE tomorrow and needs his PE kit ready. {% endif %} {% if
         states(''sensor.school_event_tomorrow'') not in [''unknown'', ''unavailable'',
         ''''] %} There is a school event tomorrow: {{ states(''sensor.school_event_tomorrow'')
-        }}. {% endif %} Style: chaotic dad humour, dry sarcasm, short punchy sentences.
-        No emojis. No baby talk. Address both boys directly. '
+        }}. {% endif %} At the end, add one short sentence warning that a YouTube
+        block is coming soon for anyone who doesn''t confirm their kit is sorted.
+        Style: chaotic dad humour, dry sarcasm, short punchy sentences. No emojis.
+        No baby talk. Address both boys directly.'
     response_variable: agent_response
   - if:
     - condition: template
-      value_template: "{% set speech = agent_response.response.speech.plain.speech | default('', true) %}\n{% set lower_speech = speech | lower %}\n{{ speech | trim == '' or 'problem getting a response' in lower_speech or 'google generative ai' in lower_speech or 'unavailable' in lower_speech or '503' in lower_speech or 'error' in lower_speech }}\n"
+      value_template: '{% set speech = agent_response.response.speech.plain.speech
+        | default('''', true) %}{% set lower_speech = speech | lower %}{{ speech |
+        trim == '''' or ''problem getting a response'' in lower_speech or ''google
+        generative ai'' in lower_speech or ''unavailable'' in lower_speech or ''503''
+        in lower_speech or ''error'' in lower_speech }}'
     then:
-    - delay: '00:00:30'
+    - delay: 00:00:30
     - action: conversation.process
       data:
         agent_id: conversation.evening_prep
         text: 'Try again. Write a short evening school prep announcement for both
           boys. School is tomorrow. Bags packed, homework done, Jacob drink bottle
           in the fridge. {% if is_state(''input_boolean.jacob_pe_tomorrow'', ''on'')
-          %} Jacob has PE tomorrow and needs his kit ready. {% endif %} Style: chaotic
-          dad humour, dry sarcasm, short punchy sentences. No emojis. '
+          %} Jacob has PE tomorrow and needs his kit ready. {% endif %} End with a
+          warning that a YouTube block is coming soon for anyone not sorted. Style:
+          chaotic dad humour, dry sarcasm, short punchy sentences. No emojis.'
       response_variable: agent_response
   - variables:
-      evening_prep_message: "{% set speech = agent_response.response.speech.plain.speech | default('', true) %}\n{% set lower_speech = speech | lower %}\n{% if speech | trim == '' or 'problem getting a response' in lower_speech or 'google generative ai' in lower_speech or 'unavailable' in lower_speech or '503' in lower_speech or 'error' in lower_speech %}\n  Evening school prep. Bags packed, homework checked, uniforms found, and Jacob's drink bottle in the fridge. Glamorous? No. Useful? Annoyingly, yes.\n{% else %}\n  {{ speech }}\n{% endif %}\n"
+      evening_prep_message: '{% set speech = agent_response.response.speech.plain.speech
+        | default('''', true) %}{% set lower_speech = speech | lower %}{% if speech
+        | trim == '''' or ''problem getting a response'' in lower_speech or ''google
+        generative ai'' in lower_speech or ''unavailable'' in lower_speech or ''503''
+        in lower_speech or ''error'' in lower_speech %}Evening school prep. Bags packed,
+        homework checked, uniforms found, and Jacob''s drink bottle in the fridge.
+        Sort it out — YouTube block incoming for anyone who doesn''t.{% else %}{{
+        speech }}{% endif %}'
   - action: notify.alexa_media
     data:
       message: '{{ evening_prep_message }}'
@@ -584,11 +629,25 @@
         type: announce
         volume: 0.5
         method: all
-  - action: notify.jacob_notify
+  - if:
+    - condition: state
+      entity_id: input_boolean.youtube_block_enabled
+      state: 'on'
+    then:
+    - action: shell_command.youtube_block_kids
+      response_variable: block_result
+    - action: input_boolean.turn_on
+      target:
+        entity_id: input_boolean.kit_check_active
+  - action: notify.jacob_phone
     data:
       title: School Prep
-      message: '{{ agent_response.response.speech.plain.speech }}'
-  - action: notify.jacob_notify
+      message: '{{ evening_prep_message }}'
+  - action: notify.joseph_phone
+    data:
+      title: School Prep
+      message: '{{ evening_prep_message }}'
+  - action: notify.jacob_phone
     data:
       title: Drink bottles
       message: Jacob. How many drink bottles have you got in the fridge for tomorrow?
@@ -605,16 +664,37 @@
       entity_id: input_boolean.jacob_pe_tomorrow
       state: 'on'
     then:
-    - action: notify.jacob_notify
+    - action: notify.jacob_phone
       data:
         title: PE kit
-        message: Jacob. PE tomorrow. Is your kit sorted and ready to go?
+        message: Jacob. PE tomorrow. Is your kit sorted?
         data:
           actions:
           - action: JACOB_PE_DONE
             title: Yes sorted
           - action: JACOB_PE_NOT_YET
             title: Not yet
+  - if:
+    - condition: state
+      entity_id: input_boolean.youtube_block_enabled
+      state: 'on'
+    then:
+    - action: notify.jon_phone
+      data:
+        title: "\U0001F392 Kit Check Active"
+        message: YouTube blocked on Kids VLAN. Tap to unblock once kit is confirmed.
+        data:
+          actions:
+          - action: KIT_CHECK_DONE
+            title: ✅ All sorted — unblock
+    - action: notify.natalie_phone
+      data:
+        title: "\U0001F392 Kit Check Active"
+        message: YouTube blocked on Kids VLAN. Tap to unblock once kit is confirmed.
+        data:
+          actions:
+          - action: KIT_CHECK_DONE
+            title: ✅ All sorted — unblock
   mode: single
 - id: jacob_task_nagger
   alias: Jacob task nagger
@@ -732,23 +812,6 @@
       data:
         type: tts
         volume_level: 0.6
-- id: jacob_pe_kit_confirmed
-  alias: Jacob PE kit confirmed
-  description: Marks PE kit as confirmed when Jacob responds
-  mode: single
-  triggers:
-  - trigger: event
-    event_type: mobile_app_notification_action
-    event_data:
-      action: JACOB_PE_DONE
-  actions:
-  - action: input_boolean.turn_on
-    target:
-      entity_id: input_boolean.jacob_pe_kit_confirmed
-  - action: notify.jacob_notify
-    data:
-      title: PE kit logged
-      message: PE kit confirmed. You're almost organised. Almost.
 - id: jacob_pe_not_yet
   alias: Jacob PE kit - not yet
   description: Jacob tapped Not yet - acknowledge and nudge via Alexa
@@ -1274,8 +1337,8 @@
       - light.boys_led_light
 - id: boys_bedtime_reset
   alias: Boys Bedtime - Daily Reset
-  description: Clears bedtime after the room has been empty for 5 minutes, from
-    07:05 on school weekdays or 08:05 on weekends and holidays
+  description: Clears bedtime after the room has been empty for 5 minutes, from 07:05
+    on school weekdays or 08:05 on weekends and holidays
   mode: single
   triggers:
   - trigger: state
@@ -1297,11 +1360,9 @@
     for:
       minutes: 5
   - condition: template
-    value_template: >-
-      {% set school_weekday =
-        now().weekday() < 5 and is_state('input_boolean.school_day', 'on') %}
-      {{ now() >= today_at('07:05') if school_weekday
-         else now() >= today_at('08:05') }}
+    value_template: "{% set school_weekday =\n  now().weekday() < 5 and is_state('input_boolean.school_day',
+      'on') %}\n{{ now() >= today_at('07:05') if school_weekday\n   else now() >=
+      today_at('08:05') }}"
   actions:
   - action: input_boolean.turn_off
     target:
@@ -1325,11 +1386,11 @@
     minutes: /1
   conditions:
   - condition: template
-    value_template: "{% set alarm = states('sensor.boy_s_new_dot_next_alarm') %} {%\
-      \ if alarm not in ['unknown', 'unavailable'] %}\n  {% set alarm_dt = alarm |\
-      \ as_datetime | as_local %}\n  {% set sunrise_dt = alarm_dt - timedelta(minutes=15)\
-      \ %}\n  {{ now().strftime('%H:%M') == sunrise_dt.strftime('%H:%M') }}\n{% else\
-      \ %}\n  false\n{% endif %}\n"
+    value_template: "{% set alarm = states('sensor.boy_s_new_dot_next_alarm') %} {%
+      if alarm not in ['unknown', 'unavailable'] %}\n  {% set alarm_dt = alarm | as_datetime
+      | as_local %}\n  {% set sunrise_dt = alarm_dt - timedelta(minutes=15) %}\n  {{
+      now().strftime('%H:%M') == sunrise_dt.strftime('%H:%M') }}\n{% else %}\n  false\n{%
+      endif %}\n"
   - condition: time
     weekday:
     - mon
@@ -1354,10 +1415,10 @@
           - light.joseph
         data:
           transition: 5
-          rgb_color: "{% set progress = repeat.index / 60 %} {% if progress < 0.5\
-            \ %}\n  {% set t = progress * 2 %}\n  {{ [255, (200 * t) | int, 0] }}\n\
-            {% else %}\n  {% set t = (progress - 0.5) * 2 %}\n  {{ [255, (200 + 55\
-            \ * t) | int, (100 * t) | int] }}\n{% endif %}\n"
+          rgb_color: "{% set progress = repeat.index / 60 %} {% if progress < 0.5
+            %}\n  {% set t = progress * 2 %}\n  {{ [255, (200 * t) | int, 0] }}\n{%
+            else %}\n  {% set t = (progress - 0.5) * 2 %}\n  {{ [255, (200 + 55 *
+            t) | int, (100 * t) | int] }}\n{% endif %}\n"
           brightness: '{{ (2.55 + (252.45 * (repeat.index / 60))) | int }} '
       - delay:
           seconds: 5
@@ -1537,7 +1598,7 @@
         payload: wrong
 - id: alarm_panel_rfid_success
   alias: Alarm Panel RFID Success
-  description: "Known card scanned \u2014 toggle arm/disarm in Alarmo"
+  description: Known card scanned — toggle arm/disarm in Alarmo
   triggers:
   - trigger: mqtt
     topic: alarm/rfid_success
@@ -1559,14 +1620,14 @@
       data: {}
 - id: alarm_panel_rfid_fail
   alias: Alarm Panel RFID Fail
-  description: "Unknown card scanned \u2014 notify"
+  description: Unknown card scanned — notify
   triggers:
   - trigger: mqtt
     topic: alarm/rfid_fail
   actions:
   - action: notify.mobile_app_jon_phone
     data:
-      title: "Alarm Panel \u2014 Unknown Card"
+      title: Alarm Panel — Unknown Card
       message: 'Unknown RFID card scanned: {{ trigger.payload }}'
 - id: alarm_panel_sound_on_trigger
   alias: Alarm Panel Sound on Trigger
@@ -1655,8 +1716,9 @@
 - id: school_day_manager
   alias: School Day Manager
   description: 'At midnight: get today''s events from calendar.sandown_school_calendar.
-    Weekend, or any event containing ''holiday'', ''half term'', ''inset'', or ''bank'' -> school
-    day OFF. Otherwise (no events or other special events) -> school day ON. '
+    Weekend, or any event containing ''holiday'', ''half term'', ''inset'', or ''bank''
+    -> school day OFF. Otherwise (no events or other special events) -> school day
+    ON. '
   mode: single
   triggers:
   - trigger: time
@@ -1673,9 +1735,9 @@
     response_variable: todays_events
   - if:
     - condition: template
-      value_template: "{{ now().weekday() >= 5 or\n   todays_events['calendar.sandown_school_calendar']['events']\
-        \ |\n   selectattr('summary', 'search', 'holiday|half\\s*-?\\s*term|inset|bank', ignorecase=True)\
-        \ |\n   list | count > 0 }}\n"
+      value_template: "{{ now().weekday() >= 5 or\n   todays_events['calendar.sandown_school_calendar']['events']
+        |\n   selectattr('summary', 'search', 'holiday|half\\s*-?\\s*term|inset|bank',
+        ignorecase=True) |\n   list | count > 0 }}\n"
     then:
     - action: input_boolean.turn_off
       target:
@@ -1684,10 +1746,10 @@
       target:
         entity_id: input_text.boys_school
       data:
-        value: "{%- set off_event = todays_events['calendar.sandown_school_calendar']['events']\
-          \ |\n   selectattr('summary', 'search', 'holiday|half\\s*-?\\s*term|inset|bank', ignorecase=True)\
-          \ |\n   map(attribute='summary') | first | default('') -%}\n{% if off_event\
-          \ %}{{ off_event }}{% else %}Enjoy your day off{% endif %}\n"
+        value: "{%- set off_event = todays_events['calendar.sandown_school_calendar']['events']
+          |\n   selectattr('summary', 'search', 'holiday|half\\s*-?\\s*term|inset|bank',
+          ignorecase=True) |\n   map(attribute='summary') | first | default('') -%}\n{%
+          if off_event %}{{ off_event }}{% else %}Enjoy your day off{% endif %}\n"
     else:
     - action: input_boolean.turn_on
       target:
@@ -1696,9 +1758,9 @@
       target:
         entity_id: input_text.boys_school
       data:
-        value: "{%- set events = todays_events['calendar.sandown_school_calendar']['events']\
-          \ |\n   map(attribute='summary') | list -%}\n{% if events %}{{ events |\
-          \ join(', ') }}{% else %}School day{% endif %}\n"
+        value: "{%- set events = todays_events['calendar.sandown_school_calendar']['events']
+          |\n   map(attribute='summary') | list -%}\n{% if events %}{{ events | join(',
+          ') }}{% else %}School day{% endif %}\n"
 - id: jacob_timetable_rotary_text
   alias: Jacob Timetable Rotary Text
   description: Updates plain text helpers for the rotary controller LCD.
@@ -1904,3 +1966,42 @@
       data:
         type: announce
         method: speak
+- id: kit_check_parent_confirm
+  alias: Kit Check — Parent confirms, unblock YouTube
+  description: Fired when Jon or Natalie taps the kit confirmed action on their phone
+    notification
+  triggers:
+  - trigger: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: KIT_CHECK_DONE
+  conditions:
+  - condition: state
+    entity_id: input_boolean.kit_check_active
+    state: 'on'
+  actions:
+  - action: shell_command.youtube_unblock_kids
+  - action: input_boolean.turn_off
+    target:
+      entity_id: input_boolean.kit_check_active
+  - action: notify.alexa_media
+    data:
+      message: YouTube is back. Well done boys. Now go to bed at a reasonable time.
+      target:
+      - media_player.lounge_plus
+      - media_player.boy_s_new_dot
+      - media_player.bedroom_dot
+      - media_player.kitchen_dot
+      data:
+        type: announce
+        volume: 0.5
+        method: all
+  - action: notify.jacob_phone
+    data:
+      title: ✅ YouTube unblocked
+      message: Kit confirmed. YouTube is back.
+  - action: notify.joseph_phone
+    data:
+      title: ✅ YouTube unblocked
+      message: Kit confirmed. YouTube is back.
+  mode: single
