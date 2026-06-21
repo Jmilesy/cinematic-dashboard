@@ -1117,7 +1117,7 @@
   - trigger: state
     entity_id: input_button.start_jon_pc
   - trigger: state
-    entity_id: binary_sensor.jonpc
+    entity_id: binary_sensor.jon_pc_is_present
     to: 'on'
   conditions: []
   actions:
@@ -1130,13 +1130,13 @@
   mode: single
   triggers:
   - trigger: state
-    entity_id: binary_sensor.jonpc
+    entity_id: binary_sensor.jon_pc_is_present
   conditions: []
   actions:
   - choose:
     - conditions:
       - condition: state
-        entity_id: binary_sensor.jonpc
+        entity_id: binary_sensor.jon_pc_is_present
         state: 'on'
       sequence:
       - action: switch.turn_on
@@ -1144,7 +1144,7 @@
           entity_id: switch.jonpc_red
     - conditions:
       - condition: state
-        entity_id: binary_sensor.jonpc
+        entity_id: binary_sensor.jon_pc_is_present
         state: 'off'
       sequence:
       - action: switch.turn_on
@@ -2005,3 +2005,61 @@
       title: ✅ YouTube unblocked
       message: Kit confirmed. YouTube is back.
   mode: single
+
+- id: adguard_per_user_filtering
+  alias: "AdGuard — Per-User Filtering (JonPC Console)"
+  description: >
+    Watches sensor.jon_pc_console_active_console_user and applies the
+    appropriate AdGuard filtering policy to the Kids-VLAN based on who
+    is logged into JonPC. jon_m=unfiltered, natal=default, all others=boys.
+  triggers:
+    - trigger: state
+      entity_id: sensor.jon_pc_console_active_console_user
+  conditions: []
+  actions:
+    - choose:
+        - conditions:
+            - condition: state
+              entity_id: sensor.jon_pc_console_active_console_user
+              state: jon_m
+          sequence:
+            - action: shell_command.adguard_set_unfiltered_policy
+            - action: notify.jon_notify
+              data:
+                message: "🔓 JonPC: Jon logged in — AdGuard Kids-VLAN unfiltered"
+        - conditions:
+            - condition: state
+              entity_id: sensor.jon_pc_console_active_console_user
+              state: natal
+          sequence:
+            - action: shell_command.adguard_set_default_policy
+            - action: notify.jon_notify
+              data:
+                message: "🔒 JonPC: Natalie logged in — AdGuard Kids-VLAN default policy"
+        - conditions:
+            - condition: state
+              entity_id: sensor.jon_pc_console_active_console_user
+              state: miles
+          sequence:
+            - action: shell_command.adguard_set_boys_policy
+            - action: notify.jon_notify
+              data:
+                message: "👦 JonPC: Joseph logged in — AdGuard Kids-VLAN boys policy"
+        - conditions:
+            - condition: state
+              entity_id: sensor.jon_pc_console_active_console_user
+              state: child
+          sequence:
+            - action: shell_command.adguard_set_boys_policy
+            - action: notify.jon_notify
+              data:
+                message: "👦 JonPC: Jacob logged in — AdGuard Kids-VLAN boys policy"
+      default:
+        - action: shell_command.adguard_set_boys_policy
+        - action: notify.jon_notify
+          data:
+            message: >
+              🔒 JonPC: {{ states('sensor.jon_pc_console_active_console_user') | default('unknown') }}
+              logged in — AdGuard Kids-VLAN boys policy (fail-safe)
+  mode: single
+  max_exceeded: silent

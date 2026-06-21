@@ -160,6 +160,12 @@ input_boolean:
   natalie_makeup:
     name: Natalie Makeup Light
     icon: mdi:mirror
+  kit_check_active:
+    name: Kit Check Active
+    icon: mdi:school
+  youtube_block_enabled:
+    name: YouTube Block Enabled
+    icon: mdi:youtube-off
 
 input_button:
   start_jon_pc:
@@ -239,3 +245,20 @@ rest_command:
 #    #port: PORT #optional
 #    username: !secret admin
 #    password: !secret gen_pw
+
+# ============================================================
+# AdGuard Per-User Filtering — rest_commands
+# ============================================================
+# NOTE: Replace ADGUARD_PASSWORD below with the real password
+# after confirming login works at 192.168.1.76:3000
+
+shell_command:
+  adguard_set_boys_policy: "/config/scripts/adguard_set_policy.sh boys"
+  adguard_set_unfiltered_policy: "/config/scripts/adguard_set_policy.sh unfiltered"
+  adguard_set_default_policy: "/config/scripts/adguard_set_policy.sh default"
+  youtube_block_kids: "/config/scripts/adguard_set_policy.sh boys"
+  youtube_unblock_kids: "/config/scripts/adguard_set_policy.sh default"
+
+# ============================================================
+# Kit Check + YouTube Block helpers
+# ============================================================

@@ -1,0 +1,21 @@
+- sensor:
+    - name: jon_pc_active_user_friendly
+      unique_id: jon_pc_active_user_friendly
+      icon: mdi:account-check
+      state: >
+        {% set user = states('sensor.jon_pc_console_active_console_user') %}
+        {% if user == 'jon_m' %}Jon
+        {% elif user == 'natal' %}Natalie
+        {% elif user == 'miles' %}Joseph
+        {% elif user == 'child' %}Jacob
+        {% elif user in ['none', 'unknown', ''] %}Nobody
+        {% else %}{{ user }}
+        {% endif %}
+      attributes:
+        windows_account: "{{ states('sensor.jon_pc_console_active_console_user') }}"
+        policy: >
+          {% set user = states('sensor.jon_pc_console_active_console_user') %}
+          {% if user == 'jon_m' %}unfiltered
+          {% elif user == 'natal' %}default
+          {% else %}boys
+          {% endif %}
