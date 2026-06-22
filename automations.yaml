@@ -639,15 +639,15 @@
     - action: input_boolean.turn_on
       target:
         entity_id: input_boolean.kit_check_active
-  - action: notify.jacob_phone
+  - action: notify.jacob_notify
     data:
       title: School Prep
       message: '{{ evening_prep_message }}'
-  - action: notify.joseph_phone
+  - action: notify.joseph_notify
     data:
       title: School Prep
       message: '{{ evening_prep_message }}'
-  - action: notify.jacob_phone
+  - action: notify.jacob_notify
     data:
       title: Drink bottles
       message: Jacob. How many drink bottles have you got in the fridge for tomorrow?
@@ -664,7 +664,7 @@
       entity_id: input_boolean.jacob_pe_tomorrow
       state: 'on'
     then:
-    - action: notify.jacob_phone
+    - action: notify.jacob_notify
       data:
         title: PE kit
         message: Jacob. PE tomorrow. Is your kit sorted?
@@ -1310,7 +1310,7 @@
       brightness: 35
   - action: light.turn_on
     target:
-      entity_id: light.joseph
+      entity_id: light.joseph_s_light
     data:
       color_name: white
       brightness: 35
@@ -1333,7 +1333,7 @@
     target:
       entity_id:
       - light.boys_light
-      - light.joseph
+      - light.joseph_s_light
       - light.boys_led_light
 - id: boys_bedtime_reset
   alias: Boys Bedtime - Daily Reset
@@ -1374,7 +1374,7 @@
     target:
       entity_id:
       - light.boys_light
-      - light.joseph
+      - light.joseph_s_light
       - light.boys_led_light
 - id: boys_morning_sunrise
   alias: Boys Morning - Sunrise Light
@@ -1412,7 +1412,7 @@
         target:
           entity_id:
           - light.boys_light
-          - light.joseph
+          - light.joseph_s_light
         data:
           transition: 5
           rgb_color: "{% set progress = repeat.index / 60 %} {% if progress < 0.5
@@ -1996,11 +1996,11 @@
         type: announce
         volume: 0.5
         method: all
-  - action: notify.jacob_phone
+  - action: notify.jacob_notify
     data:
       title: ✅ YouTube unblocked
       message: Kit confirmed. YouTube is back.
-  - action: notify.joseph_phone
+  - action: notify.joseph_notify
     data:
       title: ✅ YouTube unblocked
       message: Kit confirmed. YouTube is back.

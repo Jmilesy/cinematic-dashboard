@@ -60,6 +60,16 @@ homeassistant:
         192.168.1.43: a663b3fdb7874445be8a4dfefaee08d9
         100.64.239.100: a663b3fdb7874445be8a4dfefaee08d9
 
+
+  customize:
+    sensor.bedroom_brightness:
+      device_class: illuminance
+    sensor.kitchen_brightness:
+      device_class: illuminance
+    sensor.landing_brightness:
+      device_class: illuminance
+    sensor.diningroom_temp:
+      device_class: temperature
 http:
   ssl_certificate: /ssl/fullchain.pem
   ssl_key: /ssl/privkey.pem
@@ -91,17 +101,12 @@ waste_collection_schedule:
         - type: PAPERCARD
           alias: "Paper/Card Collection"
           icon: mdi:package-variant
-
-# ============================================================
-# Waste Collection Schedule – Platform Sensor
-# ============================================================
-sensor:
-  - platform: waste_collection_schedule
-    name: "Next Waste Collection"
-    source_index: 0
-    count: 3
-    leadtime: 60
-    add_days_to: true
+  sensors:
+    - name: "Next Waste Collection"
+      source_index: 0
+      count: 3
+      leadtime: 60
+      add_days_to: true
 
 notify:
   - platform: group
@@ -253,11 +258,11 @@ rest_command:
 # after confirming login works at 192.168.1.76:3000
 
 shell_command:
-  adguard_set_boys_policy: "/config/scripts/adguard_set_policy.sh boys"
+  adguard_set_boys_policy: "/config/scripts/adguard_set_policy.sh kids"
   adguard_set_unfiltered_policy: "/config/scripts/adguard_set_policy.sh unfiltered"
   adguard_set_default_policy: "/config/scripts/adguard_set_policy.sh default"
   youtube_block_kids: "/config/scripts/adguard_set_policy.sh boys"
-  youtube_unblock_kids: "/config/scripts/adguard_set_policy.sh default"
+  youtube_unblock_kids: "/config/scripts/adguard_set_policy.sh kids"
 
 # ============================================================
 # Kit Check + YouTube Block helpers
