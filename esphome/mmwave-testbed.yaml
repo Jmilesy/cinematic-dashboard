@@ -135,8 +135,18 @@ binary_sensor:
     device_class: presence
 
   - platform: ble_presence
-    ibeacon_uuid: "b11bf984-446b-4ab1-b702-150365cf547b"
+    ibeacon_uuid: "a5acc421-706a-4331-9889-3c408ec046dd"
     name: "Joseph BT Present"
+    device_class: presence
+
+  - platform: ble_presence
+    ibeacon_uuid: "78aff0ac-333f-4288-9196-ec1521190fbc"
+    name: "Jon BT Present"
+    device_class: presence
+
+  - platform: ble_presence
+    ibeacon_uuid: "7aaa77c3-4a49-491c-8d0f-90e1ebfff9c9"
+    name: "Natalie BT Present"
     device_class: presence
 
 # ─────────────────────────────────────────────
