@@ -29,6 +29,7 @@ api:
 
 ota:
   - platform: esphome
+    password: !secret api_password
 
 text_sensor:
   - platform: version
