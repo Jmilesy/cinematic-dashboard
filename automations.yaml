@@ -1115,6 +1115,9 @@
   mode: single
   triggers:
   - trigger: state
+    entity_id: binary_sensor.jonpc
+    to: 'on'
+  - trigger: state
     entity_id: input_button.start_jon_pc
   - trigger: state
     entity_id: binary_sensor.jon_pc_is_present
