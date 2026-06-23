@@ -14,8 +14,7 @@ substitutions:
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
-
-
+  min_auth_mode: WPA2
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
@@ -31,6 +30,7 @@ logger:
 api:
 
 ota:
+  - platform: esphome
 
 text_sensor:
   - platform: version
@@ -44,8 +44,9 @@ text_sensor:
       name: '${friendly_name} - Connected SSID'
       icon: mdi:wifi-strength-
 
-dallas:
-  - pin: GPIO4
+one_wire:
+  - platform: gpio
+    pin: GPIO4
 
 switch:
   - platform: gpio
@@ -56,7 +57,7 @@ binary_sensor:
   - platform: gpio
     pin: 0
     name: "Boys Room Door"
-    device_class: Door
+    device_class: door
     
 sensor:
   # WiFi signal
@@ -71,10 +72,9 @@ sensor:
     humidity:
       name: "Boys Room Humidity"
     update_interval: 60s
-  - platform: dallas
+  - platform: dallas_temp
     address: 0x89031720FB7AFF28
     name: "Boysroom Temperature"
-    
 
   - platform: adc
     pin: A0
