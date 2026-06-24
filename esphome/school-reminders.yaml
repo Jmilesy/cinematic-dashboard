@@ -333,6 +333,21 @@ binary_sensor:
       mode:
         pullup: true
         input: true
+    on_click:
+      - min_length: 50ms
+        max_length: 600ms
+        then:
+          - homeassistant.event:
+              event: esphome.encoder_event
+              data:
+                action: press
+      - min_length: 600ms
+        max_length: 5s
+        then:
+          - homeassistant.event:
+              event: esphome.encoder_event
+              data:
+                action: long_press
   # Bluetooth presence detection
   - platform: ble_presence
     ibeacon_uuid: "c11b71d5-3772-4b30-8f24-684f33dadd3f"
@@ -368,16 +383,13 @@ sensor:
     filters:
       - debounce: 5ms
     internal: true
-    on_value:
-      then:
-        - lambda: |-
-            static int last = 0;
-            int current = (int)x;
-
-            if (current > last) {
-              ESP_LOGD("encoder", "RIGHT");
-            } else if (current < last) {
-              ESP_LOGD("encoder", "LEFT");
-            }
-
-            last = current;
+    on_clockwise:
+      - homeassistant.event:
+          event: esphome.encoder_event
+          data:
+            action: right
+    on_anticlockwise:
+      - homeassistant.event:
+          event: esphome.encoder_event
+          data:
+            action: left
