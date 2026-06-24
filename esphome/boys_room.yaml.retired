@@ -1,0 +1,141 @@
+esphome:
+  name: boys_room
+
+esp8266:
+  board: d1_mini_lite
+
+substitutions:
+  device_name: Boys_room_monitor
+  friendly_name: boys_Rm
+    
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Boys Room Fallback Hotspot"
+    password: "RSKEz9Mc34ps"
+
+#captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+  - platform: esphome
+    password: !secret api_password
+
+text_sensor:
+  - platform: version
+    hide_timestamp: true
+    name: '${friendly_name} - ESPHome Version'
+  - platform: wifi_info
+    ip_address:
+      name: '${friendly_name} - IP Address'
+      icon: mdi:wifi
+    ssid:
+      name: '${friendly_name} - Connected SSID'
+      icon: mdi:wifi-strength-
+
+one_wire:
+  - platform: gpio
+    pin: 4
+
+switch:
+  - platform: gpio
+    name: "Out Door Floods"
+    pin: 16
+    
+binary_sensor:
+  - platform: gpio
+    pin: 0
+    name: "Boys Room Door"
+    device_class: Door
+    
+sensor:
+  # WiFi signal
+  - platform: wifi_signal
+    name: "${friendly_name} - WiFi Signal"
+    update_interval: 120s
+  - platform: dht
+    pin: D1
+    model: DHT11
+    temperature:
+      name: "Boys Room Temperature"
+    humidity:
+      name: "Boys Room Humidity"
+    update_interval: 60s
+  - platform: dallas_temp
+    address: 0x89031720FB7AFF28
+    name: "Boysroom Temperature"
+    
+
+  - platform: adc
+    pin: A0
+    name: "Boys noise"
+    update_interval: 5000ms
+    filters:
+      - multiply: 3.3
+
+light:
+  - platform: neopixelbus
+    variant: WS2812X
+    pin: GPIO2
+    num_leds: 60
+    type: GRB
+    name: "boys led Light"
+    effects:
+    - addressable_flicker:
+    - addressable_flicker:
+        name: Flicker Effect With Custom Values
+        update_interval: 16ms
+        intensity: 5%
+    - addressable_twinkle:
+    - addressable_twinkle:
+        name: Twinkle Effect With Custom Values
+        twinkle_probability: 5%
+        progress_interval: 4ms
+    - random:
+    - random:
+        name: Random Effect With Custom Values
+        transition_length: 5s
+        update_interval: 7s
+    - addressable_scan:
+    - addressable_scan:
+        name: Scan Effect With Custom Values
+        move_interval: 100ms
+        scan_width: 1
+    - strobe:
+    - strobe:
+         name: Strobe Effect With Custom Values
+         colors:
+           - state: True
+             brightness: 100%
+             red: 100%
+             green: 0%
+             blue: 0%
+             duration: 500ms
+           - state: False
+             duration: 25ms
+           - state: True
+             brightness: 100%
+             red: 0%
+             green: 0%
+             blue: 100%
+             duration: 500ms
+    - addressable_rainbow:
+    - addressable_rainbow:
+        name: Rainbow Effect With Custom Values
+        speed: 20
+        width: 50
+    - addressable_fireworks:
+    - addressable_fireworks:
+        name: Fireworks Effect With Custom Values
+        update_interval: 32ms
+        spark_probability: 10%
+        use_random_color: false
+        fade_out_rate: 120
