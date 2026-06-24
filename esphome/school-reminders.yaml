@@ -24,7 +24,7 @@ api:
 
 ota:
   - platform: esphome
-    password: "fc9c31e55047132f35d517e11896f8a7"
+    password: !secret ota_password
 
 wifi:
   ssid: !secret wifi_ssid
@@ -33,9 +33,8 @@ wifi:
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
-    ssid: "School-Reminders"
-    password: "bFIORnHv7Gof"
-
+    ssid: School-Reminders
+    password: !secret fallback_password
 captive_portal:
 
 
