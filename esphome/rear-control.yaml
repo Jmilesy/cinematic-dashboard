@@ -29,7 +29,7 @@ wifi:
   password: !secret wifi_password
   ap:
     ssid: "Rear-Control Fallback Hotspot"
-    password: "d7YBmSZPNSRf"
+    password: !secret fallback_password
 
 captive_portal:
 
