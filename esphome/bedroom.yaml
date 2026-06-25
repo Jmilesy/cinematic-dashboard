@@ -13,7 +13,7 @@ wifi:
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "Bedroom Fallback Hotspot"
-    password: "zCYbIe2Bg5ke"
+    password: !secret fallback_password
 
 captive_portal:
 
