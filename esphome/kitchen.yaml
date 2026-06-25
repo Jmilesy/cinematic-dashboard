@@ -20,7 +20,7 @@ wifi:
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "Kitchen Fallback Hotspot"
-    password: "xDKRE3EsM1Ia"
+    password: !secret fallback_password
 
 captive_portal:
 
