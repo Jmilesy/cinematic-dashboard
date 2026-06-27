@@ -190,15 +190,15 @@
         is_home: "{{ is_state('person.joseph', 'home') }}"
         location: "{{ states('person.joseph') }}"
         room: "{{ states('sensor.joseph_room') }}"
-        battery_level: "{{ states('sensor.joseph_battery_level') }}"
-        battery_state: "{{ states('sensor.joseph_battery_state') }}"
-        is_charging: "{{ is_state('sensor.joseph_battery_state', 'charging') or is_state('sensor.joseph_battery_state', 'full') }}"
+        battery_level: "{{ states('sensor.joseph_phone_battery_level') }}"
+        battery_state: "{{ states('sensor.joseph_phone_battery_state') }}"
+        is_charging: "{{ is_state('sensor.joseph_phone_battery_state', 'charging') or is_state('sensor.joseph_phone_battery_state', 'full') }}"
         should_glow: >
           {{ is_state('person.joseph', 'home') and
-             (is_state('sensor.joseph_battery_state', 'charging') or is_state('sensor.joseph_battery_state', 'full')) }}
+             (is_state('sensor.joseph_phone_battery_state', 'charging') or is_state('sensor.joseph_phone_battery_state', 'full')) }}
         battery_display: >
-          {% set lvl = states('sensor.joseph_battery_level') | int(0) %}
-          {% set chg = states('sensor.joseph_battery_state') %}
+          {% set lvl = states('sensor.joseph_phone_battery_level') | int(0) %}
+          {% set chg = states('sensor.joseph_phone_battery_state') %}
           {% if lvl == 0 or chg == 'unknown' %}
             Battery N/A
           {% elif chg == 'charging' %}
