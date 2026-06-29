@@ -241,6 +241,11 @@ rest_command:
   valance_sunrise:
     url: "http://10.0.0.50/win&A=0&NL=10&NT=255&NF=3"
     method: GET
+  home_api_notify:
+    url: "https://craftsbyjon.co.uk/n8n-proxy/home-api/notify"
+    method: POST
+    content_type: "application/json"
+    payload: '{"title": "{{ title }}", "body": "{{ body }}", "data": {{ data | default("{}") }}}'
 #python_script:
 
 #media_player:

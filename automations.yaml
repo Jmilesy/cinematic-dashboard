@@ -695,6 +695,11 @@
           actions:
           - action: KIT_CHECK_DONE
             title: ✅ All sorted — unblock
+    - action: rest_command.home_api_notify
+      data:
+        title: "🎒 Kit Check Active"
+        body: "YouTube blocked. Tap to unblock once the boys' kit is sorted."
+        data: '{"action": "KIT_CHECK_DONE"}'
   mode: single
 - id: jacob_task_nagger
   alias: Jacob task nagger
