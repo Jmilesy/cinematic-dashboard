@@ -1318,7 +1318,7 @@
       brightness: 35
   - action: light.turn_on
     target:
-      entity_id: light.joseph_s_light
+      entity_id: light.joseph_bedroom
     data:
       color_name: white
       brightness: 35
@@ -1341,7 +1341,7 @@
     target:
       entity_id:
       - light.boys_light
-      - light.joseph_s_light
+      - light.joseph_bedroom
       - light.boys_led_light
 - id: boys_bedtime_reset
   alias: Boys Bedtime - Daily Reset
@@ -1382,7 +1382,7 @@
     target:
       entity_id:
       - light.boys_light
-      - light.joseph_s_light
+      - light.joseph_bedroom
       - light.boys_led_light
 - id: boys_morning_sunrise
   alias: Boys Morning - Sunrise Light
@@ -1420,7 +1420,7 @@
         target:
           entity_id:
           - light.boys_light
-          - light.joseph_s_light
+          - light.joseph_bedroom
         data:
           transition: 5
           rgb_color: "{% set progress = repeat.index / 60 %} {% if progress < 0.5

@@ -79,7 +79,7 @@ cards:
             }
 
       - type: custom:mushroom-light-card
-        entity: light.joseph
+        entity: light.joseph_bedroom
         name: Joseph's Light
         use_light_color: true
         show_brightness_control: true
