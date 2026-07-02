@@ -19,20 +19,17 @@
           {% else %}
             {% set t = title | lower %}
 
-            {% if 'whole school' in t %}
+            {% if 'whole school' in t or 'food bank friday' in t or 'pta summer fair' in t %}
               Whole‑school event tomorrow: {{ title }}
 
-            {% elif 'year 6' in t %}
+            {% elif 'year 6' in t or 'years 5 & 6' in t %}
               Year 6 event tomorrow: {{ title }}
 
             {% elif 'class 6s' in t %}
               Class 6S event tomorrow: {{ title }}
 
-            {% elif not ('year' in t or 'class' in t) %}
-              General school event tomorrow: {{ title }}
-
             {% else %}
-              School event tomorrow: {{ title }}
+              No school events tomorrow.
             {% endif %}
           {% endif %}
         {% endif %}

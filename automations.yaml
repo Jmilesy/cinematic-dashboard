@@ -575,6 +575,14 @@
     - action: input_boolean.turn_on
       target:
         entity_id: input_boolean.jacob_pe_tomorrow
+  - variables:
+      sandown_event_text: >-
+        {% set evts = tomorrow_school_events['calendar.sandown_school_calendar']['events']
+          | selectattr('summary', 'search', 'whole school|year 6|class 6s|food bank friday|pta summer fair|years 5 & 6', ignorecase=True) | list %}
+        {{ evts | map(attribute='summary') | join('; ') }}
+      jacob_school_event_text: >-
+        {% set evts = school_events['calendar.boys_school']['events'] %}
+        {{ evts | map(attribute='summary') | join('; ') }}
   - action: conversation.process
     data:
       agent_id: conversation.evening_prep
@@ -582,9 +590,10 @@
         is tomorrow. They need bags packed, homework done. Jacob needs a drink bottle
         in the fridge. {% if is_state(''input_boolean.jacob_pe_tomorrow'', ''on'')
         %} Jacob also has PE tomorrow and needs his PE kit ready. {% endif %} {% if
-        states(''sensor.school_event_tomorrow'') not in [''unknown'', ''unavailable'',
-        ''''] %} There is a school event tomorrow: {{ states(''sensor.school_event_tomorrow'')
-        }}. {% endif %} At the end, add one short sentence warning that a YouTube
+        sandown_event_text | trim != '''' %} There is a whole-school or Year 6 event
+        tomorrow: {{ sandown_event_text }}. {% endif %} {% if jacob_school_event_text
+        | trim != '''' %} Jacob also has: {{ jacob_school_event_text }}. {% endif
+        %} At the end, add one short sentence warning that a YouTube
         block is coming soon for anyone who doesn''t confirm their kit is sorted.
         Style: chaotic dad humour, dry sarcasm, short punchy sentences. No emojis.
         No baby talk. Address both boys directly.'
@@ -679,7 +688,7 @@
       entity_id: input_boolean.youtube_block_enabled
       state: 'on'
     then:
-    - action: notify.jon_phone
+    - action: notify.mobile_app_jon_phone
       data:
         title: "\U0001F392 Kit Check Active"
         message: YouTube blocked on Kids VLAN. Tap to unblock once kit is confirmed.
@@ -687,7 +696,7 @@
           actions:
           - action: KIT_CHECK_DONE
             title: ✅ All sorted — unblock
-    - action: notify.natalie_phone
+    - action: notify.mobile_app_sm_a566b
       data:
         title: "\U0001F392 Kit Check Active"
         message: YouTube blocked on Kids VLAN. Tap to unblock once kit is confirmed.
