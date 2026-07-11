@@ -576,13 +576,12 @@
       target:
         entity_id: input_boolean.jacob_pe_tomorrow
   - variables:
-      sandown_event_text: >-
-        {% set evts = tomorrow_school_events['calendar.sandown_school_calendar']['events']
-          | selectattr('summary', 'search', 'whole school|year 6|class 6s|food bank friday|pta summer fair|years 5 & 6', ignorecase=True) | list %}
-        {{ evts | map(attribute='summary') | join('; ') }}
-      jacob_school_event_text: >-
-        {% set evts = school_events['calendar.boys_school']['events'] %}
-        {{ evts | map(attribute='summary') | join('; ') }}
+      sandown_event_text: "{% set evts = tomorrow_school_events['calendar.sandown_school_calendar']['events']\n
+        \ | selectattr('summary', 'search', 'whole school|year 6|class 6s|food bank
+        friday|pta summer fair|years 5 & 6', ignorecase=True) | list %}\n{{ evts |
+        map(attribute='summary') | join('; ') }}"
+      jacob_school_event_text: '{% set evts = school_events[''calendar.boys_school''][''events'']
+        %} {{ evts | map(attribute=''summary'') | join(''; '') }}'
   - action: conversation.process
     data:
       agent_id: conversation.evening_prep
@@ -593,10 +592,10 @@
         sandown_event_text | trim != '''' %} There is a whole-school or Year 6 event
         tomorrow: {{ sandown_event_text }}. {% endif %} {% if jacob_school_event_text
         | trim != '''' %} Jacob also has: {{ jacob_school_event_text }}. {% endif
-        %} At the end, add one short sentence warning that a YouTube
-        block is coming soon for anyone who doesn''t confirm their kit is sorted.
-        Style: chaotic dad humour, dry sarcasm, short punchy sentences. No emojis.
-        No baby talk. Address both boys directly.'
+        %} At the end, add one short sentence warning that a YouTube block is coming
+        soon for anyone who doesn''t confirm their kit is sorted. Style: chaotic dad
+        humour, dry sarcasm, short punchy sentences. No emojis. No baby talk. Address
+        both boys directly.'
     response_variable: agent_response
   - if:
     - condition: template
@@ -706,8 +705,8 @@
             title: ✅ All sorted — unblock
     - action: rest_command.home_api_notify
       data:
-        title: "🎒 Kit Check Active"
-        body: "YouTube blocked. Tap to unblock once the boys' kit is sorted."
+        title: "\U0001F392 Kit Check Active"
+        body: YouTube blocked. Tap to unblock once the boys' kit is sorted.
         data: '{"action": "KIT_CHECK_DONE"}'
   mode: single
 - id: jacob_task_nagger
@@ -1733,10 +1732,9 @@
 - id: school_day_manager
   alias: School Day Manager
   description: 'At midnight: get today''s events from calendar.sandown_school_calendar.
-    Weekend, or any event containing ''holiday'', ''half term'', ''inset'', or ''bank''
-    -> school day OFF. Otherwise (no events or other special events) -> school day
-    ON. '
-  mode: single
+    Weekend, or any event containing ''holiday'', ''half term'', ''inset'', or ''bank
+    holiday'' -> school day OFF. Otherwise (no events or other special events) ->
+    school day ON. '
   triggers:
   - trigger: time
     at: 00:01:00
@@ -1753,7 +1751,7 @@
   - if:
     - condition: template
       value_template: "{{ now().weekday() >= 5 or\n   todays_events['calendar.sandown_school_calendar']['events']
-        |\n   selectattr('summary', 'search', 'holiday|half\\s*-?\\s*term|inset|bank',
+        |\n   selectattr('summary', 'search', 'holiday|half\\s*-?\\s*term|inset|bank\\s*holiday',
         ignorecase=True) |\n   list | count > 0 }}\n"
     then:
     - action: input_boolean.turn_off
@@ -1764,7 +1762,7 @@
         entity_id: input_text.boys_school
       data:
         value: "{%- set off_event = todays_events['calendar.sandown_school_calendar']['events']
-          |\n   selectattr('summary', 'search', 'holiday|half\\s*-?\\s*term|inset|bank',
+          |\n   selectattr('summary', 'search', 'holiday|half\\s*-?\\s*term|inset|bank\\s*holiday',
           ignorecase=True) |\n   map(attribute='summary') | first | default('') -%}\n{%
           if off_event %}{{ off_event }}{% else %}Enjoy your day off{% endif %}\n"
     else:
@@ -1778,6 +1776,7 @@
         value: "{%- set events = todays_events['calendar.sandown_school_calendar']['events']
           |\n   map(attribute='summary') | list -%}\n{% if events %}{{ events | join(',
           ') }}{% else %}School day{% endif %}\n"
+  mode: single
 - id: jacob_timetable_rotary_text
   alias: Jacob Timetable Rotary Text
   description: Updates plain text helpers for the rotary controller LCD.
@@ -2022,61 +2021,201 @@
       title: ✅ YouTube unblocked
       message: Kit confirmed. YouTube is back.
   mode: single
-
 - id: adguard_per_user_filtering
-  alias: "AdGuard — Per-User Filtering (JonPC Console)"
-  description: >
-    Watches sensor.jon_pc_console_active_console_user and applies the
-    appropriate AdGuard filtering policy to the Kids-VLAN based on who
-    is logged into JonPC. jon_m=unfiltered, natal=default, all others=boys.
+  alias: AdGuard — Per-User Filtering (JonPC Console)
+  description: 'Watches sensor.jon_pc_console_active_console_user and applies the
+    appropriate AdGuard filtering policy to the Kids-VLAN based on who is logged into
+    JonPC. jon_m=unfiltered, natal=default, all others=boys.
+
+    '
   triggers:
-    - trigger: state
-      entity_id: sensor.jon_pc_console_active_console_user
+  - trigger: state
+    entity_id: sensor.jon_pc_console_active_console_user
   conditions: []
   actions:
-    - choose:
-        - conditions:
-            - condition: state
-              entity_id: sensor.jon_pc_console_active_console_user
-              state: jon_m
-          sequence:
-            - action: shell_command.adguard_set_unfiltered_policy
-            - action: notify.jon_notify
-              data:
-                message: "🔓 JonPC: Jon logged in — AdGuard Kids-VLAN unfiltered"
-        - conditions:
-            - condition: state
-              entity_id: sensor.jon_pc_console_active_console_user
-              state: natal
-          sequence:
-            - action: shell_command.adguard_set_default_policy
-            - action: notify.jon_notify
-              data:
-                message: "🔒 JonPC: Natalie logged in — AdGuard Kids-VLAN default policy"
-        - conditions:
-            - condition: state
-              entity_id: sensor.jon_pc_console_active_console_user
-              state: miles
-          sequence:
-            - action: shell_command.adguard_set_boys_policy
-            - action: notify.jon_notify
-              data:
-                message: "👦 JonPC: Joseph logged in — AdGuard Kids-VLAN boys policy"
-        - conditions:
-            - condition: state
-              entity_id: sensor.jon_pc_console_active_console_user
-              state: child
-          sequence:
-            - action: shell_command.adguard_set_boys_policy
-            - action: notify.jon_notify
-              data:
-                message: "👦 JonPC: Jacob logged in — AdGuard Kids-VLAN boys policy"
-      default:
-        - action: shell_command.adguard_set_boys_policy
-        - action: notify.jon_notify
-          data:
-            message: >
-              🔒 JonPC: {{ states('sensor.jon_pc_console_active_console_user') | default('unknown') }}
-              logged in — AdGuard Kids-VLAN boys policy (fail-safe)
+  - choose:
+    - conditions:
+      - condition: state
+        entity_id: sensor.jon_pc_console_active_console_user
+        state: jon_m
+      sequence:
+      - action: shell_command.adguard_set_unfiltered_policy
+      - action: notify.jon_notify
+        data:
+          message: "\U0001F513 JonPC: Jon logged in — AdGuard Kids-VLAN unfiltered"
+    - conditions:
+      - condition: state
+        entity_id: sensor.jon_pc_console_active_console_user
+        state: natal
+      sequence:
+      - action: shell_command.adguard_set_default_policy
+      - action: notify.jon_notify
+        data:
+          message: "\U0001F512 JonPC: Natalie logged in — AdGuard Kids-VLAN default
+            policy"
+    - conditions:
+      - condition: state
+        entity_id: sensor.jon_pc_console_active_console_user
+        state: miles
+      sequence:
+      - action: shell_command.adguard_set_boys_policy
+      - action: notify.jon_notify
+        data:
+          message: "\U0001F466 JonPC: Joseph logged in — AdGuard Kids-VLAN boys policy"
+    - conditions:
+      - condition: state
+        entity_id: sensor.jon_pc_console_active_console_user
+        state: child
+      sequence:
+      - action: shell_command.adguard_set_boys_policy
+      - action: notify.jon_notify
+        data:
+          message: "\U0001F466 JonPC: Jacob logged in — AdGuard Kids-VLAN boys policy"
+    default:
+    - action: shell_command.adguard_set_boys_policy
+    - action: notify.jon_notify
+      data:
+        message: "\U0001F512 JonPC: {{ states('sensor.jon_pc_console_active_console_user')
+          | default('unknown') }} logged in — AdGuard Kids-VLAN boys policy (fail-safe)\n"
   mode: single
   max_exceeded: silent
+- id: boys_phones_charging_2210
+  alias: Check Boys Phones Charging 22:10
+  description: Alexa announcement if Jacob's or Joseph's phone isn't charging at 22:10,
+    skipping anyone not home (sleepovers etc)
+  triggers:
+  - trigger: time
+    at: '22:10:00'
+  conditions: []
+  actions:
+  - variables:
+      jacob_ok: '{{ not is_state(''person.jacob'',''home'') or states(''sensor.jacob_phone_battery_state'')
+        in [''charging'', ''full''] }}'
+      joseph_ok: '{{ not is_state(''person.joseph'',''home'') or states(''sensor.joseph_phone_battery_state'')
+        in [''charging'', ''full''] }}'
+  - if:
+    - condition: template
+      value_template: '{{ not jacob_ok or not joseph_ok }}'
+    then:
+    - variables:
+        names_not_charging: '{{ ([''Jacob''] if not jacob_ok else []) + ([''Joseph'']
+          if not joseph_ok else []) }}'
+    - data:
+        message: '{{ names_not_charging | join('' and '') }}{{ '' is'' if names_not_charging
+          | length == 1 else '' are'' }} phone not charging.'
+        data:
+          type: announce
+      action: notify.alexa_media_bedroom_dot
+    - data:
+        message: '{{ names_not_charging | join('' and '') }}{{ '' is'' if names_not_charging
+          | length == 1 else '' are'' }} phone not charging.'
+        data:
+          type: announce
+      action: notify.alexa_media_lounge_plus
+  mode: single
+- id: adults_phone_charging_sleep_check
+  alias: Check Jon/Natalie Phone Charging on Sleep Detection
+  description: When sleep confidence stays above 75% for 20 minutes, check if that
+    person's phone is charging. Skips anyone not home.
+  triggers:
+  - trigger: numeric_state
+    entity_id: sensor.jon_phone_sleep_confidence
+    above: 75
+    for:
+      minutes: 20
+    id: jon
+  - trigger: numeric_state
+    entity_id: sensor.sm_a566b_sleep_confidence
+    above: 75
+    for:
+      minutes: 20
+    id: natalie
+  conditions: []
+  actions:
+  - choose:
+    - conditions:
+      - condition: trigger
+        id: jon
+      - condition: state
+        entity_id: person.jon
+        state: home
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: sensor.jon_phone_battery_state
+          state: charging
+        - condition: state
+          entity_id: sensor.jon_phone_battery_state
+          state: full
+      sequence:
+      - action: notify.alexa_media_bedroom_dot
+        data:
+          message: Jon, your phone is not charging.
+          data:
+            type: announce
+      - action: notify.alexa_media_lounge_plus
+        data:
+          message: Jon, your phone is not charging.
+          data:
+            type: announce
+    - conditions:
+      - condition: trigger
+        id: natalie
+      - condition: state
+        entity_id: person.natalie
+        state: home
+      - condition: not
+        conditions:
+        - condition: state
+          entity_id: sensor.sm_a566b_battery_state
+          state: charging
+        - condition: state
+          entity_id: sensor.sm_a566b_battery_state
+          state: full
+      sequence:
+      - action: notify.alexa_media_bedroom_dot
+        data:
+          message: Natalie, your phone is not charging.
+          data:
+            type: announce
+      - action: notify.alexa_media_lounge_plus
+        data:
+          message: Natalie, your phone is not charging.
+          data:
+            type: announce
+  mode: parallel
+- id: adults_phone_charging_fallback_2330
+  alias: Check Jon/Natalie Phone Charging 23:30 Fallback
+  description: 'Safety net: at 23:30, checks Jon and Natalie''s phones regardless
+    of sleep detection, in case the sleep-confidence trigger missed. Skips anyone
+    not home.'
+  triggers:
+  - trigger: time
+    at: '23:30:00'
+  conditions: []
+  actions:
+  - variables:
+      jon_ok: '{{ not is_state(''person.jon'',''home'') or states(''sensor.jon_phone_battery_state'')
+        in [''charging'', ''full''] }}'
+      natalie_ok: '{{ not is_state(''person.natalie'',''home'') or states(''sensor.sm_a566b_battery_state'')
+        in [''charging'', ''full''] }}'
+  - if:
+    - condition: template
+      value_template: '{{ not jon_ok or not natalie_ok }}'
+    then:
+    - variables:
+        names_not_charging: '{{ ([''Jon''] if not jon_ok else []) + ([''Natalie'']
+          if not natalie_ok else []) }}'
+    - action: notify.alexa_media_bedroom_dot
+      data:
+        message: '{{ names_not_charging | join('' and '') }}{{ '' is'' if names_not_charging
+          | length == 1 else '' are'' }} phone not charging.'
+        data:
+          type: announce
+    - action: notify.alexa_media_lounge_plus
+      data:
+        message: '{{ names_not_charging | join('' and '') }}{{ '' is'' if names_not_charging
+          | length == 1 else '' are'' }} phone not charging.'
+        data:
+          type: announce
+  mode: single
