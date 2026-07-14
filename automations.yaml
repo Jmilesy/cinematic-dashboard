@@ -690,7 +690,7 @@
     - action: notify.mobile_app_jon_phone
       data:
         title: "\U0001F392 Kit Check Active"
-        message: YouTube blocked on Kids VLAN. Tap to unblock once kit is confirmed.
+        message: YouTube, TikTok & Facebook blocked. Tap to unblock once kit is confirmed.
         data:
           actions:
           - action: KIT_CHECK_DONE
@@ -698,7 +698,7 @@
     - action: notify.mobile_app_sm_a566b
       data:
         title: "\U0001F392 Kit Check Active"
-        message: YouTube blocked on Kids VLAN. Tap to unblock once kit is confirmed.
+        message: YouTube, TikTok & Facebook blocked. Tap to unblock once kit is confirmed.
         data:
           actions:
           - action: KIT_CHECK_DONE
@@ -706,7 +706,7 @@
     - action: rest_command.home_api_notify
       data:
         title: "\U0001F392 Kit Check Active"
-        body: YouTube blocked. Tap to unblock once the boys' kit is sorted.
+        body: YouTube, TikTok & Facebook blocked. Tap to unblock once the boys' kit is sorted.
         data: '{"action": "KIT_CHECK_DONE"}'
   mode: single
 - id: jacob_task_nagger
@@ -2014,11 +2014,11 @@
         method: all
   - action: notify.jacob_notify
     data:
-      title: ✅ YouTube unblocked
+      title: ✅ YouTube, TikTok & Facebook unblocked
       message: Kit confirmed. YouTube is back.
   - action: notify.joseph_notify
     data:
-      title: ✅ YouTube unblocked
+      title: ✅ YouTube, TikTok & Facebook unblocked
       message: Kit confirmed. YouTube is back.
   mode: single
 - id: adguard_per_user_filtering
