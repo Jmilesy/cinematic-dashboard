@@ -72,15 +72,13 @@ voice_assistant:
   id: alarm_va
   microphone: alarm_mic
   use_wake_word: true
-  micro_wake_word: micro_wake_word
   on_listening:
     - logger.log: "Wake word detected — listening..."
   on_stt_end:
-    text:
     then:
       - logger.log:
           format: "Heard: %s"
-          args: ["text.c_str()"]
+          args: ["x.c_str()"]
   on_end:
     - logger.log: "Voice assistant session ended"
 
