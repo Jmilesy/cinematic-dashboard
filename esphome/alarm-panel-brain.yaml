@@ -57,32 +57,50 @@ microphone:
     bits_per_sample: 32bit
     sample_rate: 16000
 
-# Voice assistant — capture only for now.
-# No wake word / trigger mechanism decided yet — start() needs
-# to be called from somewhere (button, HA service, or a wake
-# word engine) before this does anything. Left un-triggered
-# intentionally until that's decided.
+# Voice assistant — bench test with a wake word (14 Jul 2026).
+# Using the stock "hey_jarvis" model just to prove the pipeline
+# works end-to-end on real hardware — NOT the final wake word.
+# Final wake word choice (a custom "Computer" style word for the
+# TNG persona) is a separate, later decision.
+micro_wake_word:
+  models:
+    - model: hey_jarvis
+  on_wake_word_detected:
+    - voice_assistant.start:
+
 voice_assistant:
   id: alarm_va
   microphone: alarm_mic
-  use_wake_word: false
+  use_wake_word: true
+  micro_wake_word: micro_wake_word
+  on_listening:
+    - logger.log: "Wake word detected — listening..."
+  on_stt_end:
+    text:
+    then:
+      - logger.log:
+          format: "Heard: %s"
+          args: ["text.c_str()"]
+  on_end:
+    - logger.log: "Voice assistant session ended"
 
-# SPI — RFID reader (RC522)
-spi:
-  mosi_pin: GPIO23
-  miso_pin: GPIO19
-  clk_pin: GPIO18
-
-rc522_spi:
-  id: rfid_reader
-  cs_pin: GPIO5
-  reset_pin: GPIO4
-  on_tag:
-    - then:
-        - logger.log:
-            format: "RFID tag scanned: %s"
-            args: ["x.c_str()"]
-        # Arm/disarm/tag-matching logic not yet designed — placeholder only
+# SPI — RFID reader (RC522) — commented out, nothing physically
+# connected to these pins yet. Uncomment once the RC522 is wired up.
+# spi:
+#   mosi_pin: GPIO23
+#   miso_pin: GPIO19
+#   clk_pin: GPIO18
+#
+# rc522_spi:
+#   id: rfid_reader
+#   cs_pin: GPIO5
+#   reset_pin: GPIO4
+#   on_tag:
+#     - then:
+#         - logger.log:
+#             format: "RFID tag scanned: %s"
+#             args: ["x.c_str()"]
+#         # Arm/disarm/tag-matching logic not yet designed — placeholder only
 
 # RGB status LED — three separate LEDs (not one WS2812)
 output:
