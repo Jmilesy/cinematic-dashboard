@@ -39,6 +39,15 @@ pcf8574:
   - id: pcf8574_hub
     address: 0x20
 
+# UART link to the screen board — carries TTS reply URLs from
+# on_tts_end so the screen board can play them through its speaker.
+# Wiring: brain TX17 -> screen RX44, brain RX16 -> screen TX43
+uart:
+  id: uart_bus
+  tx_pin: GPIO17
+  rx_pin: GPIO16
+  baud_rate: 115200
+
 # I2S — dedicated INMP441 microphone
 # WS/LRCLK=GPIO32  SCK/BCLK=GPIO14  SD/DIN=GPIO35  L/R=GND (left channel)
 i2s_audio:
@@ -79,6 +88,13 @@ voice_assistant:
       - logger.log:
           format: "Heard: %s"
           args: ["x.c_str()"]
+  on_tts_end:
+    then:
+      - uart.write:
+          id: uart_bus
+          data: !lambda |-
+            std::string msg = x + "\n";
+            return std::vector<uint8_t>(msg.begin(), msg.end());
   on_end:
     - logger.log: "Voice assistant session ended"
 
