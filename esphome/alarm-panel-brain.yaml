@@ -113,6 +113,7 @@ microphone:
 micro_wake_word:
   models:
     - model: hey_jarvis
+      probability_cutoff: 0.8
   on_wake_word_detected:
     - voice_assistant.start:
 
