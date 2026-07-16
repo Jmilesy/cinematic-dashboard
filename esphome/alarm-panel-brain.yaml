@@ -8,6 +8,16 @@ esp32:
   framework:
     type: arduino
 
+globals:
+  - id: mic_level_last_log
+    type: uint32_t
+    restore_value: false
+    initial_value: '0'
+  - id: mic_level_peak
+    type: int32_t
+    restore_value: false
+    initial_value: '0'
+
 logger:
   level: VERY_VERBOSE
 
@@ -66,6 +76,24 @@ microphone:
     channel: left
     bits_per_sample: 32bit
     sample_rate: 16000
+    on_data:
+      then:
+        - lambda: |-
+            const int32_t *samples = reinterpret_cast<const int32_t*>(x.data());
+            size_t count = x.size() / sizeof(int32_t);
+            int32_t peak = 0;
+            for (size_t i = 0; i < count; i++) {
+              int32_t v = samples[i];
+              if (v < 0) v = -v;
+              if (v > peak) peak = v;
+            }
+            if (peak > id(mic_level_peak)) id(mic_level_peak) = peak;
+            uint32_t now = millis();
+            if (now - id(mic_level_last_log) > 1000) {
+              id(mic_level_last_log) = now;
+              ESP_LOGI("mic_level", "Mic peak amplitude (last ~1s, %d samples): %d", (int)count, (int)id(mic_level_peak));
+              id(mic_level_peak) = 0;
+            }
 
 # Voice assistant — bench test with a wake word (14 Jul 2026).
 # Using the stock "hey_jarvis" model just to prove the pipeline
