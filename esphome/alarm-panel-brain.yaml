@@ -2,6 +2,16 @@ esphome:
   name: alarm-panel-brain
   friendly_name: Alarm Panel Brain
   comment: Alarm Panel V2 — brain board (RFID, LEDs, buzzer, relays, encoder, mic)
+  # Nothing in this config previously called micro_wake_word.start, so the
+  # wake-word engine sat in IDLE forever and never touched the microphone -
+  # confirmed via zero state-transition logs and zero on_data callbacks over
+  # hours of uptime, even after swapping the physical mic. Matches the
+  # pattern in every working ESPHome micro_wake_word example found.
+  on_boot:
+    priority: 600
+    then:
+      - delay: 10s
+      - micro_wake_word.start:
 
 esp32:
   board: esp32dev
