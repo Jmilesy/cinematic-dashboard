@@ -125,6 +125,7 @@ microphone:
 # Final wake word choice (a custom "Computer" style word for the
 # TNG persona) is a separate, later decision.
 micro_wake_word:
+  id: mww
   models:
     - model: hey_jarvis
       probability_cutoff: 0.6
@@ -135,6 +136,7 @@ micro_wake_word:
 voice_assistant:
   id: alarm_va
   microphone: alarm_mic
+  micro_wake_word: mww
   use_wake_word: true
   on_listening:
     - logger.log: "Wake word detected — listening..."
