@@ -129,7 +129,7 @@ micro_wake_word:
     - model: hey_jarvis
       probability_cutoff: 0.6
   on_wake_word_detected:
-    - voice_assistant.start:
+    - voice_assistant.start_continuous:
 
 voice_assistant:
   id: alarm_va
