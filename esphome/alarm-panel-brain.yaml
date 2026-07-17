@@ -137,7 +137,6 @@ voice_assistant:
   id: alarm_va
   microphone: alarm_mic
   micro_wake_word: mww
-  use_wake_word: true
   on_listening:
     - logger.log: "Wake word detected — listening..."
   on_stt_end:
