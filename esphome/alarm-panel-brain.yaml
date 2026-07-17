@@ -130,6 +130,7 @@ micro_wake_word:
       probability_cutoff: 0.6
   on_wake_word_detected:
     - voice_assistant.start_continuous:
+        wake_word: !lambda 'return wake_word;'
 
 voice_assistant:
   id: alarm_va
