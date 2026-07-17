@@ -16,8 +16,6 @@ esphome:
       - micro_wake_word.start:
       - logger.log: "on_boot: micro_wake_word.start call completed"
 
-esp32:
-
 # The on_boot start above isn't reliable every boot (confirmed 17 Jul: some
 # boots never log a single micro_wake_word state transition even after
 # waiting minutes). Calling micro_wake_word.start when it's already running
@@ -29,6 +27,7 @@ interval:
     then:
       - micro_wake_word.start:
 
+esp32:
   board: esp32dev
   framework:
     type: arduino
