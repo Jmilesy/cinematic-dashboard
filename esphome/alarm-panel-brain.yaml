@@ -10,8 +10,11 @@ esphome:
   on_boot:
     priority: 600
     then:
+      - logger.log: "on_boot: waiting 10s before starting wake word engine"
       - delay: 10s
+      - logger.log: "on_boot: calling micro_wake_word.start now"
       - micro_wake_word.start:
+      - logger.log: "on_boot: micro_wake_word.start call completed"
 
 esp32:
   board: esp32dev
