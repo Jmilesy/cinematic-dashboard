@@ -17,6 +17,18 @@ esphome:
       - logger.log: "on_boot: micro_wake_word.start call completed"
 
 esp32:
+
+# The on_boot start above isn't reliable every boot (confirmed 17 Jul: some
+# boots never log a single micro_wake_word state transition even after
+# waiting minutes). Calling micro_wake_word.start when it's already running
+# is safe - it just logs a harmless "already running" warning - so this
+# repeating interval acts as a self-healing safety net rather than relying
+# on a single fragile boot-time attempt.
+interval:
+  - interval: 30s
+    then:
+      - micro_wake_word.start:
+
   board: esp32dev
   framework:
     type: arduino
