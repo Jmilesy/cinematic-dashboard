@@ -232,6 +232,11 @@ emulated_hue:
 
 
 rest_command:
+  alarm_panel_refresh:
+    url: "http://192.168.20.113/refresh"
+    method: POST
+    username: "AlarmScr"
+    password: "Month@2018"
   shutdown_jon_pc:
     url: "http://192.168.1.107:8000/?action=System.Shutdown"
     method: POST
