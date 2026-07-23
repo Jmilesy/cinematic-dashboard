@@ -73,6 +73,7 @@ sensor:
   - platform: adc
     pin: A0
     name: "Landing Brightness"
+    device_class: illuminance
     unit_of_measurement: lux
     update_interval: 5s
     filters:
