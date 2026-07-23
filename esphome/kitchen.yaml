@@ -78,6 +78,7 @@ sensor:
   - platform: adc
     pin: A0
     name: "Kitchen Brightness"
+    device_class: illuminance
     unit_of_measurement: lux
     update_interval: 5s
     filters:
