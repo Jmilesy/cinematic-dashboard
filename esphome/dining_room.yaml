@@ -85,6 +85,7 @@ sensor:
   - platform: adc
     pin: A0
     name: "Diningroom temp"
+    device_class: temperature
     unit_of_measurement: "°C"
     filters:
       - lambda: |-
