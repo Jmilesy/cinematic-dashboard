@@ -2222,12 +2222,30 @@
 
 - id: alarm_panel_refresh_on_state_change
   alias: Alarm Panel - Refresh Screen on State Change
-  description: Pushes an immediate refresh to the Alarm Panel V2 screen board when Alarmo changes state, instead of waiting for its 30s poll
+  description: Pushes an immediate refresh to the Alarm Panel V2 screen board when Alarmo or sidebar toggle state changes, instead of waiting for its fallback poll
   mode: single
   triggers:
   - trigger: state
-    entity_id: alarm_control_panel.alarmo
+    entity_id:
+    - alarm_control_panel.alarmo
+    - input_boolean.boys_bedtime_switch
+    - input_boolean.natalie_makeup
   conditions: []
   actions:
   - action: rest_command.alarm_panel_refresh
+    data: {}
+
+- id: alarm_panel_wake_on_landing_pir
+  alias: Alarm Panel - Wake on Landing Motion
+  description: Turns the Alarm Panel V2 screen backlight on when either landing PIR detects motion
+  mode: restart
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.hall_multi_sensor
+    - binary_sensor.hall_pir
+    to: 'on'
+  conditions: []
+  actions:
+  - action: rest_command.alarm_panel_wake
     data: {}
