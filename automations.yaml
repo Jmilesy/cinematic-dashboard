@@ -2249,3 +2249,38 @@
   actions:
   - action: rest_command.alarm_panel_wake
     data: {}
+
+- id: school_panel_refresh_on_state_change
+  alias: School Panel - Refresh Screen on State Change
+  description: Pushes an immediate refresh to the school calendar screen when displayed HA state changes, instead of waiting for its fallback poll
+  mode: single
+  triggers:
+  - trigger: state
+    entity_id:
+    - alarm_control_panel.alarmo
+    - input_boolean.boys_bedtime_switch
+    - input_boolean.natalie_makeup
+    - input_text.boys_school
+    - sensor.school_event_today
+    - sensor.school_event_tomorrow
+    - calendar.boys_school
+    - calendar.sandown_school_calendar
+  conditions: []
+  actions:
+  - action: rest_command.school_panel_refresh
+    data: {}
+
+- id: school_panel_wake_on_landing_pir
+  alias: School Panel - Wake on Landing Motion
+  description: Turns the school calendar screen backlight on when either landing PIR detects motion
+  mode: restart
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.hall_multi_sensor
+    - binary_sensor.hall_pir
+    to: 'on'
+  conditions: []
+  actions:
+  - action: rest_command.school_panel_wake
+    data: {}

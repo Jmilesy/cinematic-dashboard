@@ -242,6 +242,17 @@ rest_command:
     method: POST
     username: "AlarmScr"
     password: "Month@2018"
+  school_panel_refresh:
+    url: "http://192.168.20.115/refresh"
+    method: POST
+    timeout: 30
+    username: "AlarmScr"
+    password: "Month@2018"
+  school_panel_wake:
+    url: "http://192.168.20.115/wake"
+    method: POST
+    username: "AlarmScr"
+    password: "Month@2018"
   shutdown_jon_pc:
     url: "http://192.168.1.107:8000/?action=System.Shutdown"
     method: POST
