@@ -217,6 +217,12 @@ input_text:
   jacob_timetable_tomorrow:
     name: Jacob Timetable Tomorrow
     max: 255
+  joseph_timetable_today:
+    name: Joseph Timetable Today
+    max: 255
+  joseph_timetable_tomorrow:
+    name: Joseph Timetable Tomorrow
+    max: 255
 
 wake_on_lan:
 

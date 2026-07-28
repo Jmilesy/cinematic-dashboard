@@ -1740,6 +1740,10 @@
     at: 00:01:00
   - trigger: homeassistant
     event: start
+  - trigger: state
+    entity_id:
+    - calendar.jacob_timetable
+    - calendar.joseph_timetable
   actions:
   - action: calendar.get_events
     target:
@@ -1777,9 +1781,9 @@
           |\n   map(attribute='summary') | list -%}\n{% if events %}{{ events | join(',
           ') }}{% else %}School day{% endif %}\n"
   mode: single
-- id: jacob_timetable_rotary_text
-  alias: Jacob Timetable Rotary Text
-  description: Updates plain text helpers for the rotary controller LCD.
+- id: boys_timetable_text
+  alias: Boys Timetable Text
+  description: Updates plain text timetable helpers for the school panel and rotary controller.
   mode: single
   triggers:
   - trigger: time
@@ -1801,6 +1805,53 @@
       start_date_time: '{{ (now() + timedelta(days=1)).strftime(''%Y-%m-%d'') }} 00:00:00'
       end_date_time: '{{ (now() + timedelta(days=1)).strftime(''%Y-%m-%d'') }} 23:59:59'
     response_variable: jacob_tomorrow
+  - if:
+    - condition: template
+      value_template: "{{ states('calendar.joseph_timetable') not in ['unknown', 'unavailable'] }}"
+    then:
+    - action: calendar.get_events
+      target:
+        entity_id: calendar.joseph_timetable
+      data:
+        start_date_time: '{{ now().strftime(''%Y-%m-%d'') }} 00:00:00'
+        end_date_time: '{{ now().strftime(''%Y-%m-%d'') }} 23:59:59'
+      response_variable: joseph_today
+    - action: calendar.get_events
+      target:
+        entity_id: calendar.joseph_timetable
+      data:
+        start_date_time: '{{ (now() + timedelta(days=1)).strftime(''%Y-%m-%d'') }} 00:00:00'
+        end_date_time: '{{ (now() + timedelta(days=1)).strftime(''%Y-%m-%d'') }} 23:59:59'
+      response_variable: joseph_tomorrow
+    - action: input_text.set_value
+      target:
+        entity_id: input_text.joseph_timetable_today
+      data:
+        value: '{%- set events = joseph_today[''calendar.joseph_timetable''][''events'']
+          | map(attribute=''summary'') | list -%}
+
+          {%- if events -%}{{ events | join('', '') | truncate(255, true, '''') }}{%-
+          else -%}No lessons today{%- endif -%}'
+    - action: input_text.set_value
+      target:
+        entity_id: input_text.joseph_timetable_tomorrow
+      data:
+        value: '{%- set events = joseph_tomorrow[''calendar.joseph_timetable''][''events'']
+          | map(attribute=''summary'') | list -%}
+
+          {%- if events -%}{{ events | join('', '') | truncate(255, true, '''') }}{%-
+          else -%}No lessons tomorrow{%- endif -%}'
+    else:
+    - action: input_text.set_value
+      target:
+        entity_id: input_text.joseph_timetable_today
+      data:
+        value: Joseph timetable calendar not configured
+    - action: input_text.set_value
+      target:
+        entity_id: input_text.joseph_timetable_tomorrow
+      data:
+        value: Joseph timetable calendar not configured
   - action: input_text.set_value
     target:
       entity_id: input_text.jacob_timetable_today
@@ -2261,6 +2312,10 @@
     - input_boolean.boys_bedtime_switch
     - input_boolean.natalie_makeup
     - input_text.boys_school
+    - input_text.jacob_timetable_today
+    - input_text.jacob_timetable_tomorrow
+    - input_text.joseph_timetable_today
+    - input_text.joseph_timetable_tomorrow
     - sensor.school_event_today
     - sensor.school_event_tomorrow
     - calendar.boys_school
