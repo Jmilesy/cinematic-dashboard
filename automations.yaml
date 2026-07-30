@@ -2326,14 +2326,14 @@
     data: {}
 
 - id: school_panel_wake_on_landing_pir
-  alias: School Panel - Wake on Landing Motion
-  description: Turns the school calendar screen backlight on when either landing PIR detects motion
+  alias: School Panel - Wake on Kitchen Motion
+  description: Turns the school calendar screen backlight on when either kitchen/downstairs PIR detects motion
   mode: restart
   triggers:
   - trigger: state
     entity_id:
-    - binary_sensor.hall_multi_sensor
-    - binary_sensor.hall_pir
+    - binary_sensor.kitchen_pir_sensor
+    - binary_sensor.kitchen_motion
     to: 'on'
   conditions: []
   actions:
